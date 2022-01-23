@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
     private bool IsGrounded = false;
 
+    [HideInInspector] public bool isAirborne;
+
     private bool canDoubleJump = true;
 
     private CharacterController characterController;
@@ -24,6 +26,8 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     private float verticalVelocity;
 
     private float baseStepOffSet;
+
+    private bool OnSlope;
 
     [Header("Movement Parameters")] 
     [SerializeField] private float moveSpeed = 3.0f; //Grounded speed
@@ -36,11 +40,28 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
     [Header("Slope Parameters")] //Unimplemented slope slide stuff
     [SerializeField] private float slopeSlideSpeed = 8.0f;
-    [SerializeField] private float slopeLimit = 45.0f;
+    [SerializeField] private bool CanSlideOnSlopes = true;
 
     [Header("Other Parameters")]
     [SerializeField] private LayerMask WhatIsGround; //Make a layer called ground or something and apply it to anything you want to jump off of. You can also set this to everything to jump off anything really
     [SerializeField] public Transform GroundCheckPosition; //Make an empty gameobject and put it somewhere near the charactercontroller's bottom.
+
+    private Vector3 hitPointNormal;
+    private bool IsSliding
+    {
+        get
+        {
+            if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
+            {
+                hitPointNormal = slopeHit.normal;
+                return Vector3.Angle(hitPointNormal, Vector3.up) > characterController.slopeLimit;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -57,6 +78,19 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     // Update is called once per frame
     void Update()
     {
+        if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
+        {
+            if(slopeHit.normal != Vector3.up)
+            {
+                OnSlope = true;
+            }
+            else
+            {
+                OnSlope = false;
+            }
+        }
+
+        //Debug.Log(OnSlope);
 
         GroundCheck();
 
@@ -67,11 +101,13 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         GravityHandler();
 
-        velocity = AdjustMovementToSlope(velocity);
+        //velocity = AdjustMovementToSlope(velocity);
 
         characterController.Move(velocity * Time.deltaTime);
 
         JumpHandler();
+
+        Debug.Log(velocity);
 
     }
 
@@ -80,12 +116,12 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         float x = Input.GetAxisRaw("Horizontal"); //A & D //Gets input of either -1 or 1 so you can turn on a dime
         float xAir = Input.GetAxis("Horizontal"); //A & D //Basically "air resistance" adds a ramp up to moving in air
 
-        if (IsGrounded)
+        if (characterController.isGrounded)
         {
             velocity = (transform.right * x) * moveSpeed + Vector3.up * verticalVelocity;
         }
 
-        if (!IsGrounded)
+        if (!characterController.isGrounded)
         {
             velocity = (transform.right * xAir) * airSpeed + Vector3.up * verticalVelocity;
 
@@ -95,13 +131,14 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
     private void JumpHandler()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded)
+
+        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded && !IsSliding)
         {
             verticalVelocity = 0;
             verticalVelocity = jumpForce;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && !IsGrounded && canDoubleJump == true)
+        if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true)
         {
             verticalVelocity = 0;
             verticalVelocity = doubleJumpForce;
@@ -109,8 +146,9 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         }
     }
 
+    //I have finally wrangled charactercontroller.isgrounded and it functions pretty well now. Keeping this method just in case
     private void GroundCheck() //Has three different ways to check if the player is grounded because charactercontroller.isgrounded gives me conniptions and I'm not using it anymore
-    {
+    {                                                                                                                
         //RaycastHit hit;
         //if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.5f))
         //{
@@ -123,18 +161,18 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         //    IsGrounded = false;
         //}
 
-        if (Physics.CheckSphere(GroundCheckPosition.position, .35f, WhatIsGround)) //CheckSphere probably works the best
-        {
-            //Debug.Log("Grounded");
-            IsGrounded = true;
-            canDoubleJump = true;
+        //if (Physics.CheckSphere(GroundCheckPosition.position, .45f, WhatIsGround)) //CheckSphere probably works the best
+        //{
+        //    //Debug.Log("Grounded");
+        //    IsGrounded = true;
+        //    canDoubleJump = true;
 
-        }
-        else
-        {
-            //Debug.Log("Not Grounded");
-            IsGrounded = false;
-        }
+        //}
+        //else
+        //{
+        //    //Debug.Log("Not Grounded");
+        //    IsGrounded = false;
+        //}
 
         //if (Physics.CheckBox(GroundCheckPosition.position, new Vector3(.7f, .1f, .7f), Quaternion.identity, WhatIsGround)) 
         //{
@@ -152,30 +190,58 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     void OnDrawGizmos() //Visualizes CheckSphere and CheckBox
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(GroundCheckPosition.position, .35f);
+        //Gizmos.DrawSphere(GroundCheckPosition.position, .45f);
         //Gizmos.DrawCube(GroundCheckPosition.position, new Vector3(.7f, .1f, .7f));
     }
 
     private void GravityHandler()
     {
-        if(!IsGrounded) //Adds artifical gravity if the player isn't grounded
+        if (!characterController.isGrounded) //Adds artifical gravity if the player isn't grounded
         {
+            isAirborne = true;
+
+            OnSlope = false;
+
             verticalVelocity -= gravity * Time.deltaTime;
 
             if (characterController.collisionFlags == CollisionFlags.Above)
             {
-                verticalVelocity = -1f;                //Stop adding any more velocity.
+                verticalVelocity = 0;                //Stop adding any more velocity.
                 characterController.stepOffset = 0;                 //Set stepOffset to zero to prevent player moving and sticking to the ceiling.
             }
+
         }
-        else if(IsGrounded && verticalVelocity < 0)
+        else if (characterController.isGrounded && verticalVelocity < 0 && !IsSliding)
         {
+            canDoubleJump = true;
             if (characterController.stepOffset == 0) //Resets stepOffset back to the base.
             {
                 characterController.stepOffset = baseStepOffSet;
             }
-            verticalVelocity = -1f; //Keep this at -1. Basically resets gravity when grounded.
+
+            if (OnSlope)
+            {
+                verticalVelocity = -12;
+            }
+            else
+            {
+                verticalVelocity = -1; //Keep this at -1. Basically resets gravity when grounded.
+            }
+
+            //verticalVelocity = -1; //Keep this at -1. Basically resets gravity when grounded.
         }
+
+        if (CanSlideOnSlopes && IsSliding && characterController.isGrounded)
+        {
+            velocity += new Vector3(hitPointNormal.x, -hitPointNormal.y, hitPointNormal.z) * slopeSlideSpeed;
+        }
+
+        if (characterController.isGrounded)
+        {
+            isAirborne = false;
+        }
+
+
     }
 
     private Vector3 AdjustMovementToSlope(Vector3 velocity) //Allows sticking to slopes
@@ -187,10 +253,12 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
             var slopeRotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
             var adjustedVelocity = slopeRotation * velocity;
             //Debug.Log(adjustedVelocity);
-            if (adjustedVelocity.y < -1)
+
+            if (adjustedVelocity.y < -1 && characterController.isGrounded)
             {
                 return adjustedVelocity;
             }
+
         }
 
         return velocity;
