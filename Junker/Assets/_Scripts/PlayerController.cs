@@ -107,8 +107,6 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         JumpHandler();
 
-        Debug.Log(velocity);
-
     }
 
     private void InputHandler() 
