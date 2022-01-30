@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     public bool CanInput = true;
     public bool AllowEverything = true;
 
-    private bool IsGrounded = false;
+    //private bool IsGrounded = false;
 
     [HideInInspector] public bool isAirborne;
 
@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         JumpHandler();
 
-        Debug.Log(velocity);
+        //Debug.Log(velocity);
 
     }
 
