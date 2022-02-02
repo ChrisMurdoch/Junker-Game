@@ -8,8 +8,12 @@ public class HookLauncher : MonoBehaviour
 
     public GameObject hook;
     public GameObject hookSpawn;
+    public Transform gunCenter;
 
-    public GameObject WorldPos;
+    [HideInInspector] public GameObject FiredHook;
+    [HideInInspector] public HookProjectile HookScript;
+    [HideInInspector] public Vector3 hitPoint;
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,34 +38,16 @@ public class HookLauncher : MonoBehaviour
 
         mousePos.z = 0;
 
-        Debug.Log(mousePos);
+        gunCenter.transform.LookAt(mousePos, Vector3.right);
 
-        //if(Physics.Raycast(transform.position, mousePos, out RaycastHit hit))
-        //{
-        //    Debug.Log(hit.point);
-        //}
 
-        //Debug.Log(ray.GetPoint(distance));
-
-        WorldPos.transform.position = mousePos;
-
-        hookSpawn.transform.LookAt(mousePos, Vector3.right);
-
-        //hookSpawn.transform.rotation = Quaternion.LookRotation(mousePos);
-        //WorldPos.transform.rotation = Quaternion.LookRotation(mousePos);
-
-        //Debug.Log(Quaternion.LookRotation(mousePos));
-
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && FiredHook == null)
         {
-            GameObject projectile = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
-            //Quaternion.LookRotation(mousePos)
-            //projectile.transform.rotation = Quaternion.LookRotation(ray.direction);
-            //projectile.GetComponent<Rigidbody>().velocity = transform.forward * 10;
-            Destroy(projectile, 10);
+            //GameObject projectile = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
+            FiredHook = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
+            HookScript = FiredHook.GetComponent<HookProjectile>();
+            HookScript.launcher = GetComponent<HookLauncher>();
         }
-
-        ////hookSpawn.transform.LookAt(mousePos);
 
     }
 

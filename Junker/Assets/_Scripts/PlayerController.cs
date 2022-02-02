@@ -28,6 +28,14 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     private float baseStepOffSet;
 
     private bool OnSlope;
+    private HookLauncher launcher;
+
+    private State state;
+
+    private enum State
+    {
+        Normal, Grappling
+    }
 
     [Header("Movement Parameters")] 
     [SerializeField] private float moveSpeed = 3.0f; //Grounded speed
@@ -67,6 +75,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     {
         characterController = GetComponent<CharacterController>();
         baseStepOffSet = characterController.stepOffset;
+        launcher = GetComponent<HookLauncher>();
     }
 
     // Start is called before the first frame update
@@ -78,9 +87,55 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     // Update is called once per frame
     void Update()
     {
+        switch (state)
+        {
+            default:
+            case State.Normal:
+                SlopeCheck();
+                InputHandler();
+                GravityHandler();
+                characterController.Move(velocity * Time.deltaTime);
+                JumpHandler();
+                break;
+            case State.Grappling:
+                HandleHookMovement();
+                JumpHandler();
+                break;
+
+        }
+
+        //Debug.Log(launcher.hitPoint);
+
+        //GroundCheck();
+
+        //SlopeCheck();
+
+
+        //if (CanInput)
+        //{
+        //    InputHandler();
+        //}
+
+        //GravityHandler();
+
+        ////velocity = AdjustMovementToSlope(velocity);
+
+        //characterController.Move(velocity * Time.deltaTime);
+
+        //JumpHandler();
+
+    }
+
+    public void ChangeState(int n)
+    {
+        state = (State)n;
+    }
+
+    private void SlopeCheck()
+    {
         if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
         {
-            if(slopeHit.normal != Vector3.up)
+            if (slopeHit.normal != Vector3.up)
             {
                 OnSlope = true;
             }
@@ -89,26 +144,6 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
                 OnSlope = false;
             }
         }
-
-        //Debug.Log(OnSlope);
-
-        GroundCheck();
-
-        if (CanInput)
-        {
-            InputHandler();
-        }
-
-        GravityHandler();
-
-        //velocity = AdjustMovementToSlope(velocity);
-
-        characterController.Move(velocity * Time.deltaTime);
-
-        JumpHandler();
-
-        //Debug.Log(velocity);
-
     }
 
     private void InputHandler() 
@@ -143,6 +178,8 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
             verticalVelocity = 0;
             verticalVelocity = doubleJumpForce;
             canDoubleJump = false;
+            state = State.Normal;
+            Destroy(launcher.FiredHook);
         }
     }
 
@@ -221,7 +258,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
             if (OnSlope)
             {
-                verticalVelocity = -12;
+                verticalVelocity = -20;
             }
             else
             {
@@ -233,6 +270,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         if (CanSlideOnSlopes && IsSliding && characterController.isGrounded)
         {
+            Debug.Log("Cum");
             velocity += new Vector3(hitPointNormal.x, -hitPointNormal.y, hitPointNormal.z) * slopeSlideSpeed;
         }
 
@@ -267,6 +305,15 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     public void SetVerticalVelocity(float n)
     {
         verticalVelocity = n;
+    }
+
+    private void HandleHookMovement()
+    {
+        Vector3 hookshotDir = (launcher.hitPoint - transform.position).normalized;
+
+        float hookshotSpeed = 50;
+
+        characterController.Move(hookshotDir * hookshotSpeed * Time.deltaTime);
     }
 
 }
