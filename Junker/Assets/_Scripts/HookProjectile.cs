@@ -8,14 +8,14 @@ public class HookProjectile : MonoBehaviour
     private GameObject Player;
 
     [HideInInspector] public HookLauncher launcher;
-
     [HideInInspector] public Vector3 latchPosition;
 
     float distanceTravelled = 0;
-
     Vector3 lastPosition;
 
-    float length = 20;
+    private float hookSpeed;
+    private float returnSpeed;
+    private float maxLength;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +23,7 @@ public class HookProjectile : MonoBehaviour
         lastPosition = transform.position;
 
         rb = GetComponent<Rigidbody>();
-        rb.velocity = transform.forward * 50;
+        rb.velocity = transform.forward * hookSpeed;
 
         Player = FindObjectOfType<PlayerController>().gameObject;
 
@@ -37,14 +37,19 @@ public class HookProjectile : MonoBehaviour
         distanceTravelled += distance;
         lastPosition = transform.position;
 
-        Debug.Log(distanceTravelled);
+        //Debug.Log(distanceTravelled);
 
-        if (distanceTravelled >= length)
+        if (distanceTravelled >= maxLength)
         {
             //rb.velocity = -transform.forward * 50;
             rb.velocity = Vector3.zero;
-            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, 20 * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, returnSpeed * Time.deltaTime);
             Physics.IgnoreCollision(Player.GetComponent<Collider>(), GetComponent<Collider>(), false);
+            GetComponent<Collider>().enabled = false;
+            if(transform.position == Player.transform.position)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -58,20 +63,21 @@ public class HookProjectile : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Environment"))
         {
-            //Debug.Log(collision.gameObject.name);
-            //Player.GetComponent<CharacterController>().enabled = false;
-            //Player.GetComponent<PlayerController>().SetVerticalVelocity(0);
-            //Player.transform.position = collision.GetContact(0).point;
-            //Player.GetComponent<CharacterController>().enabled = true;
             latchPosition = collision.GetContact(0).point;
-            launcher.hitPoint = latchPosition;
+            launcher.HookHitPosition = latchPosition;
             Player.GetComponent<PlayerController>().ChangeState(1);
-            
-
+           
         }
 
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.velocity = Vector2.zero;
+    }
+
+    public void SetHookParameters(float HookSpeed, float ReturnSpeed, float MaxLength)
+    {
+        hookSpeed = HookSpeed;
+        returnSpeed = ReturnSpeed;
+        maxLength = MaxLength;
     }
 
 }

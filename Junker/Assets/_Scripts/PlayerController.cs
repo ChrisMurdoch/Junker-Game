@@ -30,11 +30,14 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     private bool OnSlope;
     private HookLauncher launcher;
 
+    private bool CanHook;
+
     private State state;
+
 
     private enum State
     {
-        Normal, Grappling
+        Normal, Hooking, Clinging
     }
 
     [Header("Movement Parameters")] 
@@ -81,12 +84,13 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     // Start is called before the first frame update
     void Start()
     {
-        
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         switch (state)
         {
             default:
@@ -96,35 +100,43 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
                 GravityHandler();
                 characterController.Move(velocity * Time.deltaTime);
                 JumpHandler();
+                UseHook();
                 break;
-            case State.Grappling:
-                HandleHookMovement();
-                JumpHandler();
+            case State.Hooking:
+                HandleHookPullMovement();
+                break;
+            case State.Clinging:
+                HookClinging();
                 break;
 
         }
 
-        //Debug.Log(launcher.hitPoint);
+        //Debug.Log(velocity);
 
         //GroundCheck();
-
         //SlopeCheck();
-
-
-        //if (CanInput)
-        //{
-        //    InputHandler();
-        //}
-
+        //InputHandler();
         //GravityHandler();
-
         ////velocity = AdjustMovementToSlope(velocity);
-
         //characterController.Move(velocity * Time.deltaTime);
-
         //JumpHandler();
 
     }
+
+    private void UseHook()
+    {
+
+        if (Input.GetMouseButton(1) && CanHook)
+        {
+            launcher.FireHook();
+            CanHook = false;
+        }
+
+        if (characterController.isGrounded && !IsSliding)
+        {
+            CanHook = true;
+        }
+    } 
 
     public void ChangeState(int n)
     {
@@ -159,7 +171,6 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         if (!characterController.isGrounded)
         {
             velocity = (transform.right * xAir) * airSpeed + Vector3.up * verticalVelocity;
-
         }
 
     }
@@ -179,7 +190,6 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
             verticalVelocity = doubleJumpForce;
             canDoubleJump = false;
             state = State.Normal;
-            Destroy(launcher.FiredHook);
         }
     }
 
@@ -236,9 +246,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         if (!characterController.isGrounded) //Adds artifical gravity if the player isn't grounded
         {
             isAirborne = true;
-
             OnSlope = false;
-
             verticalVelocity -= gravity * Time.deltaTime;
 
             if (characterController.collisionFlags == CollisionFlags.Above)
@@ -270,7 +278,6 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         if (CanSlideOnSlopes && IsSliding && characterController.isGrounded)
         {
-            Debug.Log("Cum");
             velocity += new Vector3(hitPointNormal.x, -hitPointNormal.y, hitPointNormal.z) * slopeSlideSpeed;
         }
 
@@ -307,13 +314,63 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         verticalVelocity = n;
     }
 
-    private void HandleHookMovement()
+    private void HandleHookPullMovement()
     {
-        Vector3 hookshotDir = (launcher.hitPoint - transform.position).normalized;
+        canDoubleJump = true;
 
-        float hookshotSpeed = 50;
+        CanHook = false;
+        
+        Vector3 hookshotDir = (launcher.HookHitPosition - transform.position).normalized;
 
-        characterController.Move(hookshotDir * hookshotSpeed * Time.deltaTime);
+        characterController.Move(hookshotDir * launcher.hookPullSpeed * Time.deltaTime);
+
+        float reachedHookHitPosition = 2f;
+
+        if(Vector3.Distance(transform.position, launcher.HookHitPosition) < reachedHookHitPosition)
+        {
+            Debug.Log("Reached Hook Position");
+            //state = State.Clinging;
+            StartCoroutine(ClingDelay());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            verticalVelocity = 0;
+            verticalVelocity = doubleJumpForce;
+            canDoubleJump = false;
+            state = State.Normal;
+            launcher.DestroyActiveHook();
+        }
+
+
     }
+
+    private void HookClinging()
+    {
+        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {
+            launcher.DestroyActiveHook();
+            verticalVelocity = 0;
+            state = State.Normal;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            verticalVelocity = 0;
+            verticalVelocity = doubleJumpForce;
+            canDoubleJump = true;
+            state = State.Normal;
+            launcher.DestroyActiveHook();
+        }
+
+    }
+
+    IEnumerator ClingDelay()
+    {
+        yield return new WaitForSeconds(.1f);
+        state = State.Clinging;
+        yield return null;
+    }
+
 
 }

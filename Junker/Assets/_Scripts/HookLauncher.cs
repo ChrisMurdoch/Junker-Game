@@ -5,26 +5,37 @@ using UnityEngine;
 public class HookLauncher : MonoBehaviour
 {
     private Vector3 mousePos;
+    private Vector3 crossHairPos;
 
     public GameObject hook;
     public GameObject hookSpawn;
-    public Transform gunCenter;
+    public Transform rotationCenter;
 
     [HideInInspector] public GameObject FiredHook;
-    [HideInInspector] public HookProjectile HookScript;
-    [HideInInspector] public Vector3 hitPoint;
+    [HideInInspector] public HookProjectile hookProjectileScript;
+    [HideInInspector] public Vector3 HookHitPosition;
 
+    public float hookSpeed;
+    public float returnSpeed;
+    public float maxLength;
+
+    public float hookPullSpeed;
+
+    public GameObject Crosshair;
+
+    private LineRenderer lr;
+    public Transform[] points;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        lr = GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawLine(transform.position, mousePos, Color.red);
+        //Debug.DrawLine(transform.position, mousePos, Color.red);
 
         Plane plane = new Plane(new Vector3(0, 0, 1), 0);
 
@@ -38,17 +49,51 @@ public class HookLauncher : MonoBehaviour
 
         mousePos.z = 0;
 
-        gunCenter.transform.LookAt(mousePos, Vector3.right);
+        rotationCenter.transform.LookAt(mousePos, Vector3.right);
 
+        Crosshair.transform.position = Input.mousePosition;
 
-        if (Input.GetMouseButtonDown(0) && FiredHook == null)
+        if (FiredHook != null)
         {
-            //GameObject projectile = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
-            FiredHook = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
-            HookScript = FiredHook.GetComponent<HookProjectile>();
-            HookScript.launcher = GetComponent<HookLauncher>();
+            lr.enabled = true;
+            for (int i = 0; i < points.Length; i++)
+            {
+                lr.SetPosition(i, points[i].position);
+            }
+        }
+        else
+        {
+            lr.enabled = false;
         }
 
+
+        //if (Input.GetMouseButtonDown(0) && FiredHook == null)
+        //{
+        //    //GameObject projectile = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
+        //    FiredHook = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
+        //    hookProjectileScript = FiredHook.GetComponent<HookProjectile>();
+        //    hookProjectileScript.launcher = GetComponent<HookLauncher>();
+        //    hookProjectileScript.SetHookParameters(hookSpeed, returnSpeed, maxLength);
+        //}
+
+    }
+
+    public void DestroyActiveHook()
+    {
+        Destroy(FiredHook);
+    }
+
+    public void FireHook()
+    {
+        if (FiredHook == null)
+        {
+            FiredHook = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
+            hookProjectileScript = FiredHook.GetComponent<HookProjectile>();
+            hookProjectileScript.launcher = GetComponent<HookLauncher>();
+            hookProjectileScript.SetHookParameters(hookSpeed, returnSpeed, maxLength);
+            points[1] = FiredHook.transform;
+
+        }
     }
 
     void OnDrawGizmos()
