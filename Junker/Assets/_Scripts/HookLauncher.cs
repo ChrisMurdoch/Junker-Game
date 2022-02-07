@@ -66,16 +66,6 @@ public class HookLauncher : MonoBehaviour
             lr.enabled = false;
         }
 
-
-        //if (Input.GetMouseButtonDown(0) && FiredHook == null)
-        //{
-        //    //GameObject projectile = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
-        //    FiredHook = Instantiate(hook, hookSpawn.transform.position, hookSpawn.transform.rotation);
-        //    hookProjectileScript = FiredHook.GetComponent<HookProjectile>();
-        //    hookProjectileScript.launcher = GetComponent<HookLauncher>();
-        //    hookProjectileScript.SetHookParameters(hookSpeed, returnSpeed, maxLength);
-        //}
-
     }
 
     public void DestroyActiveHook()

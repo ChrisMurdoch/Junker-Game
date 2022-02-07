@@ -328,7 +328,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         if(Vector3.Distance(transform.position, launcher.HookHitPosition) < reachedHookHitPosition)
         {
-            Debug.Log("Reached Hook Position");
+            //Debug.Log("Reached Hook Position");
             //state = State.Clinging;
             StartCoroutine(ClingDelay());
         }

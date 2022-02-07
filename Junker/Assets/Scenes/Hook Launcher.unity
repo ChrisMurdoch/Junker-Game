@@ -773,7 +773,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 240955532}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 14.1, y: 58.7, z: 0}
+  m_LocalPosition: {x: 20.64, y: 61.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1981210558}
@@ -1982,7 +1982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1568058877}
   player: {fileID: 0}
-  FollowSpeed: 3
+  FollowSpeed: 6
   negativeZAxis: -30
   lookDownAmount: 5
   lookUpAmount: 6
@@ -2363,7 +2363,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1552498575}
   m_LocalRotation: {x: -0, y: -0, z: 0.9659257, w: 0.2588196}
-  m_LocalPosition: {x: 31.9, y: 59.4, z: 0}
+  m_LocalPosition: {x: 36.81, y: 62.02, z: 0}
   m_LocalScale: {x: 18.906162, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 1981210558}
