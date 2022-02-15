@@ -7,11 +7,16 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 	/*To use, make an empty Gameobject and add this script and a character controller to it. Add a capsule as a child and remove its collider so you have a visual. Add another empty gameobject
 	as a child and place it near the bottom of the capsule around -.7f on the y axis (This is the GroundCheckPosition. Finally, make a layer called ground or just keep it set to everything.*/
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 =======
 
 
 >>>>>>> Shooting-Mechanics
+=======
+
+
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
 	
     public bool Paused = false; //Relatively unused rn, but they'll come in handy when making player states and such
     public bool CanMove = true;
@@ -20,19 +25,27 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     public bool AllowEverything = true;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     private bool IsGrounded = false;
 =======
     //private bool IsGrounded = false;
 >>>>>>> Shooting-Mechanics
+=======
+    //private bool IsGrounded = false;
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
 
     [HideInInspector] public bool isAirborne;
 
     private bool canDoubleJump = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     
 >>>>>>> Shooting-Mechanics
+=======
+    
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     private CharacterController characterController;
 
     private Vector3 velocity;
@@ -42,7 +55,10 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
     private bool OnSlope;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     private HookLauncher launcher;
 
     private bool CanHook;
@@ -54,7 +70,10 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     {
         Normal, Hooking, Clinging
     }
+<<<<<<< HEAD
 >>>>>>> Shooting-Mechanics
+=======
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
 
     [Header("Movement Parameters")] 
     [SerializeField] private float moveSpeed = 3.0f; //Grounded speed
@@ -95,11 +114,23 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         characterController = GetComponent<CharacterController>();
         baseStepOffSet = characterController.stepOffset;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        launcher = GetComponent<HookLauncher>();
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     }
 
+    #region weapon function
+    //region by John Murphy
+    //This section will contain all that is necessary to make use of the weapon system,
+    //it will keep track of a player component that itself keeps track of the weapons through
+    //the inventory system. This section is meant keep track of that with inverse kinematics
+    //for now it will just do so with simple game objects I will come back to this later when necessary
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
+<<<<<<< HEAD
         
 =======
         launcher = GetComponent<HookLauncher>();
@@ -117,41 +148,77 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     {
         Cursor.visible = false;
 >>>>>>> Shooting-Mechanics
+=======
+        Cursor.visible = false;
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     }
 
     // Update is called once per frame
     void Update()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
+=======
+
+        switch (state)
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
         {
-            if(slopeHit.normal != Vector3.up)
-            {
-                OnSlope = true;
-            }
-            else
-            {
-                OnSlope = false;
-            }
+            default:
+            case State.Normal:
+                SlopeCheck();
+                InputHandler();
+                GravityHandler();
+                characterController.Move(velocity * Time.deltaTime);
+                JumpHandler();
+                UseHook();
+                break;
+            case State.Hooking:
+                HandleHookPullMovement();
+                break;
+            case State.Clinging:
+                HookClinging();
+                break;
+
         }
 
-        //Debug.Log(OnSlope);
+        //Debug.Log(velocity);
 
-        GroundCheck();
+        //GroundCheck();
+        //SlopeCheck();
+        //InputHandler();
+        //GravityHandler();
+        ////velocity = AdjustMovementToSlope(velocity);
+        //characterController.Move(velocity * Time.deltaTime);
+        //JumpHandler();
 
-        if (CanInput)
+    }
+
+    private void UseHook()
+    {
+
+        if (Input.GetMouseButton(1) && CanHook)
         {
-            InputHandler();
+            launcher.FireHook();
+            CanHook = false;
         }
 
-        GravityHandler();
+        if (characterController.isGrounded && !IsSliding)
+        {
+            CanHook = true;
+        }
+    } 
 
-        //velocity = AdjustMovementToSlope(velocity);
+<<<<<<< HEAD
+        
+=======
+    public void ChangeState(int n)
+    {
+        state = (State)n;
+    }
+>>>>>>> 778c56917bff87b7445dfb4b6d9f99540919dc59
 
-        characterController.Move(velocity * Time.deltaTime);
-
-        JumpHandler();
-
+<<<<<<< HEAD
 =======
 
         switch (state)
@@ -210,6 +277,8 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     }
 >>>>>>> 778c56917bff87b7445dfb4b6d9f99540919dc59
 
+=======
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     private void SlopeCheck()
     {
         if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
@@ -223,7 +292,10 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
                 OnSlope = false;
             }
         }
+<<<<<<< HEAD
 >>>>>>> Shooting-Mechanics
+=======
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     }
 
     private void InputHandler() 
@@ -240,9 +312,12 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         {
             velocity = (transform.right * xAir) * airSpeed + Vector3.up * verticalVelocity;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> Shooting-Mechanics
+=======
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
         }
 
     }
@@ -262,9 +337,13 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
             verticalVelocity = doubleJumpForce;
             canDoubleJump = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             state = State.Normal;
 >>>>>>> Shooting-Mechanics
+=======
+            state = State.Normal;
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
         }
     }
 
@@ -322,12 +401,16 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         {
             isAirborne = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
             OnSlope = false;
 
 =======
             OnSlope = false;
 >>>>>>> Shooting-Mechanics
+=======
+            OnSlope = false;
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
             verticalVelocity -= gravity * Time.deltaTime;
 
             if (characterController.collisionFlags == CollisionFlags.Above)
@@ -348,10 +431,14 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
             if (OnSlope)
             {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 verticalVelocity = -12;
 =======
                 verticalVelocity = -20;
 >>>>>>> Shooting-Mechanics
+=======
+                verticalVelocity = -20;
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
             }
             else
             {
@@ -400,7 +487,10 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     private void HandleHookPullMovement()
     {
         canDoubleJump = true;
@@ -460,5 +550,8 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     }
 
 
+<<<<<<< HEAD
 >>>>>>> Shooting-Mechanics
+=======
+>>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
 }
