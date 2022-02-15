@@ -8,8 +8,6 @@ public class CameraFollow : MonoBehaviour
     public GameObject player;
     public float FollowSpeed = 2f;
     public float negativeZAxis = 15f;
-    public float lookDownAmount = 5f;
-    public float lookUpAmount = 6f;
 
     // Start is called before the first frame update
     void Start()
@@ -26,18 +24,16 @@ public class CameraFollow : MonoBehaviour
 
         if (Input.GetKey(KeyCode.S))
         {
-            newPosition.y = target.position.y - lookDownAmount;
+            newPosition.y = target.position.y - 3;
         }
 
         if (Input.GetKey(KeyCode.W))
         {
-            newPosition.y = target.position.y + lookUpAmount;
+            newPosition.y = target.position.y + 5;
         }
 
 
 
         transform.position = Vector3.Lerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
-        //transform.position = newPosition;
-
     }
 }
