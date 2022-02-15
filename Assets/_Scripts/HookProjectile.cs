@@ -11,6 +11,7 @@ public class HookProjectile : MonoBehaviour
     [HideInInspector] public Vector3 latchPosition;
 
     float distanceTravelled = 0;
+    float testvariable;
     Vector3 lastPosition;
 
     private float hookSpeed;

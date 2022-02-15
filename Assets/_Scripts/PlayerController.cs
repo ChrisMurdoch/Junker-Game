@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 {
 	/*To use, make an empty Gameobject and add this script and a character controller to it. Add a capsule as a child and remove its collider so you have a visual. Add another empty gameobject
 	as a child and place it near the bottom of the capsule around -.7f on the y axis (This is the GroundCheckPosition. Finally, make a layer called ground or just keep it set to everything.*/
-	
+
+
 	
     public bool Paused = false; //Relatively unused rn, but they'll come in handy when making player states and such
     public bool CanMove = true;
@@ -14,12 +15,12 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     public bool CanInput = true;
     public bool AllowEverything = true;
 
-    private bool IsGrounded = false;
+    //private bool IsGrounded = false;
 
     [HideInInspector] public bool isAirborne;
 
     private bool canDoubleJump = true;
-
+    
     private CharacterController characterController;
 
     private Vector3 velocity;
@@ -28,6 +29,17 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     private float baseStepOffSet;
 
     private bool OnSlope;
+    private HookLauncher launcher;
+
+    private bool CanHook;
+
+    private State state;
+
+
+    private enum State
+    {
+        Normal, Hooking, Clinging
+    }
 
     [Header("Movement Parameters")] 
     [SerializeField] private float moveSpeed = 3.0f; //Grounded speed
@@ -67,20 +79,87 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     {
         characterController = GetComponent<CharacterController>();
         baseStepOffSet = characterController.stepOffset;
+        launcher = GetComponent<HookLauncher>();
     }
 
+    #region weapon function
+    //region by John Murphy
+    //This section will contain all that is necessary to make use of the weapon system,
+    //it will keep track of a player component that itself keeps track of the weapons through
+    //the inventory system. This section is meant keep track of that with inverse kinematics
+    //for now it will just do so with simple game objects I will come back to this later when necessary
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
-        
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        switch (state)
+        {
+            default:
+            case State.Normal:
+                SlopeCheck();
+                InputHandler();
+                GravityHandler();
+                characterController.Move(velocity * Time.deltaTime);
+                JumpHandler();
+                UseHook();
+                break;
+            case State.Hooking:
+                HandleHookPullMovement();
+                break;
+            case State.Clinging:
+                HookClinging();
+                break;
+
+        }
+
+        //Debug.Log(velocity);
+
+        //GroundCheck();
+        //SlopeCheck();
+        //InputHandler();
+        //GravityHandler();
+        ////velocity = AdjustMovementToSlope(velocity);
+        //characterController.Move(velocity * Time.deltaTime);
+        //JumpHandler();
+
+    }
+
+    private void UseHook()
+    {
+
+        if (Input.GetMouseButton(1) && CanHook)
+        {
+            launcher.FireHook();
+            CanHook = false;
+        }
+
+        if (characterController.isGrounded && !IsSliding)
+        {
+            CanHook = true;
+        }
+    } 
+
+<<<<<<< HEAD
+        
+=======
+    public void ChangeState(int n)
+    {
+        state = (State)n;
+    }
+>>>>>>> 778c56917bff87b7445dfb4b6d9f99540919dc59
+
+    private void SlopeCheck()
+    {
         if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
         {
-            if(slopeHit.normal != Vector3.up)
+            if (slopeHit.normal != Vector3.up)
             {
                 OnSlope = true;
             }
@@ -89,24 +168,6 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
                 OnSlope = false;
             }
         }
-
-        //Debug.Log(OnSlope);
-
-        GroundCheck();
-
-        if (CanInput)
-        {
-            InputHandler();
-        }
-
-        GravityHandler();
-
-        //velocity = AdjustMovementToSlope(velocity);
-
-        characterController.Move(velocity * Time.deltaTime);
-
-        JumpHandler();
-
     }
 
     private void InputHandler() 
@@ -122,7 +183,6 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         if (!characterController.isGrounded)
         {
             velocity = (transform.right * xAir) * airSpeed + Vector3.up * verticalVelocity;
-
         }
 
     }
@@ -141,6 +201,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
             verticalVelocity = 0;
             verticalVelocity = doubleJumpForce;
             canDoubleJump = false;
+            state = State.Normal;
         }
     }
 
@@ -197,9 +258,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         if (!characterController.isGrounded) //Adds artifical gravity if the player isn't grounded
         {
             isAirborne = true;
-
             OnSlope = false;
-
             verticalVelocity -= gravity * Time.deltaTime;
 
             if (characterController.collisionFlags == CollisionFlags.Above)
@@ -219,7 +278,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
             if (OnSlope)
             {
-                verticalVelocity = -12;
+                verticalVelocity = -20;
             }
             else
             {
@@ -266,5 +325,64 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     {
         verticalVelocity = n;
     }
+
+    private void HandleHookPullMovement()
+    {
+        canDoubleJump = true;
+
+        CanHook = false;
+        
+        Vector3 hookshotDir = (launcher.HookHitPosition - transform.position).normalized;
+
+        characterController.Move(hookshotDir * launcher.hookPullSpeed * Time.deltaTime);
+
+        float reachedHookHitPosition = 2f;
+
+        if(Vector3.Distance(transform.position, launcher.HookHitPosition) < reachedHookHitPosition)
+        {
+            //Debug.Log("Reached Hook Position");
+            //state = State.Clinging;
+            StartCoroutine(ClingDelay());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            verticalVelocity = 0;
+            verticalVelocity = doubleJumpForce;
+            canDoubleJump = false;
+            state = State.Normal;
+            launcher.DestroyActiveHook();
+        }
+
+
+    }
+
+    private void HookClinging()
+    {
+        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {
+            launcher.DestroyActiveHook();
+            verticalVelocity = 0;
+            state = State.Normal;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            verticalVelocity = 0;
+            verticalVelocity = doubleJumpForce;
+            canDoubleJump = true;
+            state = State.Normal;
+            launcher.DestroyActiveHook();
+        }
+
+    }
+
+    IEnumerator ClingDelay()
+    {
+        yield return new WaitForSeconds(.1f);
+        state = State.Clinging;
+        yield return null;
+    }
+
 
 }
