@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 {
 	/*To use, make an empty Gameobject and add this script and a character controller to it. Add a capsule as a child and remove its collider so you have a visual. Add another empty gameobject
 	as a child and place it near the bottom of the capsule around -.7f on the y axis (This is the GroundCheckPosition. Finally, make a layer called ground or just keep it set to everything.*/
-	
+
+
 	
     public bool Paused = false; //Relatively unused rn, but they'll come in handy when making player states and such
     public bool CanMove = true;
@@ -19,7 +20,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     [HideInInspector] public bool isAirborne;
 
     private bool canDoubleJump = true;
-
+    
     private CharacterController characterController;
 
     private Vector3 velocity;
@@ -69,6 +70,13 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         baseStepOffSet = characterController.stepOffset;
     }
 
+    #region weapon function
+    //region by John Murphy
+    //This section will contain all that is necessary to make use of the weapon system,
+    //it will keep track of a player component that itself keeps track of the weapons through
+    //the inventory system. This section is meant keep track of that with inverse kinematics
+    //for now it will just do so with simple game objects I will come back to this later when necessary
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
@@ -107,7 +115,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         JumpHandler();
 
-        Debug.Log(velocity);
+        
 
     }
 
