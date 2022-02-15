@@ -19,6 +19,8 @@ public class HookLauncher : MonoBehaviour
     public float returnSpeed;
     public float maxLength;
 
+    float testvariable;
+
     public float hookPullSpeed;
 
     public GameObject Crosshair;
