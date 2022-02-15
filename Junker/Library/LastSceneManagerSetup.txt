@@ -1,5 +1,9 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scenes/Shooting Playground.unity
+=======
+- path: Assets/Scenes/Hook Launcher.unity
+>>>>>>> 778c56917bff87b7445dfb4b6d9f99540919dc59
   isLoaded: 1
   isActive: 1
   isSubScene: 0
