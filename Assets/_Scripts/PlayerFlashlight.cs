@@ -18,7 +18,7 @@ public class PlayerFlashlight : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawLine(flashLightLocation.position, mousePos, Color.red);
+        //Debug.DrawLine(flashLightLocation.position, mousePos, Color.red);
 
         flashLight.transform.LookAt(mousePos);
 

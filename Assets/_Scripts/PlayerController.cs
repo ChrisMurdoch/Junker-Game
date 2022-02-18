@@ -2,50 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour //Lots of this is ripped from my first person character controller but adapted to 2.5D, hell this ended up better than my FPS controller in some areas.
+//Authored by Joshua Hilliard
+
+public class PlayerController : MonoBehaviour 
 {
-	/*To use, make an empty Gameobject and add this script and a character controller to it. Add a capsule as a child and remove its collider so you have a visual. Add another empty gameobject
-	as a child and place it near the bottom of the capsule around -.7f on the y axis (This is the GroundCheckPosition. Finally, make a layer called ground or just keep it set to everything.*/
-<<<<<<< HEAD
-<<<<<<< HEAD
 	
-=======
-
-
->>>>>>> Shooting-Mechanics
-=======
-
-
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
-	
-    public bool Paused = false; //Relatively unused rn, but they'll come in handy when making player states and such
-    public bool CanMove = true;
-    public bool CanJump = true;
-    public bool CanInput = true;
-    public bool AllowEverything = true;
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-    private bool IsGrounded = false;
-=======
-    //private bool IsGrounded = false;
->>>>>>> Shooting-Mechanics
-=======
-    //private bool IsGrounded = false;
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
-
     [HideInInspector] public bool isAirborne;
 
     private bool canDoubleJump = true;
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> Shooting-Mechanics
-=======
-    
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     private CharacterController characterController;
 
     private Vector3 velocity;
@@ -54,46 +19,52 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     private float baseStepOffSet;
 
     private bool OnSlope;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
+
     private HookLauncher launcher;
 
     private bool CanHook;
 
-    private State state;
+    private GameObject PlayerBody;
+
+    [HideInInspector] public bool isCrouching;
+
+    private bool underObject;
+
+    private State state; //A simple state machine to keep track of player states
 
 
     private enum State
     {
         Normal, Hooking, Clinging
+
+        //Normal is normal movement
+        //Hooking is when the hook collides with a wall and beings pulling the player
+        //Clinging is when the player is latching to the wall
     }
-<<<<<<< HEAD
->>>>>>> Shooting-Mechanics
-=======
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
+
 
     [Header("Movement Parameters")] 
     [SerializeField] private float moveSpeed = 3.0f; //Grounded speed
     [SerializeField] private float airSpeed = 4.0f; //Air speed, this should generally be higher that moveSpeed
+    [SerializeField] private float crouchSpeed = 4.0f;
+
 
     [Header("Jumping Parameters")] //For a snappier jump, turn these way up to a ratio of 1:2 ish or double the amount of gravity in the script
     [SerializeField] private float jumpForce = 8.0f;
     [SerializeField] private float doubleJumpForce = 6.0f;
     [SerializeField] private float gravity = 30.0f;
 
-    [Header("Slope Parameters")] //Unimplemented slope slide stuff
+    [Header("Slope Parameters")]
     [SerializeField] private float slopeSlideSpeed = 8.0f;
     [SerializeField] private bool CanSlideOnSlopes = true;
 
-    [Header("Other Parameters")]
-    [SerializeField] private LayerMask WhatIsGround; //Make a layer called ground or something and apply it to anything you want to jump off of. You can also set this to everything to jump off anything really
-    [SerializeField] public Transform GroundCheckPosition; //Make an empty gameobject and put it somewhere near the charactercontroller's bottom.
+    //[Header("Other Parameters")]
+    //[SerializeField] private LayerMask WhatIsGround; 
+    //[SerializeField] public Transform GroundCheckPosition; 
 
     private Vector3 hitPointNormal;
-    private bool IsSliding
+
+    private bool IsSliding //A bool that returns the angle of a slope if it exceeds the CharacterControllers slope limit
     {
         get
         {
@@ -111,63 +82,29 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
     private void Awake()
     {
+        PlayerBody = transform.Find("Player Body").gameObject;
         characterController = GetComponent<CharacterController>();
         baseStepOffSet = characterController.stepOffset;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        launcher = GetComponent<HookLauncher>();
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
-    }
-
-    #region weapon function
-    //region by John Murphy
-    //This section will contain all that is necessary to make use of the weapon system,
-    //it will keep track of a player component that itself keeps track of the weapons through
-    //the inventory system. This section is meant keep track of that with inverse kinematics
-    //for now it will just do so with simple game objects I will come back to this later when necessary
-    #endregion
-    // Start is called before the first frame update
-    void Start()
-    {
-<<<<<<< HEAD
-        
-=======
         launcher = GetComponent<HookLauncher>();
     }
 
-    #region weapon function
-    //region by John Murphy
-    //This section will contain all that is necessary to make use of the weapon system,
-    //it will keep track of a player component that itself keeps track of the weapons through
-    //the inventory system. This section is meant keep track of that with inverse kinematics
-    //for now it will just do so with simple game objects I will come back to this later when necessary
-    #endregion
     // Start is called before the first frame update
     void Start()
     {
         Cursor.visible = false;
->>>>>>> Shooting-Mechanics
-=======
-        Cursor.visible = false;
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
+
     }
 
     // Update is called once per frame
     void Update()
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
-=======
-
         switch (state)
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
         {
             default:
             case State.Normal:
                 SlopeCheck();
                 InputHandler();
+                Crouch();
                 GravityHandler();
                 characterController.Move(velocity * Time.deltaTime);
                 JumpHandler();
@@ -182,22 +119,11 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         }
 
-        //Debug.Log(velocity);
-
-        //GroundCheck();
-        //SlopeCheck();
-        //InputHandler();
-        //GravityHandler();
-        ////velocity = AdjustMovementToSlope(velocity);
-        //characterController.Move(velocity * Time.deltaTime);
-        //JumpHandler();
-
     }
 
     private void UseHook()
     {
-
-        if (Input.GetMouseButton(1) && CanHook)
+        if (Input.GetMouseButton(1) && CanHook) //Right mouse buttons throws the hook
         {
             launcher.FireHook();
             CanHook = false;
@@ -209,77 +135,12 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         }
     } 
 
-<<<<<<< HEAD
-        
-=======
-    public void ChangeState(int n)
+    public void ChangeState(int n) //A public method to allow other scripts to change the players state
     {
         state = (State)n;
     }
->>>>>>> 778c56917bff87b7445dfb4b6d9f99540919dc59
 
-<<<<<<< HEAD
-=======
-
-        switch (state)
-        {
-            default:
-            case State.Normal:
-                SlopeCheck();
-                InputHandler();
-                GravityHandler();
-                characterController.Move(velocity * Time.deltaTime);
-                JumpHandler();
-                UseHook();
-                break;
-            case State.Hooking:
-                HandleHookPullMovement();
-                break;
-            case State.Clinging:
-                HookClinging();
-                break;
-
-        }
-
-        //Debug.Log(velocity);
-
-        //GroundCheck();
-        //SlopeCheck();
-        //InputHandler();
-        //GravityHandler();
-        ////velocity = AdjustMovementToSlope(velocity);
-        //characterController.Move(velocity * Time.deltaTime);
-        //JumpHandler();
-
-    }
-
-    private void UseHook()
-    {
-
-        if (Input.GetMouseButton(1) && CanHook)
-        {
-            launcher.FireHook();
-            CanHook = false;
-        }
-
-        if (characterController.isGrounded && !IsSliding)
-        {
-            CanHook = true;
-        }
-    } 
-
-<<<<<<< HEAD
-        
-=======
-    public void ChangeState(int n)
-    {
-        state = (State)n;
-    }
->>>>>>> 778c56917bff87b7445dfb4b6d9f99540919dc59
-
-=======
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
-    private void SlopeCheck()
+    private void SlopeCheck() //A check to see if the player is standing on a slope
     {
         if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
         {
@@ -292,32 +153,78 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
                 OnSlope = false;
             }
         }
-<<<<<<< HEAD
->>>>>>> Shooting-Mechanics
-=======
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
     }
 
-    private void InputHandler() 
+    private void Crouch()
     {
-        float x = Input.GetAxisRaw("Horizontal"); //A & D //Gets input of either -1 or 1 so you can turn on a dime
-        float xAir = Input.GetAxis("Horizontal"); //A & D //Basically "air resistance" adds a ramp up to moving in air
+        if (Input.GetKey(KeyCode.C))
+        {
+            isCrouching = true;
+            PlayerBody.transform.localScale = new Vector3(1, .5f, 1);
+            characterController.height = 1;
+            characterController.center = new Vector3(0, -.5f, 0);
+            PlayerBody.transform.localPosition = characterController.center;
+            if (Physics.Raycast(transform.position, Vector3.up, out RaycastHit hit, 1))
+            {
+                underObject = true;
+            }
+            else
+            {
+                underObject = false;
+            }
+        }
+        else if(underObject == true)
+        {
+            isCrouching = true;
+            PlayerBody.transform.localScale = new Vector3(1, .5f, 1);
+            characterController.height = 1;
+            characterController.center = new Vector3(0, -.5f, 0);
+            PlayerBody.transform.localPosition = characterController.center;
+
+            if (Physics.Raycast(transform.position, Vector3.up, out RaycastHit hit, 1))
+            {
+                underObject = true;
+            }
+            else
+            {
+                underObject = false;
+            }
+        }
+        else
+        {
+            isCrouching = false;
+            PlayerBody.transform.localScale = new Vector3(1, 1, 1);
+            characterController.height = 2;
+            characterController.center = new Vector3(0, 0, 0);
+            PlayerBody.transform.localPosition = characterController.center;
+        }
+    }
+
+    private void InputHandler() //Gets the input of the "Horizontal Axis" or keys A & D.
+    {
+        float x = Input.GetAxisRaw("Horizontal"); //is equal to -1 if pressing A, 1 if pressing D, or 0 if pressing neither
+        float xAir = Input.GetAxis("Horizontal"); //Same as above but ramps to -1 or 1.
 
         if (characterController.isGrounded)
         {
-            velocity = (transform.right * x) * moveSpeed + Vector3.up * verticalVelocity;
+            if (!isCrouching)
+            {
+                velocity = (transform.right * x) * moveSpeed + Vector3.up * verticalVelocity;
+                // A Vector3 used with charactercontroller.move()
+                //Transform.right is shorthand for the X axis of the gameobject * x which is either -1, 0, or 1, then multiplied by the movespeed
+                //Vector3.up * verticalVelocity is gravity and jump height, with Vector3.up being short for Vector3(0,1,0)
+            }
+            else if (isCrouching)
+            {
+                velocity = (transform.right * x) * crouchSpeed + Vector3.up * verticalVelocity;
+
+            }
         }
 
         if (!characterController.isGrounded)
         {
             velocity = (transform.right * xAir) * airSpeed + Vector3.up * verticalVelocity;
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> Shooting-Mechanics
-=======
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
         }
 
     }
@@ -325,69 +232,23 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     private void JumpHandler()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded && !IsSliding)
+        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded && !IsSliding) //If player is grounded and not sliding, verticalVelocity becomes the jumpforce
         {
             verticalVelocity = 0;
             verticalVelocity = jumpForce;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true)
+        if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true) //If player is not grounded, then they can double jump
         {
             verticalVelocity = 0;
             verticalVelocity = doubleJumpForce;
             canDoubleJump = false;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-            state = State.Normal;
->>>>>>> Shooting-Mechanics
-=======
-            state = State.Normal;
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
+            state = State.Normal; //Allows jumping out of the Hooking state
+
         }
     }
 
-    //I have finally wrangled charactercontroller.isgrounded and it functions pretty well now. Keeping this method just in case
-    private void GroundCheck() //Has three different ways to check if the player is grounded because charactercontroller.isgrounded gives me conniptions and I'm not using it anymore
-    {                                                                                                                
-        //RaycastHit hit;
-        //if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.5f))
-        //{
-        //    Debug.Log("Grounded");
-        //    IsGrounded = true;
-        //}
-        //else
-        //{
-        //    Debug.Log("Not Grounded");
-        //    IsGrounded = false;
-        //}
-
-        //if (Physics.CheckSphere(GroundCheckPosition.position, .45f, WhatIsGround)) //CheckSphere probably works the best
-        //{
-        //    //Debug.Log("Grounded");
-        //    IsGrounded = true;
-        //    canDoubleJump = true;
-
-        //}
-        //else
-        //{
-        //    //Debug.Log("Not Grounded");
-        //    IsGrounded = false;
-        //}
-
-        //if (Physics.CheckBox(GroundCheckPosition.position, new Vector3(.7f, .1f, .7f), Quaternion.identity, WhatIsGround)) 
-        //{
-        //    //Debug.Log("Grounded");
-        //    IsGrounded = true;
-        //}
-        //else
-        //{
-        //    //Debug.Log("Not Grounded");
-        //    IsGrounded = false;
-        //}
-
-    }
-
+ 
     void OnDrawGizmos() //Visualizes CheckSphere and CheckBox
     {
         Gizmos.color = Color.red;
@@ -399,21 +260,10 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
     {
         if (!characterController.isGrounded) //Adds artifical gravity if the player isn't grounded
         {
-            isAirborne = true;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-            OnSlope = false;
-
-=======
-            OnSlope = false;
->>>>>>> Shooting-Mechanics
-=======
-            OnSlope = false;
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
+            OnSlope = false; //Can't be on a slope if they're not grounded
             verticalVelocity -= gravity * Time.deltaTime;
 
-            if (characterController.collisionFlags == CollisionFlags.Above)
+            if (characterController.collisionFlags == CollisionFlags.Above) //If player hits a ceiling, stop adding upward velocity
             {
                 verticalVelocity = 0;                //Stop adding any more velocity.
                 characterController.stepOffset = 0;                 //Set stepOffset to zero to prevent player moving and sticking to the ceiling.
@@ -422,7 +272,7 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         }
         else if (characterController.isGrounded && verticalVelocity < 0 && !IsSliding)
         {
-            canDoubleJump = true;
+            canDoubleJump = true; //Resets double jump when grounded
             if (characterController.stepOffset == 0) //Resets stepOffset back to the base.
             {
                 characterController.stepOffset = baseStepOffSet;
@@ -430,22 +280,15 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
             if (OnSlope)
             {
-<<<<<<< HEAD
-<<<<<<< HEAD
-                verticalVelocity = -12;
-=======
-                verticalVelocity = -20;
->>>>>>> Shooting-Mechanics
-=======
-                verticalVelocity = -20;
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
+
+                verticalVelocity = -20; //Helps player stick to slopes
+
             }
             else
             {
                 verticalVelocity = -1; //Keep this at -1. Basically resets gravity when grounded.
             }
 
-            //verticalVelocity = -1; //Keep this at -1. Basically resets gravity when grounded.
         }
 
         if (CanSlideOnSlopes && IsSliding && characterController.isGrounded)
@@ -453,44 +296,16 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
             velocity += new Vector3(hitPointNormal.x, -hitPointNormal.y, hitPointNormal.z) * slopeSlideSpeed;
         }
 
-        if (characterController.isGrounded)
-        {
-            isAirborne = false;
-        }
-
 
     }
 
-    private Vector3 AdjustMovementToSlope(Vector3 velocity) //Allows sticking to slopes
-    {
-        var ray = new Ray(transform.position, Vector3.down);
-
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1.5f))
-        {
-            var slopeRotation = Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-            var adjustedVelocity = slopeRotation * velocity;
-            //Debug.Log(adjustedVelocity);
-
-            if (adjustedVelocity.y < -1 && characterController.isGrounded)
-            {
-                return adjustedVelocity;
-            }
-
-        }
-
-        return velocity;
-    }
-
-    public void SetVerticalVelocity(float n)
+    public void SetVerticalVelocity(float n) //Public method to allow changing player's vertical velocity from other scripts
     {
         verticalVelocity = n;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
+    //NOTE: All hook stuff is a mess that communicates with 2 other scripts. It works but needs refactoring.
+
     private void HandleHookPullMovement()
     {
         canDoubleJump = true;
@@ -505,8 +320,6 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
 
         if(Vector3.Distance(transform.position, launcher.HookHitPosition) < reachedHookHitPosition)
         {
-            //Debug.Log("Reached Hook Position");
-            //state = State.Clinging;
             StartCoroutine(ClingDelay());
         }
 
@@ -549,9 +362,4 @@ public class PlayerController : MonoBehaviour //Lots of this is ripped from my f
         yield return null;
     }
 
-
-<<<<<<< HEAD
->>>>>>> Shooting-Mechanics
-=======
->>>>>>> f5fc99e6480bed4178da6ba778b9bad0b866db60
 }

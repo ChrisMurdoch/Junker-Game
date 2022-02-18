@@ -6,8 +6,8 @@ public class CameraFollow : MonoBehaviour
 {
     public Transform target;
     public GameObject player;
-    public float FollowSpeed = 2f;
-    public float negativeZAxis = 15f;
+    public float FollowSpeed = 7f;
+    public float negativeZAxis = -30f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +21,12 @@ public class CameraFollow : MonoBehaviour
         Vector3 newPosition = target.position;
         newPosition.z = negativeZAxis;
         newPosition.y = target.position.y + 2.5f;
+
+        if (player.GetComponent<PlayerController>().isCrouching)
+        {
+            newPosition.y = target.position.y;
+
+        }
 
         if (Input.GetKey(KeyCode.S))
         {
