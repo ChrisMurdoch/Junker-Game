@@ -39,7 +39,7 @@ public class TurretEnemy : EnemyBase
         //Debug.DrawLine(turretHead.position, turretHead.forward, Color.red);
         Debug.DrawRay(turretHead.position, turretHead.forward * range, Color.red);
 
-        if (distanceFromPlayer <= 20)
+        if (distanceFromPlayer <= range)
         {
             if (Physics.Raycast(turretHead.position, turretLookDir, out hit, range))
             {
@@ -79,7 +79,7 @@ public class TurretEnemy : EnemyBase
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        //Gizmos.DrawWireSphere(turretHead.position, 20);
+        //Gizmos.DrawWireSphere(turretHead.position, range);
     }
 
     private void Aim()
