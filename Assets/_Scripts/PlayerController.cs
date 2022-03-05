@@ -9,6 +9,11 @@ public class PlayerController : MonoBehaviour
 	
     [HideInInspector] public bool isAirborne;
 
+    public inventoryManager inventory; //reference to inventory script / canvas
+    public KeyCode interactKey; // ex. "e", "Tab", "Mouse 0"
+    private bool inPickupRange;
+    private GameObject currPickup; //holds the pickup we were last in range of
+
     private bool canDoubleJump = true;
 
     private CharacterController characterController;
@@ -92,6 +97,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
+        inPickupRange = false;
 
     }
 
@@ -119,6 +125,27 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        if(inPickupRange && Input.GetKeyDown(interactKey)) {
+            bool weaponPickup = false;
+            if(currPickup.GetComponent<Weapon>() != null)
+                weaponPickup = true;
+            inventory.PickUpItem(currPickup, weaponPickup);
+            inPickupRange = false;
+        }
+
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if(other.gameObject.tag == "Pickups") {
+            inPickupRange = true;
+            currPickup = other.gameObject;
+        }
+
+    }
+
+    void OnTriggerExit(Collider other) {
+        if(other.gameObject == currPickup)
+            inPickupRange = false;
     }
 
     private void UseHook()

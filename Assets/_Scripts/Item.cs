@@ -5,11 +5,12 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
 
+    [SerializeField]
     private Vector2 gridShape; //format (width, height) measured in grid squares
 
     
-    private string itemName; //name of item
-    private string desc; //item description
+    public string itemName; //name of item
+    public string desc; //item description
 
 
     public float moneyValue; //how much money you get from selling item
@@ -25,21 +26,20 @@ public class Item : MonoBehaviour
         return new Vector2 (gridShape.x, gridShape.y);
     }
 
+    public void DestroyPickup() {
+        Destroy(this.gameObject);
+    }
+
 #region Properties
-
-   public string ItemName {
-       get {return itemName; }
-       set {itemName = value; }
-   }
-
-   public string Desc {
-       get {return desc; }
-       set {desc = value; }
-   }
 
    public bool Stackable {
        get {return stackable; }
        set {stackable = value; }
+   }
+
+   public Vector2 GridPosition {
+       get {return gridPosition; }
+       set {gridPosition = value; }
    }
 
 
