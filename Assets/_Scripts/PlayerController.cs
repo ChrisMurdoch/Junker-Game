@@ -39,6 +39,9 @@ public class PlayerController : MonoBehaviour
 
     private State state; //A simple state machine to keep track of player states
 
+    Vector3 impact = Vector3.zero;
+    float mass = 3.0F; // defines the character mass for adding impacts
+
 
     private enum State
     {
@@ -56,11 +59,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float crouchSpeed = 4.0f;
     [SerializeField] private float wallSlideSpeed = 4.0f;
 
-
-
     [Header("Jumping Parameters")] //For a snappier jump, turn these way up to a ratio of 1:2 ish or double the amount of gravity in the script
     [SerializeField] private float jumpForce = 8.0f;
     [SerializeField] private float doubleJumpForce = 6.0f;
+    [SerializeField] private float WallJumpForce = 6.0f;
+    [SerializeField] private float WallJumpPropulsion = 75.0f;
     [SerializeField] private float gravity = 30.0f;
 
     [Header("Slope Parameters")]
@@ -109,6 +112,7 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log(isWallSliding);
         //Debug.Log(velocity);
+        Debug.Log(impact);
 
         switch (state)
         {
@@ -120,6 +124,7 @@ public class PlayerController : MonoBehaviour
                 WallSlide();
                 GravityHandler();
                 characterController.Move(velocity * Time.deltaTime);
+                WallJump();
                 JumpHandler();
                 UseHook();
                 break;
@@ -132,6 +137,12 @@ public class PlayerController : MonoBehaviour
 
         }
 
+    }
+
+    public void AddImpact(Vector3 dir, float force) //Allows adding "force" with a character controller
+    {
+        dir.Normalize();
+        impact += dir.normalized * force / mass;
     }
 
     private void UseHook()
@@ -217,13 +228,18 @@ public class PlayerController : MonoBehaviour
 
     private void WallSlide()
     {
-        if(characterController.collisionFlags == CollisionFlags.Sides && !characterController.isGrounded && verticalVelocity <= 0)
-        {
-            //Debug.Log("Hit Wall");
-            //isWallSliding = true;
-            //verticalVelocity = -wallSlideSpeed;
-        }
-        else
+        //if(characterController.collisionFlags == CollisionFlags.Sides && !characterController.isGrounded && verticalVelocity <= 0)
+        //{
+        //    //Debug.Log("Hit Wall");
+        //    //isWallSliding = true;
+        //    //verticalVelocity = -wallSlideSpeed;
+        //}
+        //else
+        //{
+        //    isWallSliding = false;
+        //}
+
+        if(characterController.isGrounded || characterController.collisionFlags != CollisionFlags.Sides)
         {
             isWallSliding = false;
         }
@@ -236,6 +252,7 @@ public class PlayerController : MonoBehaviour
             wallHit = hit;
             isWallSliding = true;
             verticalVelocity = -wallSlideSpeed;
+
         }
         else
         {
@@ -273,6 +290,23 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void WallJump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isWallSliding)
+        {
+            verticalVelocity = 0;
+            verticalVelocity = WallJumpForce;
+            AddImpact(wallHit.normal, WallJumpPropulsion);
+        }
+
+        if (impact.magnitude > 0.2f)
+        {
+            characterController.Move(impact * Time.deltaTime);
+        }
+
+        impact = Vector3.Lerp(impact, Vector3.zero, 7 * Time.deltaTime);
+    }
+
     private void JumpHandler()
     {
 
@@ -290,11 +324,12 @@ public class PlayerController : MonoBehaviour
             state = State.Normal; //Allows jumping out of the Hooking state
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && isWallSliding)
-        {
-            verticalVelocity = 0;
-            verticalVelocity = jumpForce;
-        }
+        //if(Input.GetKeyDown(KeyCode.Space) && isWallSliding)
+        //{
+        //    verticalVelocity = 0;
+        //    verticalVelocity = WallJumpForce;
+        //    AddImpact(wallHit.normal, WallJumpPropulsion);
+        //}
 
     }
 

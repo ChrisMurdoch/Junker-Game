@@ -3099,6 +3099,8 @@ MonoBehaviour:
   wallSlideSpeed: 4
   jumpForce: 20
   doubleJumpForce: 25
+  WallJumpForce: 20
+  WallJumpPropulsion: 100
   gravity: 60
   slopeSlideSpeed: 8
   CanSlideOnSlopes: 1
