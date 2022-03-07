@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
@@ -15,10 +16,12 @@ public class Item : MonoBehaviour
 
     public float moneyValue; //how much money you get from selling item
     public float scrapValue; //how much scrap you get from scrapping item
+    public Image invImage; //image of the item used for inventory
 
     private bool stackable; //whether item can stack together in inventory grid
-
     private Vector2 gridPosition; //pos of top-left corner in inv grid
+    private Vector2 gridSquareSize; //hold size of each grid square after calculation
+    private Vector2 gridoffsetSize; //size of x and y offsets on grid
 
 
 
@@ -28,6 +31,14 @@ public class Item : MonoBehaviour
 
     public void DestroyPickup() {
         Destroy(this.gameObject);
+    }
+
+    public void CreateInvObject() {
+        
+    }
+
+    private Image CreateInvBackground() {
+        
     }
 
 #region Properties
@@ -42,7 +53,10 @@ public class Item : MonoBehaviour
        set {gridPosition = value; }
    }
 
-
+   public Vector2 GridSquareSize {
+       get {return gridSquareSize; }
+       set {gridSquareSize = value; }
+   }
 
 #endregion
 }

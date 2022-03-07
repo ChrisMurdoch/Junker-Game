@@ -16,7 +16,6 @@ public class inventoryManager : MonoBehaviour
 
 
     public GameObject gridArea; //background of grid (the whole area it takes up)
-    public GameObject gridSquarePrefab; //prefab of 1 grid square
     public Vector2 totalGridSpace; //(columns, rows)
 
     public Text scrapCountText;
@@ -26,12 +25,14 @@ public class inventoryManager : MonoBehaviour
     public static bool invScreenActive = false; //whether inventory screen is active
     public GameObject invScreenUI; //holds inventory screen panel
 
-    private GameObject[,] gridSquares; //holds each grid square's rect transform after instantiated
+    public GameObject[,] gridSquares; //holds each grid square's rect transform after instantiated
 
     public GameObject Player;
+    float canvasScaleFactor;
 
     void Start() {
         gridSquares = new GameObject[(int)totalGridSpace.x, (int)totalGridSpace.y]; //declare gridSquares array to correct size 
+        canvasScaleFactor = this.GetComponent<CanvasScaler>().scaleFactor;
         InstantiateGrid();
         items = new List<GameObject>();
         itemAmts = new List<int>();
@@ -97,11 +98,27 @@ public class inventoryManager : MonoBehaviour
 
         //get pixel width & height for grid area
         RectTransform gridRectTransform = gridArea.GetComponent<RectTransform>();
-  
 
-        // get width & height of grid squares as % so we can draw using anchor min / max
-        float squareWidthPercent = 1/totalGridSpace.x;
-        float squareHeightPercent = 1/totalGridSpace.y;
+        // get width & height of grid squares
+        float squareWidth = gridRectTransform.sizeDelta.x/(totalGridSpace.x + 1); //divide width
+        float squareHeight = gridRectTransform.sizeDelta.y/(totalGridSpace.y + 1); //divide height
+
+        // put width & height in world measurement units
+        float gridWorldWidth = gridRectTransform.sizeDelta.x * canvasScaleFactor;
+        float gridWorldHeight = gridRectTransform.sizeDelta.y * canvasScaleFactor;
+        float squareWidthWorld = squareWidth * canvasScaleFactor;
+        float squareHeightWorld = squareHeight * canvasScaleFactor;
+
+        //get world pos of grid area's topLeft corner
+        Vector2 bottomLeft = new Vector2(gridArea.transform.position.x - (gridWorldWidth / 2f), gridArea.transform.localPosition.y - (gridWorldHeight / 2f)); 
+
+        //get x and y offset in world units
+        float squareWidthOffset = squareWidth / (totalGridSpace.x + 1); //how much space between squares in x direction
+        float squareHeightOffset = squareHeight / (totalGridSpace.y + 1); //how much space between squares in y direction
+        float offsetWorldX = squareWidthOffset * canvasScaleFactor; //offset in x direction in world space
+        float offsetWorldY = squareHeightOffset * canvasScaleFactor; //offset in y direction in world space
+
+
 
         //create grid square with desired components
         GameObject gridSquareOrig = new GameObject();
@@ -110,8 +127,16 @@ public class inventoryManager : MonoBehaviour
         gridSquareOrig.AddComponent<Image>();
 
         GameObject newGridSquare;
-        Vector2 squareAnchorMin = new Vector2(0, 0);
-        Vector2 squareAnchorMax = new Vector2(squareWidthPercent, squareHeightPercent);
+        gridSquareOrig.GetComponent<RectTransform>().anchorMin = new Vector2(0f, 0f); //anchor min/max stay in the center of grid area
+        gridSquareOrig.GetComponent<RectTransform>().anchorMax = gridSquareOrig.GetComponent<RectTransform>().anchorMin;
+        gridSquareOrig.GetComponent<RectTransform>().sizeDelta = new Vector2(squareWidth, squareHeight);
+
+        //calculate first grid square's position in world space
+        //Vector3 gridSquarePos = new Vector3(gridArea.transform.position.x + offsetWorldX + (squareWidthWorld / 2), gridArea.transform.position.y + (offsetWorldY) + (squareHeightWorld / 2), gridArea.transform.position.z);
+        Vector3 gridSquarePos = new Vector3( -(gridRectTransform.sizeDelta.x/2) + offsetWorldX + (squareWidthWorld / 2), -(gridRectTransform.sizeDelta.y/2) + offsetWorldY + (squareHeightWorld / 2));
+        Debug.Log("(" + gridSquarePos.x + ", " + gridSquarePos.y + ", " + gridSquarePos.z + ")");
+        float resetXPos = -(gridRectTransform.sizeDelta.x / 2) + offsetWorldX + (squareWidthWorld / 2);
+
 
         //variables for adding grid squares to array
         int currentX = 0;
@@ -121,18 +146,16 @@ public class inventoryManager : MonoBehaviour
             for (int j = 0; j < totalGridSpace.x; j++) {
 
                 //instantiate & set common components
-                newGridSquare = Instantiate(gridSquareOrig, gridArea.transform); //instantiate with grid area's transform
+                newGridSquare = Instantiate(gridSquareOrig, gridArea.transform); //instantiate grid square
+
+
                 newGridSquare.name = "Grid Square";
-                newGridSquare.GetComponent<Image>().color = new Color(1f, 1f, 1f, .5f);
+                newGridSquare.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.2f);
+                newGridSquare.transform.localPosition = gridSquarePos;
 
-                //draw square in correct position using anchor min & max
-                newGridSquare. GetComponent<RectTransform>().anchorMin = squareAnchorMin;
-                newGridSquare.GetComponent<RectTransform>().anchorMax = squareAnchorMax;
-                newGridSquare.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
 
-                //update x values for next square in row
-                squareAnchorMin.x = squareAnchorMax.x; //next square immediately next to this one (no offset)
-                squareAnchorMax.x += squareWidthPercent;
+                //update x value for next square in row
+                gridSquarePos.x += offsetWorldX + squareWidthWorld;
 
                 //add to array & move to next array space in row
                 gridSquares[currentX,currentY]= newGridSquare;
@@ -140,13 +163,11 @@ public class inventoryManager : MonoBehaviour
 
             }
 
-             //reset x values
-             squareAnchorMin.x = 0;
-             squareAnchorMax.x = squareWidthPercent;
+             //reset x value
+             gridSquarePos.x = resetXPos;
                 
-            //update y values for next row
-            squareAnchorMin.y = squareAnchorMax.y; //next row immediately below prev (no offset)
-            squareAnchorMax.y += squareHeightPercent;
+            //update y value for next row
+            gridSquarePos.y += squareHeightWorld + offsetWorldY;
 
             //move to next array row
             currentX = 0;
@@ -201,6 +222,7 @@ public class inventoryManager : MonoBehaviour
         }
         // else, open inventory menu and show in separate box
         //allow player to manually move / scrap items, or drop pickup
+        itemObject.tag = "invItem";
         item.DestroyPickup();
     }
 
