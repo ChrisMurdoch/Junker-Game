@@ -13,7 +13,7 @@ public class TurretEnemy : EnemyBase
     [SerializeField] private float range = 20;
 
     [SerializeField] private float fireRate = 2;
-    [SerializeField] private float fireTimer;
+    private float fireTimer;
 
     private float distanceFromPlayer;
 
