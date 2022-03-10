@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-//Authored by Pain and Suffering
 public class TurretEnemy : EnemyBase
 {
     public Transform Player;
@@ -23,6 +22,14 @@ public class TurretEnemy : EnemyBase
     [SerializeField] private GameObject Projectile;
     [SerializeField] private Transform ProjectileSpawn;
 
+    private enum State
+    {
+        Idle,
+        Attacking,
+    }
+
+    private State currentState = State.Idle;
+    
 
     private void Start()
     {
@@ -32,22 +39,91 @@ public class TurretEnemy : EnemyBase
 
     private void Update()
     {
+        switch (currentState)
+        {
+            case State.Idle:
+                IdleState();
+                break;
+            case State.Attacking:
+                AttackingState();
+                break;
+        }
+
+
+
         distanceFromPlayer = Vector3.Distance(Player.position, turretHead.position);
-        Vector3 turretLookDir = Player.position - turretHead.position;
-        RaycastHit hit;
+        //Vector3 turretLookDir = Player.position - turretHead.position;
+        //RaycastHit hit;
 
-        //Debug.DrawLine(turretHead.position, turretHead.forward, Color.red);
-        Debug.DrawRay(turretHead.position, turretHead.forward * range, Color.red);
+        ////Debug.DrawLine(turretHead.position, turretHead.forward, Color.red);
+        //Debug.DrawRay(turretHead.position, turretHead.forward * range, Color.red);
 
+        //if (distanceFromPlayer <= range)
+        //{
+        //    if (Physics.Raycast(turretHead.position, turretLookDir, out hit, range))
+        //    {
+
+        //        if (hit.transform.CompareTag("Player"))
+        //        {
+        //            Aim();
+        //            Shoot();
+        //            LockOnTimer = LockOnLength;
+        //        }
+
+
+        //        if (!hit.transform.CompareTag("Player"))
+        //        {
+        //            LockOnTimer -= Time.deltaTime;
+        //            if(LockOnTimer <= 0)
+        //            {
+        //                ReturnToNormal();
+        //            }
+        //            else
+        //            {
+        //                Shoot();
+        //                Aim();
+        //            }
+        //        }
+        //    }
+
+        //}
+        //else
+        //{
+        //    fireTimer = fireRate;
+        //    ReturnToNormal();
+        //}
+
+    }
+
+    private void IdleState()
+    {
+        ReturnToNormal();
         if (distanceFromPlayer <= range)
         {
-            if (Physics.Raycast(turretHead.position, turretLookDir, out hit, range))
+            Vector3 turretLookDir = Player.position - turretHead.position;
+            if (Physics.Raycast(turretHead.position, turretLookDir, out RaycastHit hit, range))
+            {
+                if (hit.transform.CompareTag("Player"))
+                {
+                    currentState = State.Attacking;
+                }
+            }
+        }
+    }
+
+    private void AttackingState()
+    {
+        Aim();
+        Shoot();
+
+        Vector3 turretLookDir = Player.position - turretHead.position;
+        if (distanceFromPlayer <= range)
+        {
+            if (Physics.Raycast(turretHead.position, turretLookDir, out RaycastHit hit, range))
             {
 
                 if (hit.transform.CompareTag("Player"))
                 {
-                    Aim();
-                    Shoot();
                     LockOnTimer = LockOnLength;
                 }
 
@@ -55,14 +131,10 @@ public class TurretEnemy : EnemyBase
                 if (!hit.transform.CompareTag("Player"))
                 {
                     LockOnTimer -= Time.deltaTime;
-                    if(LockOnTimer <= 0)
+                    if (LockOnTimer <= 0)
                     {
-                        ReturnToNormal();
-                    }
-                    else
-                    {
-                        Shoot();
-                        Aim();
+                        currentState = State.Idle;
+                        fireTimer = fireRate;
                     }
                 }
             }
@@ -71,9 +143,8 @@ public class TurretEnemy : EnemyBase
         else
         {
             fireTimer = fireRate;
-            ReturnToNormal();
+            currentState = State.Idle;
         }
-
     }
 
     private void OnDrawGizmos()
@@ -97,6 +168,7 @@ public class TurretEnemy : EnemyBase
         if(fireTimer <= 0)
         {
             GameObject projectile = Instantiate(Projectile, ProjectileSpawn.position, ProjectileSpawn.rotation);
+            Physics.IgnoreCollision(projectile.GetComponent<Collider>(), gameObject.GetComponent<Collider>());
             fireTimer = fireRate;
         }
     }
@@ -105,18 +177,6 @@ public class TurretEnemy : EnemyBase
     {
         Vector3 rotation = Quaternion.Lerp(turretHead.localRotation, Quaternion.Euler(0,0,0), 2 * Time.deltaTime).eulerAngles;
         turretHead.localRotation = Quaternion.Euler(rotation);
-    }
-
-
-    public Quaternion XLookRotation(Vector3 right, Vector3 up = default(Vector3))
-    {
-        if (up == default(Vector3))
-            up = Vector3.up;
-
-        Quaternion rightToForward = Quaternion.Euler(0f, 90f, 0f) * transform.rotation;
-        Quaternion forwardToTarget = Quaternion.LookRotation(right, up);
-
-        return forwardToTarget * rightToForward;
     }
 
 }

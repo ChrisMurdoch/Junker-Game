@@ -9,17 +9,16 @@ public class EnemyBase : MonoBehaviour
 
     [SerializeField] private int EnemyID;
 
-
-
-    // Start is called before the first frame update
-    void Start()
+    public virtual void TakeDamage(float damage)
     {
-        
+        currentHealth -= damage;
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void Die()
     {
-        
+        if(currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

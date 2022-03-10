@@ -8,7 +8,8 @@ public class DroneEnemy : EnemyBase
     public Transform Gun;
 
     [SerializeField] private float range = 20;
-    [SerializeField] private float followSpeed = 3;
+    [SerializeField] private float stoppingRange = 10;
+    [SerializeField] private float rotationSpeed = 3;
     [SerializeField] private float chaseSpeed = 3;
 
     [SerializeField] private float fireRate = 2;
@@ -17,10 +18,21 @@ public class DroneEnemy : EnemyBase
     [SerializeField] private float positionChangeTimer = 4;
     private float idleTimer;
 
+    private float AggroTimer;
+    [SerializeField] private float AggroLength = 3;
+
     private float distanceFromPlayer;
 
     [SerializeField] private GameObject Projectile;
     [SerializeField] private Transform ProjectileSpawn;
+
+    private enum State
+    {
+        Idle,
+        Attacking,
+    }
+
+    private State currentState = State.Idle;
 
 
     // Start is called before the first frame update
@@ -34,47 +46,90 @@ public class DroneEnemy : EnemyBase
     // Update is called once per frame
     void Update()
     {
+        switch (currentState)
+        {
+            case State.Idle:
+                IdleState();
+                break;
+            case State.Attacking:
+                AttackingState();
+                break;
+        }
+
         distanceFromPlayer = Vector3.Distance(Player.position, transform.position);
+
+    }
+
+    private void IdleState()
+    {
+        ReturnToNormal();
 
         if (distanceFromPlayer <= range)
         {
-            transform.position = Vector3.MoveTowards(transform.position, Player.position, chaseSpeed * Time.deltaTime);
-            Shoot();
-            LookAtPlayer();
-            Aim();
-        }
-        else
-        {
-            //Idle();
+            Vector3 DirectionToPlayer = Player.position - gameObject.transform.position;
+            if (Physics.Raycast(gameObject.transform.position, DirectionToPlayer, out RaycastHit hit, range))
+            {
+                if (hit.transform.CompareTag("Player"))
+                {
+                    currentState = State.Attacking;
+                }
+            }
         }
     }
 
-    //private void Idle()
-    //{
-    //    idleTimer -= Time.deltaTime;
+    private void AttackingState()
+    {
+        //if(distanceFromPlayer >= range / 2)
+        //{
+        //    transform.position = Vector3.MoveTowards(transform.position, Player.position, chaseSpeed * Time.deltaTime);
+        //}
 
-    //    if(idleTimer <= 0)
-    //    {
-    //        float x = transform.position.x + Random.Range(-10, 10);
-    //        float y = transform.position.x + Random.Range(-10, 10);
-    //        Vector3 pos = new Vector3(x, y, 0);
-    //        idleTimer = positionChangeTimer;
+        LookAtPlayer();
+        Aim();
+        Shoot();
 
-    //        StartCoroutine(ChangePosition(pos));
+        Vector3 DirectionToPlayer = Player.position - gameObject.transform.position;
 
-    //    }
+        if (distanceFromPlayer <= range)
+        {
+            if (distanceFromPlayer >= stoppingRange)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, Player.position, chaseSpeed * Time.deltaTime);
+            }
 
-    //}
+            if (Physics.Raycast(gameObject.transform.position, DirectionToPlayer, out RaycastHit hit, range))
+            {
 
-    //IEnumerator ChangePosition(Vector3 pos)
-    //{
-    //    Vector3 LookDir = pos - transform.position;
-    //    Quaternion look = Quaternion.LookRotation(-LookDir, Vector3.up);
-    //    Vector3 rotation = Quaternion.Lerp(transform.rotation, look, followSpeed * Time.deltaTime).eulerAngles;
-    //    transform.rotation = Quaternion.Euler(rotation);
-    //    transform.position = Vector3.MoveTowards(transform.position, pos, chaseSpeed * Time.deltaTime);
-    //    yield return null;
-    //}
+                if (hit.transform.CompareTag("Player"))
+                {
+                    AggroTimer = AggroLength;
+                }
+
+
+                if (!hit.transform.CompareTag("Player"))
+                {
+                    AggroTimer -= Time.deltaTime;
+                    if (AggroTimer <= 0)
+                    {
+                        currentState = State.Idle;
+                        fireTimer = fireRate;
+                    }
+                }
+            }
+
+        }
+        else
+        {
+            AggroTimer -= Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, Player.position, chaseSpeed * Time.deltaTime);
+
+            if (AggroTimer <= 0)
+            {
+                currentState = State.Idle;
+                fireTimer = fireRate;
+            }
+        }
+    }
 
     private void Shoot()
     {
@@ -83,19 +138,20 @@ public class DroneEnemy : EnemyBase
         if (fireTimer <= 0)
         {
             GameObject projectile = Instantiate(Projectile, ProjectileSpawn.position, ProjectileSpawn.rotation);
+            Physics.IgnoreCollision(projectile.GetComponent<Collider>(), gameObject.GetComponent<Collider>());
             fireTimer = fireRate;
         }
     }
 
-    private void LookAtPlayer()
+    private void LookAtPlayer() //Makes the whole object look at the player
     {
         Vector3 LookDir = Player.position - transform.position;
         Quaternion look = Quaternion.LookRotation(-LookDir, Vector3.up);
-        Vector3 rotation = Quaternion.Lerp(transform.rotation, look, followSpeed * Time.deltaTime).eulerAngles;
+        Vector3 rotation = Quaternion.Lerp(transform.rotation, look, rotationSpeed * Time.deltaTime).eulerAngles;
         transform.rotation = Quaternion.Euler(rotation);
     }
 
-    private void Aim()
+    private void Aim() //Aims the mounted gun at the player
     {
         Vector3 LookDir = Player.position - Gun.position;
         float singleStep = 1f * Time.deltaTime;
@@ -105,6 +161,12 @@ public class DroneEnemy : EnemyBase
         Vector3 test = look.eulerAngles;
         Gun.rotation = Quaternion.Euler(test.x, test.y, 0);
 
+    }
+
+    private void ReturnToNormal()
+    {
+        Vector3 rotation = Quaternion.Lerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, 0), 2 * Time.deltaTime).eulerAngles;
+        gameObject.transform.rotation = Quaternion.Euler(rotation);
     }
 
 }
