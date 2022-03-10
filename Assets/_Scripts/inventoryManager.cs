@@ -6,12 +6,12 @@ using UnityEngine.UI;
 public class inventoryManager : MonoBehaviour
 {
 
-    private List<GameObject> items;
-    private List<int> itemAmts;
-    private float moneyCount;
-    private float scrapCount;
-    private bool holdingItem;
-    private int heldItemIndex;
+    private List<GameObject> items; //holds the actual item gameobjects
+    private List<int> itemAmts; //holds the amount of each item (index same as items list)
+    private float moneyCount; //how much money the player has
+    private float scrapCount; //how much scrap the player has
+    private bool holdingItem; //whether the mouse is holding an item
+    private int heldItemIndex; //tracks item mouse is holding (if any)
 
 
 
@@ -41,6 +41,8 @@ public class inventoryManager : MonoBehaviour
 
 
     void Update() {
+
+        //use tab key to open / close inventory
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (invScreenActive)
@@ -57,6 +59,7 @@ public class inventoryManager : MonoBehaviour
 
         if (invScreenActive) {
 
+            // code to allow for clicking to pick up / drop item images on grid
             if(Input.GetMouseButtonDown(0)) {
                 Vector3 clickedPosition = Input.mousePosition;
 
@@ -80,6 +83,7 @@ public class inventoryManager : MonoBehaviour
     }
 
 
+    //pauses the game and opens the inventory screen
     void OpenInvScreen() {
 
         invScreenUI.SetActive(true);
@@ -87,6 +91,7 @@ public class inventoryManager : MonoBehaviour
         invScreenActive = true;
     }
 
+    //closes the inventory screen and unpauses the game
     void CloseInvScreen() {
 
         invScreenUI.SetActive(false);
@@ -126,7 +131,9 @@ public class inventoryManager : MonoBehaviour
         gridSquareOrig.AddComponent<CanvasRenderer>();
         gridSquareOrig.AddComponent<Image>();
 
-        GameObject newGridSquare;
+        GameObject newGridSquare; //create space to hold next created grid square
+
+        //set recttransform of first grid square
         gridSquareOrig.GetComponent<RectTransform>().anchorMin = new Vector2(0f, 0f); //anchor min/max stay in the center of grid area
         gridSquareOrig.GetComponent<RectTransform>().anchorMax = gridSquareOrig.GetComponent<RectTransform>().anchorMin;
         gridSquareOrig.GetComponent<RectTransform>().sizeDelta = new Vector2(squareWidth, squareHeight);
@@ -135,6 +142,8 @@ public class inventoryManager : MonoBehaviour
         //Vector3 gridSquarePos = new Vector3(gridArea.transform.position.x + offsetWorldX + (squareWidthWorld / 2), gridArea.transform.position.y + (offsetWorldY) + (squareHeightWorld / 2), gridArea.transform.position.z);
         Vector3 gridSquarePos = new Vector3( -(gridRectTransform.sizeDelta.x/2) + offsetWorldX + (squareWidthWorld / 2), -(gridRectTransform.sizeDelta.y/2) + offsetWorldY + (squareHeightWorld / 2));
         Debug.Log("(" + gridSquarePos.x + ", " + gridSquarePos.y + ", " + gridSquarePos.z + ")");
+
+        //holds x position of 1st grid square so it can be reset for new rows
         float resetXPos = -(gridRectTransform.sizeDelta.x / 2) + offsetWorldX + (squareWidthWorld / 2);
 
 
@@ -151,7 +160,7 @@ public class inventoryManager : MonoBehaviour
 
                 newGridSquare.name = "Grid Square";
                 newGridSquare.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.2f);
-                newGridSquare.transform.localPosition = gridSquarePos;
+                newGridSquare.transform.localPosition = gridSquarePos; //move grid square to correct position
 
 
                 //update x value for next square in row
@@ -226,6 +235,7 @@ public class inventoryManager : MonoBehaviour
         item.DestroyPickup();
     }
 
+    // makes item image & background follow mouse until player clicks again
     public int MouseGrabItem(Vector2 clickPosition) {
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(clickPosition),Vector2.zero);
         int objectIndex = -1;
@@ -240,6 +250,8 @@ public class inventoryManager : MonoBehaviour
         return objectIndex;
     }
 
+    //called when player clicks mouse while "holding" an item
+    //places item in grid space player clicks on, or back in original position if it doesn't fit
     public void MouseDropItem(int index, Vector2 clickPosition) {
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(clickPosition), Vector2.zero);
 
@@ -258,6 +270,7 @@ public class inventoryManager : MonoBehaviour
     }
 
     //check if item is already in inventory list
+    //return its index
     int CheckForItem(string itemName) {
 
         if(itemName != null) {
@@ -276,6 +289,8 @@ public class inventoryManager : MonoBehaviour
         return -1;
     }
 
+    //given top-left grid square, how much space is available?
+    //x = columns, y = rows
     Vector2 CheckGridSpace (Vector2 topLeft) {
 
         Vector2 openGridSpace = new Vector2(0,0);
@@ -309,6 +324,7 @@ public class inventoryManager : MonoBehaviour
         return openGridSpace; //returns Vector2 (# of columns, # of rows)
     }
 
+    // check if given grid space is empty
     bool CheckPositionEmpty (Vector2 position) {
 
         for(int i = 0; i < items.Count; i++) {

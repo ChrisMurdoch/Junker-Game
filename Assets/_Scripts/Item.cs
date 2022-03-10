@@ -24,35 +24,41 @@ public class Item : MonoBehaviour
     private Vector2 gridoffsetSize; //size of x and y offsets on grid
 
 
-
+    //how much of the grid this item will take up when added to inventory
     public Vector2 GetGridShape () {
-        return new Vector2 (gridShape.x, gridShape.y);
+        return new Vector2 (gridShape.x, gridShape.y); //x = how many columns, y = how many rows
     }
 
+    //called by inventory manager to destroy item in game world when it is picked up
     public void DestroyPickup() {
         Destroy(this.gameObject);
     }
 
+    //called by inventory manager to instantiate item image at the right grid position
     public void CreateInvObject() {
         
     }
 
+    //called by CreateInvObject() to create translucent backing image (goes under item image) with dimensions based on item's grid size
     private Image CreateInvBackground() {
         
     }
 
 #region Properties
 
+    //whether or not this item can stack on top of other items of the same type (instead of taking up another grid space)
    public bool Stackable {
        get {return stackable; }
        set {stackable = value; }
    }
 
+    //which grid square the item's top-left corner is on
    public Vector2 GridPosition {
        get {return gridPosition; }
        set {gridPosition = value; }
    }
 
+    //how large each grid square is (sizeDelta)
    public Vector2 GridSquareSize {
        get {return gridSquareSize; }
        set {gridSquareSize = value; }
