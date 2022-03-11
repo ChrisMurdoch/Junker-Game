@@ -66,8 +66,7 @@ public class HookProjectile : MonoBehaviour
         {
             latchPosition = collision.GetContact(0).point;
             launcher.HookHitPosition = latchPosition;
-            Player.GetComponent<PlayerController>().ChangeState(1);
-           
+            Player.GetComponent<PlayerController>().ChangeState(1);   
         }
 
         rb.constraints = RigidbodyConstraints.FreezeAll;

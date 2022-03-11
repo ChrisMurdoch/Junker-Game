@@ -361,23 +361,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b315d3df33c6cbd4fa1967204536af57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Paused: 0
-  CanMove: 1
-  CanJump: 1
-  CanInput: 1
-  AllowEverything: 1
   isAirborne: 0
+  isCrouching: 0
   moveSpeed: 10
   airSpeed: 12
+  crouchSpeed: 4
   jumpForce: 30
   doubleJumpForce: 25
   gravity: 75
   slopeSlideSpeed: 8
   CanSlideOnSlopes: 1
-  WhatIsGround:
-    serializedVersion: 2
-    m_Bits: 9
-  GroundCheckPosition: {fileID: 594319930}
 --- !u!4 &479635076
 Transform:
   m_ObjectHideFlags: 0
@@ -743,7 +736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 479635076}
-  player: {fileID: 0}
+  player: {fileID: 479635073}
   FollowSpeed: 3
   negativeZAxis: -15
 --- !u!1 &1071069154
