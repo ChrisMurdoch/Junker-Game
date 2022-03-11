@@ -22,6 +22,8 @@ public class TurretEnemy : EnemyBase
     [SerializeField] private GameObject Projectile;
     [SerializeField] private Transform ProjectileSpawn;
 
+    public LayerMask RaycastLayerIgnore;
+
     private enum State
     {
         Idle,
@@ -33,6 +35,7 @@ public class TurretEnemy : EnemyBase
 
     private void Start()
     {
+        Player = GameObject.Find("Player Body").transform;
         LockOnTimer = LockOnLength;
         fireTimer = fireRate;
     }
@@ -52,46 +55,6 @@ public class TurretEnemy : EnemyBase
 
 
         distanceFromPlayer = Vector3.Distance(Player.position, turretHead.position);
-        //Vector3 turretLookDir = Player.position - turretHead.position;
-        //RaycastHit hit;
-
-        ////Debug.DrawLine(turretHead.position, turretHead.forward, Color.red);
-        //Debug.DrawRay(turretHead.position, turretHead.forward * range, Color.red);
-
-        //if (distanceFromPlayer <= range)
-        //{
-        //    if (Physics.Raycast(turretHead.position, turretLookDir, out hit, range))
-        //    {
-
-        //        if (hit.transform.CompareTag("Player"))
-        //        {
-        //            Aim();
-        //            Shoot();
-        //            LockOnTimer = LockOnLength;
-        //        }
-
-
-        //        if (!hit.transform.CompareTag("Player"))
-        //        {
-        //            LockOnTimer -= Time.deltaTime;
-        //            if(LockOnTimer <= 0)
-        //            {
-        //                ReturnToNormal();
-        //            }
-        //            else
-        //            {
-        //                Shoot();
-        //                Aim();
-        //            }
-        //        }
-        //    }
-
-        //}
-        //else
-        //{
-        //    fireTimer = fireRate;
-        //    ReturnToNormal();
-        //}
 
     }
 
@@ -101,7 +64,7 @@ public class TurretEnemy : EnemyBase
         if (distanceFromPlayer <= range)
         {
             Vector3 turretLookDir = Player.position - turretHead.position;
-            if (Physics.Raycast(turretHead.position, turretLookDir, out RaycastHit hit, range))
+            if (Physics.Raycast(turretHead.position, turretLookDir, out RaycastHit hit, range, ~RaycastLayerIgnore))
             {
                 if (hit.transform.CompareTag("Player"))
                 {
@@ -119,7 +82,7 @@ public class TurretEnemy : EnemyBase
         Vector3 turretLookDir = Player.position - turretHead.position;
         if (distanceFromPlayer <= range)
         {
-            if (Physics.Raycast(turretHead.position, turretLookDir, out RaycastHit hit, range))
+            if (Physics.Raycast(turretHead.position, turretLookDir, out RaycastHit hit, range, ~RaycastLayerIgnore))
             {
 
                 if (hit.transform.CompareTag("Player"))

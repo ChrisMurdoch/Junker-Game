@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2842227129507266929}
   - component: {fileID: 2842227129323683771}
+  - component: {fileID: -4205067333422443923}
   m_Layer: 0
   m_Name: turret_1
   m_TagString: Untagged
@@ -54,9 +55,24 @@ MonoBehaviour:
   followSpeed: 2
   range: 30
   fireRate: 2
-  fireTimer: 0
   Projectile: {fileID: 1895114844437855911, guid: ec1c27b5482cec540839ec8b2e5a8922, type: 3}
   ProjectileSpawn: {fileID: 5683732034011874863}
+  RaycastLayerIgnore:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!65 &-4205067333422443923
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2842227129507503441}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.7, z: 0.7}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &2842227129507503443
 GameObject:
   m_ObjectHideFlags: 0

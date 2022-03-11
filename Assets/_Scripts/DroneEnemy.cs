@@ -26,6 +26,9 @@ public class DroneEnemy : EnemyBase
     [SerializeField] private GameObject Projectile;
     [SerializeField] private Transform ProjectileSpawn;
 
+    public LayerMask RaycastLayerIgnore;
+
+
     private enum State
     {
         Idle,
@@ -38,6 +41,8 @@ public class DroneEnemy : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
+        Physics.IgnoreCollision(Player.GetComponentInParent<CharacterController>(), gameObject.GetComponent<Collider>());
+        Player = GameObject.Find("Player Body").transform;
         fireTimer = fireRate;
         idleTimer = positionChangeTimer;
 
@@ -63,11 +68,12 @@ public class DroneEnemy : EnemyBase
     private void IdleState()
     {
         ReturnToNormal();
+        AggroTimer = AggroLength;
 
         if (distanceFromPlayer <= range)
         {
             Vector3 DirectionToPlayer = Player.position - gameObject.transform.position;
-            if (Physics.Raycast(gameObject.transform.position, DirectionToPlayer, out RaycastHit hit, range))
+            if (Physics.Raycast(gameObject.transform.position, DirectionToPlayer, out RaycastHit hit, range, ~RaycastLayerIgnore))
             {
                 if (hit.transform.CompareTag("Player"))
                 {
@@ -79,10 +85,6 @@ public class DroneEnemy : EnemyBase
 
     private void AttackingState()
     {
-        //if(distanceFromPlayer >= range / 2)
-        //{
-        //    transform.position = Vector3.MoveTowards(transform.position, Player.position, chaseSpeed * Time.deltaTime);
-        //}
 
         LookAtPlayer();
         Aim();
@@ -97,7 +99,7 @@ public class DroneEnemy : EnemyBase
                 transform.position = Vector3.MoveTowards(transform.position, Player.position, chaseSpeed * Time.deltaTime);
             }
 
-            if (Physics.Raycast(gameObject.transform.position, DirectionToPlayer, out RaycastHit hit, range))
+            if (Physics.Raycast(gameObject.transform.position, DirectionToPlayer, out RaycastHit hit, range, ~RaycastLayerIgnore))
             {
 
                 if (hit.transform.CompareTag("Player"))
