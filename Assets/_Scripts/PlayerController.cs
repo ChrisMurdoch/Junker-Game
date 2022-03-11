@@ -30,7 +30,17 @@ public class PlayerController : MonoBehaviour
 
     private bool underObject;
 
+    private bool isWallSliding = false;
+
+    private ControllerColliderHit wallHit;
+
+    private float x;
+    private float xAir;
+
     private State state; //A simple state machine to keep track of player states
+
+    Vector3 impact = Vector3.zero;
+    float mass = 3.0F; // defines the character mass for adding impacts
 
 
     private enum State
@@ -47,11 +57,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed = 3.0f; //Grounded speed
     [SerializeField] private float airSpeed = 4.0f; //Air speed, this should generally be higher that moveSpeed
     [SerializeField] private float crouchSpeed = 4.0f;
-
+    [SerializeField] private float wallSlideSpeed = 4.0f;
 
     [Header("Jumping Parameters")] //For a snappier jump, turn these way up to a ratio of 1:2 ish or double the amount of gravity in the script
     [SerializeField] private float jumpForce = 8.0f;
     [SerializeField] private float doubleJumpForce = 6.0f;
+    [SerializeField] private float WallJumpForce = 6.0f;
+    [SerializeField] private float WallJumpPropulsion = 75.0f;
     [SerializeField] private float gravity = 30.0f;
 
     [Header("Slope Parameters")]
@@ -98,6 +110,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(isWallSliding);
+        //Debug.Log(velocity);
+        Debug.Log(impact);
+
         switch (state)
         {
             default:
@@ -105,8 +121,10 @@ public class PlayerController : MonoBehaviour
                 SlopeCheck();
                 InputHandler();
                 Crouch();
+                WallSlide();
                 GravityHandler();
                 characterController.Move(velocity * Time.deltaTime);
+                WallJump();
                 JumpHandler();
                 UseHook();
                 break;
@@ -119,6 +137,12 @@ public class PlayerController : MonoBehaviour
 
         }
 
+    }
+
+    public void AddImpact(Vector3 dir, float force) //Allows adding "force" with a character controller
+    {
+        dir.Normalize();
+        impact += dir.normalized * force / mass;
     }
 
     private void UseHook()
@@ -142,8 +166,10 @@ public class PlayerController : MonoBehaviour
 
     private void SlopeCheck() //A check to see if the player is standing on a slope
     {
-        if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2.5f))
+        if (characterController.isGrounded && Physics.Raycast(PlayerBody.transform.position, Vector3.down, out RaycastHit slopeHit, 2f))
         {
+            //Debug.Log(slopeHit.normal);
+
             if (slopeHit.normal != Vector3.up)
             {
                 OnSlope = true;
@@ -157,7 +183,7 @@ public class PlayerController : MonoBehaviour
 
     private void Crouch()
     {
-        if (Input.GetKey(KeyCode.C))
+        if (Input.GetKey(KeyCode.C) && characterController.isGrounded)
         {
             isCrouching = true;
             PlayerBody.transform.localScale = new Vector3(1, .5f, 1);
@@ -200,10 +226,47 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void WallSlide()
+    {
+        //if(characterController.collisionFlags == CollisionFlags.Sides && !characterController.isGrounded && verticalVelocity <= 0)
+        //{
+        //    //Debug.Log("Hit Wall");
+        //    //isWallSliding = true;
+        //    //verticalVelocity = -wallSlideSpeed;
+        //}
+        //else
+        //{
+        //    isWallSliding = false;
+        //}
+
+        if(characterController.isGrounded || characterController.collisionFlags != CollisionFlags.Sides)
+        {
+            isWallSliding = false;
+        }
+    }
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (characterController.collisionFlags == CollisionFlags.Sides && !characterController.isGrounded && verticalVelocity <= 0)
+        {
+            //Debug.Log(hit.gameObject.name);
+            wallHit = hit;
+            isWallSliding = true;
+            verticalVelocity = -wallSlideSpeed;
+
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+    }
+
     private void InputHandler() //Gets the input of the "Horizontal Axis" or keys A & D.
     {
-        float x = Input.GetAxisRaw("Horizontal"); //is equal to -1 if pressing A, 1 if pressing D, or 0 if pressing neither
-        float xAir = Input.GetAxis("Horizontal"); //Same as above but ramps to -1 or 1.
+        //float x = Input.GetAxisRaw("Horizontal"); //is equal to -1 if pressing A, 1 if pressing D, or 0 if pressing neither
+        //float xAir = Input.GetAxis("Horizontal"); //Same as above but ramps to -1 or 1.
+
+        x = Input.GetAxisRaw("Horizontal"); //is equal to -1 if pressing A, 1 if pressing D, or 0 if pressing neither
+        xAir = Input.GetAxis("Horizontal"); //Same as above but ramps to -1 or 1.
 
         if (characterController.isGrounded)
         {
@@ -217,35 +280,57 @@ public class PlayerController : MonoBehaviour
             else if (isCrouching)
             {
                 velocity = (transform.right * x) * crouchSpeed + Vector3.up * verticalVelocity;
-
             }
         }
 
         if (!characterController.isGrounded)
         {
             velocity = (transform.right * xAir) * airSpeed + Vector3.up * verticalVelocity;
-
         }
 
+    }
+
+    private void WallJump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isWallSliding)
+        {
+            verticalVelocity = 0;
+            verticalVelocity = WallJumpForce;
+            AddImpact(wallHit.normal, WallJumpPropulsion);
+        }
+
+        if (impact.magnitude > 0.2f)
+        {
+            characterController.Move(impact * Time.deltaTime);
+        }
+
+        impact = Vector3.Lerp(impact, Vector3.zero, 7 * Time.deltaTime);
     }
 
     private void JumpHandler()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded && !IsSliding) //If player is grounded and not sliding, verticalVelocity becomes the jumpforce
+        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded && !IsSliding && !isWallSliding) //If player is grounded and not sliding, verticalVelocity becomes the jumpforce
         {
             verticalVelocity = 0;
             verticalVelocity = jumpForce;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true) //If player is not grounded, then they can double jump
+        if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true && !isWallSliding) //If player is not grounded, then they can double jump
         {
             verticalVelocity = 0;
             verticalVelocity = doubleJumpForce;
             canDoubleJump = false;
             state = State.Normal; //Allows jumping out of the Hooking state
-
         }
+
+        //if(Input.GetKeyDown(KeyCode.Space) && isWallSliding)
+        //{
+        //    verticalVelocity = 0;
+        //    verticalVelocity = WallJumpForce;
+        //    AddImpact(wallHit.normal, WallJumpPropulsion);
+        //}
+
     }
 
  
