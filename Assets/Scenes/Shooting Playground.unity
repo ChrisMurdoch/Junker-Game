@@ -666,7 +666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1899543235}
-  player: {fileID: 0}
+  player: {fileID: 1899543232}
   FollowSpeed: 3
   negativeZAxis: -10
 --- !u!114 &771562657
