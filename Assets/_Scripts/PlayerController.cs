@@ -92,12 +92,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Awake()
+    void Awake()
     {
         PlayerBody = transform.Find("Player Body").gameObject;
         characterController = GetComponent<CharacterController>();
         baseStepOffSet = characterController.stepOffset;
         launcher = GetComponent<HookLauncher>();
+
     }
 
     // Start is called before the first frame update
@@ -273,6 +274,8 @@ public class PlayerController : MonoBehaviour
             if (!isCrouching)
             {
                 velocity = (transform.right * x) * moveSpeed + Vector3.up * verticalVelocity;
+                
+                
                 // A Vector3 used with charactercontroller.move()
                 //Transform.right is shorthand for the X axis of the gameobject * x which is either -1, 0, or 1, then multiplied by the movespeed
                 //Vector3.up * verticalVelocity is gravity and jump height, with Vector3.up being short for Vector3(0,1,0)
