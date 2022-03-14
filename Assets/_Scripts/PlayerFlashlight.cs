@@ -33,5 +33,6 @@ public class PlayerFlashlight : MonoBehaviour
         }
 
         mousePos.z = 0;
+
     }
 }

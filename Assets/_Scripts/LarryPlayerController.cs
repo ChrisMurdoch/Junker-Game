@@ -297,7 +297,7 @@ public class LarryPlayerController : MonoBehaviour
         if (!characterController.isGrounded)
         {
             animator.SetBool(IS_JUMP, true);
-            if(xAir < 0)
+            if (xAir < 0)
             {
                 velocity = (transform.right * -xAir) * airSpeed + Vector3.up * verticalVelocity;
             }
@@ -305,7 +305,9 @@ public class LarryPlayerController : MonoBehaviour
             {
                 velocity = (transform.right * xAir) * airSpeed + Vector3.up * verticalVelocity;
             }
-            
+
+
+
 
         }
         else

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour
 {
-    [SerializeField] private float currentHealth;
-    [SerializeField] private float maxHealth;
+    [SerializeField] protected float currentHealth;
+    [SerializeField] protected float maxHealth;
 
     [SerializeField] private int EnemyID;
 

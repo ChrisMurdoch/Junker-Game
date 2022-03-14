@@ -68,6 +68,11 @@ public class GroundEnemy : EnemyBase
 
         }
 
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+
         distanceFromPlayer = Vector3.Distance(Player.position, transform.position);
         //agent.SetDestination(Player.position);
     }
