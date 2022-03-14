@@ -1,13 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class inventoryManager : MonoBehaviour
 {
 
-    private List<GameObject> items; //holds the actual item gameobjects
+    
+
+    public List<GameObject> items; //holds the actual item gameobjects
     private List<int> itemAmts; //holds the amount of each item (index same as items list)
+
+    public List<InventoryObject> items2; //New list to hold data references to the game objects
     private float moneyCount; //how much money the player has
     private float scrapCount; //how much scrap the player has
     private bool holdingItem; //whether the mouse is holding an item
@@ -16,7 +22,7 @@ public class inventoryManager : MonoBehaviour
 
 
     public GameObject gridArea; //background of grid (the whole area it takes up)
-    public Vector2 totalGridSpace; //(columns, rows)
+    public Vector2Int totalGridSpace; //(columns, rows)
 
     public Text scrapCountText;
     public Text moneyCountText;
@@ -29,12 +35,19 @@ public class inventoryManager : MonoBehaviour
 
     public GameObject Player;
     float canvasScaleFactor;
+    float offsetWorldX;
+    float offsetWorldY;
+    public GameObject imagePrefab;
+    [SerializeField] GraphicRaycaster m_Raycaster;
+    [SerializeField] EventSystem m_EventSystem;
+
 
     void Start() {
-        gridSquares = new GameObject[(int)totalGridSpace.x, (int)totalGridSpace.y]; //declare gridSquares array to correct size 
+        gridSquares = new GameObject[totalGridSpace.x, totalGridSpace.y]; //declare gridSquares array to correct size 
         canvasScaleFactor = this.GetComponent<CanvasScaler>().scaleFactor;
         InstantiateGrid();
         items = new List<GameObject>();
+        items2 = new List<InventoryObject>();
         itemAmts = new List<int>();
         holdingItem = false;
     }
@@ -47,7 +60,13 @@ public class inventoryManager : MonoBehaviour
         {
             if (invScreenActive)
             {
-                holdingItem = false; //also need to put item back where it was last
+                if (holdingItem)
+                {
+                    holdingItem = false; //also need to put item back where it was last
+                    RectTransform heldRect = items2[heldItemIndex].uiImage.GetComponent<RectTransform>();
+                    heldRect.position = GetItemCenter(items2[heldItemIndex].GridPosition, items2[heldItemIndex].itemSize);
+                    heldItemIndex = -1;
+                }
                 CloseInvScreen();
             }
 
@@ -62,22 +81,23 @@ public class inventoryManager : MonoBehaviour
             // code to allow for clicking to pick up / drop item images on grid
             if(Input.GetMouseButtonDown(0)) {
                 Vector3 clickedPosition = Input.mousePosition;
-
-                if(!holdingItem) {
+                Debug.Log("Clicked");
+                if (!holdingItem) {
                     heldItemIndex = MouseGrabItem(new Vector2(clickedPosition.x, clickedPosition.y));
                 }
-
-                if(holdingItem) {
-
+                else if (holdingItem)
+                {
+                    MouseDropItem(new Vector2(clickedPosition.x, clickedPosition.y));
                 }
+
 
             }
             if(holdingItem) {
 
-                Vector3 newItemPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                newItemPosition.z = items[heldItemIndex].transform.position.z;
-                items[heldItemIndex].transform.position = newItemPosition; //change to be item image's position
-
+                Vector3 newItemPosition = Input.mousePosition;
+                //items[heldItemIndex].transform.position = newItemPosition; //change to be item image's position
+                RectTransform trans = items2[heldItemIndex].uiImage.GetComponent<RectTransform>();
+                trans.position = newItemPosition;
             }
         }
     }
@@ -120,9 +140,8 @@ public class inventoryManager : MonoBehaviour
         //get x and y offset in world units
         float squareWidthOffset = squareWidth / (totalGridSpace.x + 1); //how much space between squares in x direction
         float squareHeightOffset = squareHeight / (totalGridSpace.y + 1); //how much space between squares in y direction
-        float offsetWorldX = squareWidthOffset * canvasScaleFactor; //offset in x direction in world space
-        float offsetWorldY = squareHeightOffset * canvasScaleFactor; //offset in y direction in world space
-
+        offsetWorldX = squareWidthOffset * canvasScaleFactor; //offset in x direction in world space
+        offsetWorldY = squareHeightOffset * canvasScaleFactor; //offset in y direction in world space
 
 
         //create grid square with desired components
@@ -131,7 +150,6 @@ public class inventoryManager : MonoBehaviour
         gridSquareOrig.AddComponent<CanvasRenderer>();
         gridSquareOrig.AddComponent<Image>();
 
-        GameObject newGridSquare; //create space to hold next created grid square
 
         //set recttransform of first grid square
         gridSquareOrig.GetComponent<RectTransform>().anchorMin = new Vector2(0f, 0f); //anchor min/max stay in the center of grid area
@@ -154,11 +172,14 @@ public class inventoryManager : MonoBehaviour
         for (int i = 0; i < totalGridSpace.y; i++) {
             for (int j = 0; j < totalGridSpace.x; j++) {
 
+                GameObject newGridSquare; //create space to hold next created grid square
+
                 //instantiate & set common components
                 newGridSquare = Instantiate(gridSquareOrig, gridArea.transform); //instantiate grid square
 
 
                 newGridSquare.name = "Grid Square";
+                newGridSquare.tag = "GridSquare";
                 newGridSquare.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.2f);
                 newGridSquare.transform.localPosition = gridSquarePos; //move grid square to correct position
 
@@ -190,83 +211,194 @@ public class inventoryManager : MonoBehaviour
     //Playercontroller passes item script and whether its a weapon
     public void PickUpItem(GameObject itemObject, bool isWeapon) {
         
-        Item item = itemObject.gameObject.GetComponent<Item>();
-        Debug.Log(itemObject.gameObject.GetComponent<Item>());
+        Item item = itemObject.GetComponent<Item>();
+        InventoryObject item2 = new InventoryObject(itemObject, item);
 
-        Vector2 itemSize = item.GetGridShape();
-        Debug.Log("item name = " + item.itemName);
-        int itemIndex = CheckForItem(item.itemName);
-        if(item.Stackable) {
+        Vector2Int itemSize = item2.itemSize;
+        Debug.Log("item name = " + item2.itemName);
+        int itemIndex = CheckForItem(item2.itemName);
+        if(item2.Stackable) {
             if(itemIndex >= 0)
-                itemAmts[itemIndex]++;
+                items2[itemIndex].amount++;
         }
 
-        Vector2 currentPos;
-        Vector2 availSpace;
+        Vector2Int currentPos = new Vector2Int(0,0);
+        Vector2Int availSpace = new Vector2Int(0,0);
         bool placed = false;
         
-        for(int i = 1; i <= totalGridSpace.y; i++) {
-            for(int j = 1; j <= totalGridSpace.x; j++) {
-                currentPos = new Vector2(j, i);
-                availSpace = CheckGridSpace(currentPos);
-                if (availSpace.x >= itemSize.x && availSpace.y >= itemSize.y){
-                    items.Add(itemObject);
-                    itemAmts.Add(1);
-                    item.GridPosition = currentPos;
+        for(int i = 0; i <= totalGridSpace.y; i++) {
+            for(int j = 0; j <= totalGridSpace.x; j++) {
+                currentPos = new Vector2Int(j, i);
+                bool avaiableSpace = CheckGridSpaceAvailable(currentPos, itemSize);
+
+                #region before refactor
+                //if (availSpace.x >= itemSize.x && availSpace.y >= itemSize.y){
+                //    items.Add(itemObject);
+                //    itemAmts.Add(1);
+                //    item.GridPosition = currentPos;
+
+                //    Debug.Log("Item added at ( " + currentPos.x + " , " + currentPos.y + " )");
+
+                //    //check if weapon & add to weapon wheel
+                //    placed = true;
+                //    break;
+                //}
+                #endregion
+                if(avaiableSpace)
+                {
+                    items2.Add(item2);
+                    item2.GridPosition = currentPos;
+                    item2.amount = item.ammount;
 
                     Debug.Log("Item added at ( " + currentPos.x + " , " + currentPos.y + " )");
 
-                    //check if weapon & add to weapon wheel
                     placed = true;
                     break;
                 }
             }
-
-            if(placed) 
+            if (placed)
                 break;
         }
 
         if(!placed) {
             Debug.Log("No Room!");
+            return;
         }
+
         // else, open inventory menu and show in separate box
         //allow player to manually move / scrap items, or drop pickup
-        itemObject.tag = "invItem";
+        item2.uiImage = Instantiate(imagePrefab, invScreenUI.transform);
+        Image newImage = item2.uiImage.GetComponent<Image>();
+        newImage.sprite = item2.image;
+        newImage.SetNativeSize();
+        //newImage.rectTransform.sizeDelta = new Vector2(newImage.rectTransform.sizeDelta.x/2.0f, newImage.rectTransform.sizeDelta.y/2.0f);
+        //place the image in it's spot on the grid
+        newImage.rectTransform.position = GetItemCenter(currentPos, itemSize);
+        newImage.tag = "InvItem";
         item.DestroyPickup();
+    }
+
+    public Vector3 GetItemCenter(Vector2Int gridPos, Vector2Int itemSize)
+    {
+        Vector3 trans = new Vector3();
+        RectTransform[] transforms = new RectTransform[itemSize.x * itemSize.y];
+        int count = 0;
+        Debug.Log("gridPos(" + gridPos.x + "," + gridPos.y + ")");
+        for(int i = gridPos.y; i < itemSize.y + gridPos.y; i++ )
+        {
+            for(int j = gridPos.x; j < itemSize.x + gridPos.x; j++)
+            {               
+                transforms[count] = gridSquares[j, i].GetComponent<RectTransform>();
+                count++;
+            }
+        }
+        for(int i = 0; i < count; i++)
+        {
+            trans += transforms[i].position;
+        }
+        trans = new Vector3( trans.x / count, trans.y / count, 0f);
+        return trans;
     }
 
     // makes item image & background follow mouse until player clicks again
     public int MouseGrabItem(Vector2 clickPosition) {
-        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(clickPosition),Vector2.zero);
+        //Set up the new Pointer Event
+        PointerEventData m_PointerEventData = new PointerEventData(m_EventSystem);
+        //Set the Pointer Event Position to that of the game object
+        m_PointerEventData.position = Input.mousePosition;
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        m_Raycaster.Raycast(m_PointerEventData, results);
+
+
         int objectIndex = -1;
-        if (hit) {
-            if (hit.transform.gameObject.tag == "InvItem")
+        if (results.Count == 0)
+            return objectIndex;
+        Debug.Log(results.Count);
+        foreach(RaycastResult result in results)
+        {
+            Debug.Log(result.gameObject.name);
+            if(result.gameObject.tag == "InvItem")
             {
                 holdingItem = true;
-                objectIndex = CheckForItem(hit.transform.gameObject.name);
+                objectIndex = CheckForUIItem(result.gameObject);
+                break;
             }
         }
 
         return objectIndex;
     }
 
+    //check if UI element has an associated item
+    //return its index
+    int CheckForUIItem(GameObject uiImage)
+    {
+
+        if (uiImage != null)
+        {
+            Debug.Log("passed item name");
+        }
+        if (items2.Count <= 0)
+        {
+            Debug.Log("Empty item list");
+            return -1;
+        }
+        for (int i = 0; i < items2.Count; i++)
+        {
+
+            if (uiImage == items2[i].uiImage)
+                return i;
+        }
+
+        return -1;
+    }
+
     //called when player clicks mouse while "holding" an item
     //places item in grid space player clicks on, or back in original position if it doesn't fit
-    public void MouseDropItem(int index, Vector2 clickPosition) {
-        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(clickPosition), Vector2.zero);
+    public void MouseDropItem(Vector2 clickPosition) {
 
-        if(hit) {
-            if(hit.transform.gameObject.name == "Grid Square") {
-                //get position of topLeft item square (if it wasn't grabbed)
-                //get grid square under top left item square
-                //use CheckGridSpace on grid Square
-                //if there's enough space, set item's gridPosition to grid square position
-                //else, leave item's gridPosition as is
-                //draw item's image in correct place
-                heldItemIndex = -1;
-                holdingItem = false;
+        PointerEventData m_PointerEventData = new PointerEventData(m_EventSystem);
+        //Set the Pointer Event Position to that of the game object
+        m_PointerEventData.position = new Vector2(
+            Input.mousePosition.x,
+            Input.mousePosition.y);
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        m_Raycaster.Raycast(m_PointerEventData, results);
+
+
+        foreach(RaycastResult result in results)
+        {
+            Debug.Log(result.gameObject.name);
+            if (result.gameObject.tag == "GridSquare")
+            {
+                for(int y = 0; y < gridSquares.GetLength(0); y++)
+                {
+                    for (int x = 0; x < gridSquares.GetLength(1); x++)
+                    {
+                        if (result.gameObject == gridSquares[x,y])
+                        {
+                            Debug.Log("grid square found");
+                            if (CheckGridSpaceAvailable(new Vector2Int(x,y), items2[heldItemIndex].itemSize))
+                            {
+                                items2[heldItemIndex].GridPosition = new Vector2Int(x,y);
+                                items2[heldItemIndex].uiImage.GetComponent<RectTransform>().position =
+                                    GetItemCenter(new Vector2Int(x, y), items2[heldItemIndex].itemSize);
+                                heldItemIndex = -1;
+                                holdingItem = false;
+                                
+                            }
+                        }
+                    }
+                }
+
             }
         }
+
     }
 
     //check if item is already in inventory list
@@ -276,63 +408,124 @@ public class inventoryManager : MonoBehaviour
         if(itemName != null) {
             Debug.Log("passed item name");
         }
-        if(items.Count <= 0) {
+        if(items2.Count <= 0) {
             Debug.Log("Empty item list");
             return -1;
         }
-        for(int i = 0; i < items.Count; i++) {
+        for(int i = 0; i < items2.Count; i++) {
 
-            if (itemName == items[i].GetComponent<Item>().itemName)
+            if (itemName == items2[i].itemName)
                 return i;
         }
 
         return -1;
     }
 
-    //given top-left grid square, how much space is available?
-    //x = columns, y = rows
-    Vector2 CheckGridSpace (Vector2 topLeft) {
 
-        Vector2 openGridSpace = new Vector2(0,0);
-        Vector2 spaceToCheck = topLeft;
-        
-        //check if first position is empty
-        if(!CheckPositionEmpty(topLeft))
-            return openGridSpace;
-        else {
-            openGridSpace.x++; //at least 1,1 space if empty
-            openGridSpace.y++;
+    //Check if grid space is avaialable based on the size of the item passed and the position given
+    bool CheckGridSpaceAvailable (Vector2Int bottomLeft, Vector2Int itemSize) {
+
+
+        for(int y = bottomLeft.y; y < bottomLeft.y + itemSize.y; y++)
+        {
+            if (y > totalGridSpace.y-1)
+                return false;
+            for(int x = bottomLeft.x; x < bottomLeft.x + itemSize.x; x++)
+            {
+                if (x > totalGridSpace.x-1)
+                    return false;
+                if (CheckPositionEmpty(new Vector2Int(x, y)) == false)
+                    return false;
+            }
         }
 
-        spaceToCheck.x++; //move a space to the right
-
-        //move right until you find a full space or reach right end of grid
-        while(CheckPositionEmpty(spaceToCheck) && spaceToCheck.x <= totalGridSpace.x ) {
-            openGridSpace.x++; //if next position is empty, increment x
-            spaceToCheck.x++; //move right
-        }
-
-        spaceToCheck = topLeft; //reset back to top-left position
-        spaceToCheck.y++; //move one space down
-
-        //move down until you find a full space of reach bottom of grid
-        while(CheckPositionEmpty(spaceToCheck) && spaceToCheck.y <= totalGridSpace.y) {
-            openGridSpace.y++;
-            spaceToCheck.y++;
-        }
-
-        return openGridSpace; //returns Vector2 (# of columns, # of rows)
+        return true;
     }
 
     // check if given grid space is empty
-    bool CheckPositionEmpty (Vector2 position) {
+    bool CheckPositionEmpty (Vector2Int position) {
 
-        for(int i = 0; i < items.Count; i++) {
-            if(position == items[i].GetComponent<Item>().GridPosition)
-                return false; //grid position isn't empty
+        for(int i = 0; i < items2.Count; i++) {
+
+            if (holdingItem && i == heldItemIndex)
+                continue;
+            for(int y = items2[i].GridPosition.y; y < items2[i].GridPosition.y + items2[i].itemSize.y; y++)
+            {
+                for(int x = items2[i].GridPosition.x; x < items2[i].GridPosition.x + items2[i].itemSize.x; x++)
+                {
+                    if (position == new Vector2Int(x, y))
+                    {
+                        return false;
+                    }
+                }
+            }
         }
 
         return true; //grid position is empty
     }
 
+}
+
+/// <summary>
+/// A class unique to the inventory manager meant to simplify the holding of listed objects
+/// </summary>
+public class InventoryObject
+{
+
+    public string itemName; // the name of the item
+    public GameObject prefab;//The Pickup Prefab it references for use when dropping the item
+    public Sprite image;//The image UI element associated with it in the inventory manager
+    public int amount = 0;//Total number of the item
+    public int amountMax = 1; //Maximum total of item stack
+
+    public GameObject uiImage; // the ui element associated with this item
+    public Vector2Int itemSize; //size of the object in grid squares
+    private Vector2Int gridPosition; //pos of bottom-left corner in inv grid
+    private Vector2 gridSquareSize; //hold size of each grid square after calculation
+    private Vector2 gridoffsetSize; //size of x and y offsets on grid
+
+
+
+    public InventoryObject(GameObject pickup, Item item)
+    {
+        //prefab = new GameObject(pickup.name, pickup.GetComponents<Type>());
+        //copy all of the components of the pickup onto this new gameobject;
+        image = item.data.image;
+        itemSize = item.data.itemSize;
+        amountMax = item.data.itemMax;
+        itemName = item.data.itemName;
+
+    }
+
+    /*
+    //called by inventory manager to instantiate item image at the right grid position
+    public void CreateInvObject() {
+    
+    }
+
+    //called by CreateInvObject() to create translucent backing image (goes under item image) with dimensions based on item's grid size
+    private image CreateInvBackground() {
+    
+    }
+    */
+#region Properties
+
+    //whether or not this item can stack on top of other items of the same type (instead of taking up another grid space)
+   public bool Stackable {
+       get {if(amountMax > 1) return true; return false; }
+   }
+
+    //which grid square the item's top-left corner is on
+   public Vector2Int GridPosition {
+       get {return gridPosition; }
+       set {gridPosition = value; }
+   }
+
+    //how large each grid square is (sizeDelta)
+   public Vector2 GridSquareSize {
+       get {return gridSquareSize; }
+       set {gridSquareSize = value; }
+   }
+
+#endregion
 }
