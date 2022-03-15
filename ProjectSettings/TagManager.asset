@@ -4,14 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-<<<<<<< HEAD
-  - Pickups
-  - InvItem
-  - GridSquare
-=======
   - Environment
   - Enemy
->>>>>>> 28adbdc509885998c14ec355933ef368c4753e8b
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -20,9 +15,9 @@ TagManager:
   - Water
   - UI
   - Enemy
-  - 
-  - 
-  - 
+  - Player
+  - EnemyProjectile
+  - PlayerProjectile
   - 
   - 
   - 

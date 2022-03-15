@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 2842227129507266929}
   - component: {fileID: 2842227129323683771}
   - component: {fileID: -4205067333422443923}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: turret_1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,7 +54,7 @@ MonoBehaviour:
   turretHead: {fileID: 2842227129507266941}
   followSpeed: 2
   range: 30
-  fireRate: 2
+  fireRate: 1
   Projectile: {fileID: 1895114844437855911, guid: ec1c27b5482cec540839ec8b2e5a8922, type: 3}
   ProjectileSpawn: {fileID: 5683732034011874863}
   RaycastLayerIgnore:
@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 2842227129507266931}
   - component: {fileID: 2842227129510658387}
   - component: {fileID: 2842227129509692307}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Temperature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 2842227129507266937}
   - component: {fileID: 2842227129510658393}
   - component: {fileID: 2842227129509692313}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cannon_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 2842227129507266939}
   - component: {fileID: 2842227129510658395}
   - component: {fileID: 2842227129509692315}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 2842227129507266941}
   - component: {fileID: 2842227129510658397}
   - component: {fileID: 2842227129509692317}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,7 +411,7 @@ GameObject:
   - component: {fileID: 2842227129507266943}
   - component: {fileID: 2842227129510658399}
   - component: {fileID: 2842227129509692319}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cannon_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5683732034011874863}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Projectile Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}

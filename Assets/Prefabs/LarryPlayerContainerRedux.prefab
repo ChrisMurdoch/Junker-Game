@@ -191,7 +191,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3355381570331703612
 Transform:
   m_ObjectHideFlags: 0
@@ -199,13 +199,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3355381570331703609}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 7776028859726507374}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_Father: {fileID: 4116832045991048659}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &3355381570331703608
 Light:
   m_ObjectHideFlags: 0
@@ -440,8 +440,11 @@ MonoBehaviour:
   moveSpeed: 12
   airSpeed: 14
   crouchSpeed: 8
+  wallSlideSpeed: 4
   jumpForce: 20
   doubleJumpForce: 25
+  WallJumpForce: 6
+  WallJumpPropulsion: 75
   gravity: 60
   slopeSlideSpeed: 8
   CanSlideOnSlopes: 1
@@ -691,5 +694,10 @@ PrefabInstance:
 --- !u!4 &7776028859726507374 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
+  m_PrefabInstance: {fileID: 3355381571425568372}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4116832045991048659 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1707243787577406375, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
   m_PrefabInstance: {fileID: 3355381571425568372}
   m_PrefabAsset: {fileID: 0}

@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log(isWallSliding);
         //Debug.Log(velocity);
-        Debug.Log(impact);
+        //Debug.Log(impact);
 
         switch (state)
         {

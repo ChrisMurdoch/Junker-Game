@@ -52,7 +52,10 @@ public class TurretEnemy : EnemyBase
                 break;
         }
 
-
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
 
         distanceFromPlayer = Vector3.Distance(Player.position, turretHead.position);
 

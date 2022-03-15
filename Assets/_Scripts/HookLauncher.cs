@@ -68,6 +68,11 @@ public class HookLauncher : MonoBehaviour
             lr.enabled = false;
         }
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            DestroyActiveHook();
+        }
+
     }
 
     public void DestroyActiveHook()

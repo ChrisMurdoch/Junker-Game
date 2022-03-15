@@ -41,8 +41,8 @@ public class DroneEnemy : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
+        Player = GameObject.Find("Player Container Redux").transform;
         Physics.IgnoreCollision(Player.GetComponentInParent<CharacterController>(), gameObject.GetComponent<Collider>());
-        Player = GameObject.Find("Player Body").transform;
         fireTimer = fireRate;
         idleTimer = positionChangeTimer;
 
@@ -59,6 +59,11 @@ public class DroneEnemy : EnemyBase
             case State.Attacking:
                 AttackingState();
                 break;
+        }
+
+        if (currentHealth <= 0)
+        {
+            Die();
         }
 
         distanceFromPlayer = Vector3.Distance(Player.position, transform.position);
