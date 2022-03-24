@@ -51,7 +51,7 @@ public class GroundEnemy : EnemyBase
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(agent.destination);
+        //Debug.Log(agent.destination);
 
         switch (currentState) 
         {

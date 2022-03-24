@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private bool inPickupRange;
     private GameObject currPickup; //holds the pickup we were last in range of
 
+    //PLEASE MAKE A COPY OF THE SCRIPT WHEN ADDING STUFF IF YOU'RE NOT THE AUTHOR^
+
     private bool canDoubleJump = true;
 
     private CharacterController characterController;
@@ -117,9 +119,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(isWallSliding);
-        //Debug.Log(velocity);
-        //Debug.Log(impact);
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0); // Makes sure player stays at 0 on the Z axis
 
         switch (state)
         {
@@ -256,27 +257,16 @@ public class PlayerController : MonoBehaviour
 
     private void WallSlide()
     {
-        //if(characterController.collisionFlags == CollisionFlags.Sides && !characterController.isGrounded && verticalVelocity <= 0)
-        //{
-        //    //Debug.Log("Hit Wall");
-        //    //isWallSliding = true;
-        //    //verticalVelocity = -wallSlideSpeed;
-        //}
-        //else
-        //{
-        //    isWallSliding = false;
-        //}
-
         if(characterController.isGrounded || characterController.collisionFlags != CollisionFlags.Sides)
         {
             isWallSliding = false;
         }
     }
+
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (characterController.collisionFlags == CollisionFlags.Sides && !characterController.isGrounded && verticalVelocity <= 0)
         {
-            //Debug.Log(hit.gameObject.name);
             wallHit = hit;
             isWallSliding = true;
             verticalVelocity = -wallSlideSpeed;
@@ -290,9 +280,6 @@ public class PlayerController : MonoBehaviour
 
     private void InputHandler() //Gets the input of the "Horizontal Axis" or keys A & D.
     {
-        //float x = Input.GetAxisRaw("Horizontal"); //is equal to -1 if pressing A, 1 if pressing D, or 0 if pressing neither
-        //float xAir = Input.GetAxis("Horizontal"); //Same as above but ramps to -1 or 1.
-
         x = Input.GetAxisRaw("Horizontal"); //is equal to -1 if pressing A, 1 if pressing D, or 0 if pressing neither
         xAir = Input.GetAxis("Horizontal"); //Same as above but ramps to -1 or 1.
 
@@ -301,7 +288,6 @@ public class PlayerController : MonoBehaviour
             if (!isCrouching)
             {
                 velocity = (transform.right * x) * moveSpeed + Vector3.up * verticalVelocity;
-                
                 
                 // A Vector3 used with charactercontroller.move()
                 //Transform.right is shorthand for the X axis of the gameobject * x which is either -1, 0, or 1, then multiplied by the movespeed
@@ -353,13 +339,6 @@ public class PlayerController : MonoBehaviour
             canDoubleJump = false;
             state = State.Normal; //Allows jumping out of the Hooking state
         }
-
-        //if(Input.GetKeyDown(KeyCode.Space) && isWallSliding)
-        //{
-        //    verticalVelocity = 0;
-        //    verticalVelocity = WallJumpForce;
-        //    AddImpact(wallHit.normal, WallJumpPropulsion);
-        //}
 
     }
 
