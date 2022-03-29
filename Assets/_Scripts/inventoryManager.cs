@@ -5,15 +5,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class inventoryManager : MonoBehaviour
-{
+//Authored by Christine Murdoch
+//Extended by John Murphy
+
+public class InventoryManager : MonoBehaviour
+{    
 
     
-
-    public List<GameObject> items; //holds the actual item gameobjects
     private List<int> itemAmts; //holds the amount of each item (index same as items list)
 
-    public List<InventoryObject> items2; //New list to hold data references to the game objects
+    public List<InventoryObject> items; //New list to hold data references to the game objects
     private float moneyCount; //how much money the player has
     private float scrapCount; //how much scrap the player has
     private bool holdingItem; //whether the mouse is holding an item
@@ -24,6 +25,9 @@ public class inventoryManager : MonoBehaviour
     public GameObject gridArea; //background of grid (the whole area it takes up)
     public Vector2Int totalGridSpace; //(columns, rows)
 
+    public GameObject hotBarArea;
+    public int hotBarSlots = 3;
+
     public Text scrapCountText;
     public Text moneyCountText;
 
@@ -32,9 +36,13 @@ public class inventoryManager : MonoBehaviour
     public GameObject invScreenUI; //holds inventory screen panel
 
     public GameObject[,] gridSquares; //holds each grid square's rect transform after instantiated
+    public GameObject[] hotbarSquares; //holds each hotbar square's rect transform after instantiated
+    public float squareSizeValue;
+    public InventoryObject[] hotBarItems;
 
-    public GameObject Player;
-    float canvasScaleFactor;
+    public GameObject player;
+    public GameObject hotBar;
+    public float canvasScaleFactor;
     float offsetWorldX;
     float offsetWorldY;
     public GameObject imagePrefab;
@@ -43,11 +51,12 @@ public class inventoryManager : MonoBehaviour
 
 
     void Start() {
-        gridSquares = new GameObject[totalGridSpace.x, totalGridSpace.y]; //declare gridSquares array to correct size 
-        canvasScaleFactor = this.GetComponent<CanvasScaler>().scaleFactor;
+        gridSquares = new GameObject[totalGridSpace.x, totalGridSpace.y]; //declare gridSquares array to correct size
+        hotbarSquares = new GameObject[hotBarSlots];
+        hotBarItems = new InventoryObject[hotBarSlots];
+        canvasScaleFactor = gameObject.GetComponent<CanvasScaler>().scaleFactor;
         InstantiateGrid();
-        items = new List<GameObject>();
-        items2 = new List<InventoryObject>();
+        items = new List<InventoryObject>();
         itemAmts = new List<int>();
         holdingItem = false;
     }
@@ -63,8 +72,8 @@ public class inventoryManager : MonoBehaviour
                 if (holdingItem)
                 {
                     holdingItem = false; //also need to put item back where it was last
-                    RectTransform heldRect = items2[heldItemIndex].uiImage.GetComponent<RectTransform>();
-                    heldRect.position = GetItemCenter(items2[heldItemIndex].GridPosition, items2[heldItemIndex].itemSize);
+                    RectTransform heldRect = items[heldItemIndex].uiImage.GetComponent<RectTransform>();
+                    heldRect.position = GetItemCenter(items[heldItemIndex].GridPosition, items[heldItemIndex].itemSize);
                     heldItemIndex = -1;
                 }
                 CloseInvScreen();
@@ -96,7 +105,7 @@ public class inventoryManager : MonoBehaviour
 
                 Vector3 newItemPosition = Input.mousePosition;
                 //items[heldItemIndex].transform.position = newItemPosition; //change to be item image's position
-                RectTransform trans = items2[heldItemIndex].uiImage.GetComponent<RectTransform>();
+                RectTransform trans = items[heldItemIndex].uiImage.GetComponent<RectTransform>();
                 trans.position = newItemPosition;
             }
         }
@@ -127,6 +136,7 @@ public class inventoryManager : MonoBehaviour
         // get width & height of grid squares
         float squareWidth = gridRectTransform.sizeDelta.x/(totalGridSpace.x + 1); //divide width
         float squareHeight = gridRectTransform.sizeDelta.y/(totalGridSpace.y + 1); //divide height
+        squareSizeValue = squareWidth;
 
         // put width & height in world measurement units
         float gridWorldWidth = gridRectTransform.sizeDelta.x * canvasScaleFactor;
@@ -134,7 +144,7 @@ public class inventoryManager : MonoBehaviour
         float squareWidthWorld = squareWidth * canvasScaleFactor;
         float squareHeightWorld = squareHeight * canvasScaleFactor;
 
-        //get world pos of grid area's topLeft corner
+        //get world pos of grid area's bottomLeft corner
         Vector2 bottomLeft = new Vector2(gridArea.transform.position.x - (gridWorldWidth / 2f), gridArea.transform.localPosition.y - (gridWorldHeight / 2f)); 
 
         //get x and y offset in world units
@@ -204,8 +214,76 @@ public class inventoryManager : MonoBehaviour
             currentY++;
         }
 
+        RectTransform hotBarRectTransform = hotBarArea.GetComponent<RectTransform>();
+
+        float hotBarSquareWidth = hotBarRectTransform.sizeDelta.x / (hotBarSlots + 1); //divide width
+        float hotBarSquareHeight = hotBarSquareWidth;
+
+        float hotBarWorldWidth = hotBarRectTransform.sizeDelta.x * canvasScaleFactor;
+        float hotBarWorldHeight = hotBarRectTransform.sizeDelta.y * canvasScaleFactor;
+        float hotBarSquareWidthWorld = hotBarSquareWidth * canvasScaleFactor;
+        float hotBarSquareHeightWorld = hotBarSquareHeight * canvasScaleFactor;
+
+        float hotBarSquareWidthOffset = hotBarSquareWidth / hotBarSlots; //how much space between squares in x direction
+        float hotBarSquareHeightOffset = hotBarSquareHeight; //how much space between squares in y direction
+        offsetWorldX = hotBarSquareWidthOffset * canvasScaleFactor; //offset in x direction in world space
+        offsetWorldY = hotBarSquareHeightOffset * canvasScaleFactor; //offset in y direction in world space
+
+        GameObject hotBarSquareOrig = new GameObject();
+        hotBarSquareOrig.AddComponent<RectTransform>();
+        hotBarSquareOrig.AddComponent<CanvasRenderer>();
+        hotBarSquareOrig.AddComponent<Image>();
+
+        hotBarSquareOrig.GetComponent<RectTransform>().anchorMin = new Vector2(1f, 0f); //anchor min/max stay in the center of grid area
+        hotBarSquareOrig.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0f);
+        hotBarSquareOrig.GetComponent<RectTransform>().pivot = new Vector2(1f, 0.5f);
+        hotBarSquareOrig.GetComponent<RectTransform>().sizeDelta = new Vector2(hotBarSquareWidth, hotBarSquareHeight);
+
+        Vector3 hotBarSquarePos = new Vector3(-(hotBarRectTransform.sizeDelta.x / 2) - offsetWorldX - (hotBarSquareWidthWorld / 2), -(hotBarRectTransform.sizeDelta.y / 2) + offsetWorldY + (hotBarSquareHeightWorld / 2));
+        Debug.Log("(" + hotBarSquarePos.x + ", " + hotBarSquarePos.y + ", " + hotBarSquarePos.z + ")");
+
+        for (int i = 0; i < hotBarSlots; i++)
+        {
+            GameObject newHotBarSquare; //create space to hold next created grid square
+
+            //instantiate & set common components
+            newHotBarSquare = Instantiate(hotBarSquareOrig, hotBarArea.transform); //instantiate grid square
+
+
+            newHotBarSquare.name = "Hot Bar Square";
+            newHotBarSquare.tag = "HotBarSquare";
+            newHotBarSquare.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.2f);
+            newHotBarSquare.transform.localPosition = hotBarSquarePos; //move grid square to correct position
+
+            hotbarSquares[i] = newHotBarSquare;
+
+            hotBarSquarePos.x += offsetWorldX + hotBarSquareWidthWorld;
+        }
     }
 
+    public void ReloadActiveWeapon(Weapon activeWeapon)
+    {
+        int amountUsed;
+        foreach(InventoryObject io in items)
+            if(io.itemName == activeWeapon.ammoType)
+            {
+                amountUsed = activeWeapon.magazineCapacity - activeWeapon.ammoCount;
+                if(io.amount > amountUsed)
+                {
+                    io.amount -= amountUsed;
+                    activeWeapon.ammoCount += amountUsed;
+                    amountUsed = 0;
+                }
+                else
+                {
+                    amountUsed -= io.amount;
+                    activeWeapon.ammoCount += io.amount;
+                    items.Remove(io);
+                }
+                if (amountUsed == 0)
+                    break;
+            }
+    }
 
     //called by PlayerController's OnTrigger
     //Playercontroller passes item script and whether its a weapon
@@ -219,7 +297,7 @@ public class inventoryManager : MonoBehaviour
         int itemIndex = CheckForItem(item2.itemName);
         if(item2.Stackable) {
             if(itemIndex >= 0)
-                items2[itemIndex].amount++;
+                items[itemIndex].amount++;
         }
 
         Vector2Int currentPos = new Vector2Int(0,0);
@@ -231,22 +309,9 @@ public class inventoryManager : MonoBehaviour
                 currentPos = new Vector2Int(j, i);
                 bool avaiableSpace = CheckGridSpaceAvailable(currentPos, itemSize);
 
-                #region before refactor
-                //if (availSpace.x >= itemSize.x && availSpace.y >= itemSize.y){
-                //    items.Add(itemObject);
-                //    itemAmts.Add(1);
-                //    item.GridPosition = currentPos;
-
-                //    Debug.Log("Item added at ( " + currentPos.x + " , " + currentPos.y + " )");
-
-                //    //check if weapon & add to weapon wheel
-                //    placed = true;
-                //    break;
-                //}
-                #endregion
                 if(avaiableSpace)
                 {
-                    items2.Add(item2);
+                    items.Add(item2);
                     item2.GridPosition = currentPos;
                     item2.amount = item.ammount;
 
@@ -270,8 +335,7 @@ public class inventoryManager : MonoBehaviour
         item2.uiImage = Instantiate(imagePrefab, invScreenUI.transform);
         Image newImage = item2.uiImage.GetComponent<Image>();
         newImage.sprite = item2.image;
-        newImage.SetNativeSize();
-        //newImage.rectTransform.sizeDelta = new Vector2(newImage.rectTransform.sizeDelta.x/2.0f, newImage.rectTransform.sizeDelta.y/2.0f);
+        newImage.rectTransform.sizeDelta = new Vector2(squareSizeValue * item2.itemSize.x, squareSizeValue * item2.itemSize.y);
         //place the image in it's spot on the grid
         newImage.rectTransform.position = GetItemCenter(currentPos, itemSize);
         newImage.tag = "InvItem";
@@ -326,8 +390,18 @@ public class inventoryManager : MonoBehaviour
                 objectIndex = CheckForUIItem(result.gameObject);
                 break;
             }
+            else if(result.gameObject.tag == "HotBarSquare")
+            {
+                for (int i = 0; i < hotBarSlots; i++)
+                {
+                    if (hotbarSquares[i] == result.gameObject)
+                    {
+                        hotBar.GetComponent<HotBarController>().RemoveItemInSlot(i);
+                        break;
+                    }
+                }
+            }
         }
-
         return objectIndex;
     }
 
@@ -340,15 +414,15 @@ public class inventoryManager : MonoBehaviour
         {
             Debug.Log("passed item name");
         }
-        if (items2.Count <= 0)
+        if (items.Count <= 0)
         {
             Debug.Log("Empty item list");
             return -1;
         }
-        for (int i = 0; i < items2.Count; i++)
+        for (int i = 0; i < items.Count; i++)
         {
 
-            if (uiImage == items2[i].uiImage)
+            if (uiImage == items[i].uiImage)
                 return i;
         }
 
@@ -383,11 +457,11 @@ public class inventoryManager : MonoBehaviour
                         if (result.gameObject == gridSquares[x,y])
                         {
                             Debug.Log("grid square found");
-                            if (CheckGridSpaceAvailable(new Vector2Int(x,y), items2[heldItemIndex].itemSize))
+                            if (CheckGridSpaceAvailable(new Vector2Int(x,y), items[heldItemIndex].itemSize))
                             {
-                                items2[heldItemIndex].GridPosition = new Vector2Int(x,y);
-                                items2[heldItemIndex].uiImage.GetComponent<RectTransform>().position =
-                                    GetItemCenter(new Vector2Int(x, y), items2[heldItemIndex].itemSize);
+                                items[heldItemIndex].GridPosition = new Vector2Int(x,y);
+                                items[heldItemIndex].uiImage.GetComponent<RectTransform>().position =
+                                    GetItemCenter(new Vector2Int(x, y), items[heldItemIndex].itemSize);
                                 heldItemIndex = -1;
                                 holdingItem = false;
                                 
@@ -396,6 +470,26 @@ public class inventoryManager : MonoBehaviour
                     }
                 }
 
+            }
+            else if(result.gameObject.tag == "HotBarSquare")
+            {
+                for(int i = 0; i < hotbarSquares.Length; i++)
+                {
+                    if(result.gameObject == hotbarSquares[i])
+                    {
+                        hotBar.GetComponent<HotBarController>().PlcaeItemInSlot(items[heldItemIndex], i+1);
+
+                        GameObject newImage = Instantiate(imagePrefab, hotbarSquares[i].transform);
+                        newImage.GetComponent<Image>().sprite = items[heldItemIndex].image;
+                        newImage.GetComponent<RectTransform>().sizeDelta = hotbarSquares[i].GetComponent<RectTransform>().sizeDelta;
+                        hotBarItems[i] = items[heldItemIndex];
+
+                        holdingItem = false;
+                        RectTransform heldRect = items[heldItemIndex].uiImage.GetComponent<RectTransform>();
+                        heldRect.position = GetItemCenter(items[heldItemIndex].GridPosition, items[heldItemIndex].itemSize);
+                        heldItemIndex = -1;
+                    }
+                }
             }
         }
 
@@ -408,13 +502,13 @@ public class inventoryManager : MonoBehaviour
         if(itemName != null) {
             Debug.Log("passed item name");
         }
-        if(items2.Count <= 0) {
+        if(items.Count <= 0) {
             Debug.Log("Empty item list");
             return -1;
         }
-        for(int i = 0; i < items2.Count; i++) {
+        for(int i = 0; i < items.Count; i++) {
 
-            if (itemName == items2[i].itemName)
+            if (itemName == items[i].itemName)
                 return i;
         }
 
@@ -445,13 +539,13 @@ public class inventoryManager : MonoBehaviour
     // check if given grid space is empty
     bool CheckPositionEmpty (Vector2Int position) {
 
-        for(int i = 0; i < items2.Count; i++) {
+        for(int i = 0; i < items.Count; i++) {
 
             if (holdingItem && i == heldItemIndex)
                 continue;
-            for(int y = items2[i].GridPosition.y; y < items2[i].GridPosition.y + items2[i].itemSize.y; y++)
+            for(int y = items[i].GridPosition.y; y < items[i].GridPosition.y + items[i].itemSize.y; y++)
             {
-                for(int x = items2[i].GridPosition.x; x < items2[i].GridPosition.x + items2[i].itemSize.x; x++)
+                for(int x = items[i].GridPosition.x; x < items[i].GridPosition.x + items[i].itemSize.x; x++)
                 {
                     if (position == new Vector2Int(x, y))
                     {
@@ -465,6 +559,8 @@ public class inventoryManager : MonoBehaviour
     }
 
 }
+
+
 
 /// <summary>
 /// A class unique to the inventory manager meant to simplify the holding of listed objects
@@ -481,10 +577,11 @@ public class InventoryObject
     public GameObject uiImage; // the ui element associated with this item
     public Vector2Int itemSize; //size of the object in grid squares
     private Vector2Int gridPosition; //pos of bottom-left corner in inv grid
-    private Vector2 gridSquareSize; //hold size of each grid square after calculation
-    private Vector2 gridoffsetSize; //size of x and y offsets on grid
 
-
+    public void RemoveObject()
+    {
+        GameObject.Destroy(uiImage);
+    }
 
     public InventoryObject(GameObject pickup, Item item)
     {
@@ -496,18 +593,6 @@ public class InventoryObject
         itemName = item.data.itemName;
 
     }
-
-    /*
-    //called by inventory manager to instantiate item image at the right grid position
-    public void CreateInvObject() {
-    
-    }
-
-    //called by CreateInvObject() to create translucent backing image (goes under item image) with dimensions based on item's grid size
-    private image CreateInvBackground() {
-    
-    }
-    */
 #region Properties
 
     //whether or not this item can stack on top of other items of the same type (instead of taking up another grid space)
@@ -520,12 +605,5 @@ public class InventoryObject
        get {return gridPosition; }
        set {gridPosition = value; }
    }
-
-    //how large each grid square is (sizeDelta)
-   public Vector2 GridSquareSize {
-       get {return gridSquareSize; }
-       set {gridSquareSize = value; }
-   }
-
 #endregion
 }

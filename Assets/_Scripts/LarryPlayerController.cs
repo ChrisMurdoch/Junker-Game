@@ -12,6 +12,16 @@ public class LarryPlayerController : MonoBehaviour
 	
     [HideInInspector] public bool isAirborne;
 
+<<<<<<< HEAD:Assets/_Scripts/LarryPlayerController.cs
+=======
+    public InventoryManager inventory; //reference to inventory script / canvas
+    public KeyCode interactKey; // ex. "e", "Tab", "Mouse 0"
+    private bool inPickupRange;
+    private GameObject currPickup; //holds the pickup we were last in range of
+
+    public GameObject equippedWeapon;
+
+>>>>>>> inventory:Assets/_Scripts/PlayerController.cs
     private bool canDoubleJump = true;
 
     private CharacterController characterController;
@@ -45,6 +55,8 @@ public class LarryPlayerController : MonoBehaviour
     const string IS_JUMP = "isJump";
 
     float rotationPerFrame = 15f;
+
+
 
     private enum State
     {
@@ -168,6 +180,11 @@ public class LarryPlayerController : MonoBehaviour
                 OnSlope = false;
             }
         }
+    }
+
+    private void Reload()
+    {
+        inventory.ReloadActiveWeapon(equippedWeapon.GetComponent<Weapon>());
     }
 
     private void Crouch()
