@@ -7,6 +7,7 @@ TagManager:
   - Pickups
   - InvItem
   - GridSquare
+  - HotBarSquare
   layers:
   - Default
   - TransparentFX

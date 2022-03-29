@@ -74,8 +74,8 @@ public class Weapon : MonoBehaviour
 
     //ammo handling
     public int ammoCount = 10;
-    int magazinCapacity;
-    string ammoType;
+    public int magazineCapacity;
+    public string ammoType;
     //Reload Function will provide a call to the inventory manager in order to get ammo reserve data
 
     //Rate of fire handling

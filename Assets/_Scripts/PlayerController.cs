@@ -9,10 +9,12 @@ public class PlayerController : MonoBehaviour
 	
     [HideInInspector] public bool isAirborne;
 
-    public inventoryManager inventory; //reference to inventory script / canvas
+    public InventoryManager inventory; //reference to inventory script / canvas
     public KeyCode interactKey; // ex. "e", "Tab", "Mouse 0"
     private bool inPickupRange;
     private GameObject currPickup; //holds the pickup we were last in range of
+
+    public GameObject equippedWeapon;
 
     private bool canDoubleJump = true;
 
@@ -36,6 +38,8 @@ public class PlayerController : MonoBehaviour
     private bool underObject;
 
     private State state; //A simple state machine to keep track of player states
+
+
 
 
     private enum State
@@ -125,27 +129,6 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if(inPickupRange && Input.GetKeyDown(interactKey)) {
-            bool weaponPickup = false;
-            if(currPickup.GetComponent<Weapon>() != null)
-                weaponPickup = true;
-            inventory.PickUpItem(currPickup, weaponPickup);
-            inPickupRange = false;
-        }
-
-    }
-
-    void OnTriggerEnter(Collider other) {
-        if(other.gameObject.tag == "Pickups") {
-            inPickupRange = true;
-            currPickup = other.gameObject;
-        }
-
-    }
-
-    void OnTriggerExit(Collider other) {
-        if(other.gameObject == currPickup)
-            inPickupRange = false;
     }
 
     private void UseHook()
@@ -180,6 +163,11 @@ public class PlayerController : MonoBehaviour
                 OnSlope = false;
             }
         }
+    }
+
+    private void Reload()
+    {
+        inventory.ReloadActiveWeapon(equippedWeapon.GetComponent<Weapon>());
     }
 
     private void Crouch()
