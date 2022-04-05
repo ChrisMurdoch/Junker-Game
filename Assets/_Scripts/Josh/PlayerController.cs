@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public inventoryManager inventory; //reference to inventory script / canvas
+    public InventoryManager inventory; //reference to inventory script / canvas
     public KeyCode interactKey; // ex. "e", "Tab", "Mouse 0"
     private bool inPickupRange;
     private GameObject currPickup; //holds the pickup we were last in range of

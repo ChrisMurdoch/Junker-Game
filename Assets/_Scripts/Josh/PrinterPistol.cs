@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Authored by Joshua Hilliard
-public class PrinterPistol : JoshWeaponBase
+public class PrinterPistol : WeaponBase
 {
 
     [Header("Weapon Specific Parameters")]
@@ -28,9 +28,12 @@ public class PrinterPistol : JoshWeaponBase
     {
         base.FireRateTimer();
         InputHandler();
-        Reload();
     }
 
+    public void PrinterRegenerate()
+    {
+        Reload();
+    }
     protected override void Reload()
     {
         if(currentAmmo < maxAmmo)

@@ -8,18 +8,28 @@ using UnityEngine.UI;
 public class HotBarController : MonoBehaviour
 {
     InventoryManager im;
-    InventoryObject[] hotbar = new InventoryObject[4];
+    InventoryObject[] hotbar = new InventoryObject[4]; // item 0 is printer pistol
     int currentItem = 0;
 
     public GameObject player;
     public Image currentItemImage;
 
+    private void Start()
+    {
+        //hotbar[0] = new InventoryObject()
+        //currentItemImage = hotbar[0].image;
+    }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-            ChangeActiveSlot(0);
-        else if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetAxis("Mouse ScrollWheel") > 0) // forward
+        {
             ChangeActiveSlot(1);
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") < 0) // backward
+        {
+            ChangeActiveSlot(0);
+        }
     }
     
     public void PlcaeItemInSlot(InventoryObject io, int slot)
@@ -54,6 +64,8 @@ public class HotBarController : MonoBehaviour
             if (currentItem > 3)
                 currentItem = 0;
         }
+        if (hotbar[currentItem] == null)
+            return;
         ChangeEquippedItem();
     }
 

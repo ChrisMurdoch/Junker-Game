@@ -12,8 +12,6 @@ public class InventoryManager : MonoBehaviour
 {    
 
     
-    private List<int> itemAmts; //holds the amount of each item (index same as items list)
-
     public List<InventoryObject> items; //New list to hold data references to the game objects
     private float moneyCount; //how much money the player has
     private float scrapCount; //how much scrap the player has
@@ -57,7 +55,6 @@ public class InventoryManager : MonoBehaviour
         canvasScaleFactor = gameObject.GetComponent<CanvasScaler>().scaleFactor;
         InstantiateGrid();
         items = new List<InventoryObject>();
-        itemAmts = new List<int>();
         holdingItem = false;
     }
 
@@ -283,6 +280,35 @@ public class InventoryManager : MonoBehaviour
                 if (amountUsed == 0)
                     break;
             }
+    }
+    public void ReloadActiveWeapon(WeaponBase activeWeapon)
+    {
+        int amountUsed;
+        List<InventoryObject> removeList = new List<InventoryObject>();
+        foreach(InventoryObject io in items)
+            if(io.itemName == activeWeapon.ammoType)
+            {
+                amountUsed = (int)(activeWeapon.maxAmmo - activeWeapon.currentAmmo);
+                if(io.amount > amountUsed)
+                {
+                    io.amount -= (int)amountUsed;
+                    activeWeapon.currentAmmo += amountUsed;
+                    amountUsed = 0;
+                }
+                else
+                {
+                    amountUsed -= io.amount;
+                    activeWeapon.currentAmmo += io.amount;
+                    removeList.Add(io);
+                }
+                if (amountUsed == 0)
+                    break;
+            }
+        foreach(InventoryObject io in removeList)
+        {
+            GameObject.Destroy(io.uiImage);
+            items.Remove(io);
+        }
     }
 
     //called by PlayerController's OnTrigger
@@ -593,10 +619,22 @@ public class InventoryObject
         itemName = item.data.itemName;
 
     }
-#region Properties
+
+    public InventoryObject(Sprite image, Vector2Int itemSize, int amountMax, int amount, string itemName)
+    {
+        //prefab = new GameObject(pickup.name, pickup.GetComponents<Type>());
+        //copy all of the components of the pickup onto this new gameobject;
+        this.image = image;
+        this.itemSize = itemSize;
+        this.amountMax = amountMax;
+        this.amount = amount;
+        this.itemName = itemName;
+
+    }
+    #region Properties
 
     //whether or not this item can stack on top of other items of the same type (instead of taking up another grid space)
-   public bool Stackable {
+    public bool Stackable {
        get {if(amountMax > 1) return true; return false; }
    }
 

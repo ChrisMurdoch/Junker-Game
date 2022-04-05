@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Authored by Joshua Hilliard
-public class AutoRifle : JoshWeaponBase
+public class AutoRifle : WeaponBase
 {
     // Start is called before the first frame update
     void Start()

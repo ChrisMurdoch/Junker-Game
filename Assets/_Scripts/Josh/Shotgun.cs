@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //Authored by Joshua Hilliard
-public class Shotgun : JoshWeaponBase
+public class Shotgun : WeaponBase
 {
     [Header("Weapon Specific Parameters")]
     public float NumberOfPellets = 10f;

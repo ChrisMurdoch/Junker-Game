@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 //Authored by Joshua Hilliard
 
-public class JoshWeaponBase : MonoBehaviour
+public class WeaponBase : MonoBehaviour
 {
     [Header("Gun Info")]
     public int weaponID;
@@ -22,6 +22,7 @@ public class JoshWeaponBase : MonoBehaviour
     public float spread;
     public bool isSemiAuto;
     public bool infiniteAmmo;
+    public string ammoType;
 
     [Header("Current State Info")]
     public float currentAmmo;
@@ -84,11 +85,6 @@ public class JoshWeaponBase : MonoBehaviour
                     Shoot();
                 }
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Reload();
         }
     }
 

@@ -12,8 +12,6 @@ public class LarryPlayerController : MonoBehaviour
 	
     [HideInInspector] public bool isAirborne;
 
-<<<<<<< HEAD:Assets/_Scripts/LarryPlayerController.cs
-=======
     public InventoryManager inventory; //reference to inventory script / canvas
     public KeyCode interactKey; // ex. "e", "Tab", "Mouse 0"
     private bool inPickupRange;
@@ -21,7 +19,6 @@ public class LarryPlayerController : MonoBehaviour
 
     public GameObject equippedWeapon;
 
->>>>>>> inventory:Assets/_Scripts/PlayerController.cs
     private bool canDoubleJump = true;
 
     private CharacterController characterController;

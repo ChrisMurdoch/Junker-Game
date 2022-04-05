@@ -20,7 +20,8 @@ public static class ItemHandler
     {
         if(actor.tag == "Player")
         {
-            //if(item is a weapon, change the equiped item on the player)
+            if (item == "Gun")
+                EquipWeapon(item, actor);
             //if(item is a healing one, heal the player)
         }
         else if(actor.tag == "Inventory")
@@ -36,8 +37,7 @@ public static class ItemHandler
 
     static void EquipWeapon(string itemName, GameObject player)
     {
-        string filePath; // = folder for the weapon equips + itemName
-        //place the active weapon in the players active weapon slot and enable the game object
+        player.GetComponent<PlayerInventoryInteraction>().ActivateWeapon(itemName);
         //there has to be a better way to do this, especially if we want upgrading weapons
         //but for now this should do
 
