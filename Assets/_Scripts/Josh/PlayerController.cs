@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private bool inPickupRange;
     private GameObject currPickup; //holds the pickup we were last in range of
 
+
     //PLEASE MAKE A COPY OF THE SCRIPT WHEN ADDING STUFF IF YOU'RE NOT THE AUTHOR^
 
     private bool canDoubleJump = true;
@@ -19,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController characterController;
     private GameObject PlayerBody;
 
-    private Vector3 velocity;
+    [HideInInspector] public Vector3 velocity; //made public to allow for animations to be handled in different script
     private float verticalVelocity;
 
     private float baseStepOffSet;
