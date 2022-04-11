@@ -4,7 +4,7 @@ using UnityEngine;
 //Authored by Joshua Hilliard
 public class DroneEnemy : EnemyBase
 {
-    public Transform Player;
+    [HideInInspector] public Transform Player;
     public Transform Gun;
 
     [SerializeField] private float range = 20;
@@ -41,7 +41,7 @@ public class DroneEnemy : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
-        Player = GameObject.Find("Player").transform;
+        Player = GameObject.FindWithTag("Player").transform; //changed to find with tag instead of name
         Physics.IgnoreCollision(Player.GetComponentInParent<CharacterController>(), gameObject.GetComponent<Collider>());
         fireTimer = fireRate;
         idleTimer = positionChangeTimer;

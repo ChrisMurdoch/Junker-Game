@@ -5,7 +5,7 @@ using UnityEngine.AI;
 //Authored by Joshua Hilliard
 public class GroundEnemy : EnemyBase
 {
-    public Transform Player;
+    [HideInInspector] public Transform Player;
     NavMeshAgent agent;
 
     Animator animator;
@@ -39,7 +39,7 @@ public class GroundEnemy : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
-        Player = GameObject.Find("Player").transform;
+        Player = GameObject.FindWithTag("Player").transform; //changed to find with tag instead of name
         attackTimer = attackInterval/2;
         AggroTimer = AggroLength;
         animator = GetComponent<Animator>();

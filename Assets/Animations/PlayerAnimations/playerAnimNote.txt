@@ -1,0 +1,7 @@
+animation clip array order:
+
+0 = idle
+1 = 180Turn
+2 = running
+3 = backwardWalk
+4 = jump

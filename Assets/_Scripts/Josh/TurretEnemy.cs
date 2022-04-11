@@ -5,7 +5,7 @@ using UnityEngine;
 //Authored by Joshua Hilliard
 public class TurretEnemy : EnemyBase
 {
-    public Transform Player;
+    [HideInInspector] public Transform Player;
     public Transform turretHead;
 
     [SerializeField] private float followSpeed = 3;
@@ -35,7 +35,7 @@ public class TurretEnemy : EnemyBase
 
     private void Start()
     {
-        Player = GameObject.Find("Player Body").transform;
+        Player = GameObject.FindWithTag("Player").transform;
         LockOnTimer = LockOnLength;
         fireTimer = fireRate;
     }

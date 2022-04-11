@@ -8,14 +8,25 @@ public class PlayerAnimator : MonoBehaviour
 
     public GameObject crosshair;
     public Animator anim;
+    public PlayerControllerNew pc;
 
-    private int facingDir; //-1 = left, 1 = right
+    //public bool jumpFinished;
+
+    private AnimationClip turnClip;
+    [HideInInspector] public bool facingRight; //false = left, true = right
+    [HideInInspector] public bool finishedTurn;
 
     // Start is called before the first frame update
     void Start()
     {
         anim = this.GetComponent<Animator>();
-        facingDir = 1; //start facing right
+        facingRight = true; //start facing right
+        finishedTurn = true; //since we aren't actively turning on start
+
+        AddAnimationEvent(1.09f, "FinishTurn", 1);
+        AddAnimationEvent(0.60f, "AddForce", 4);
+
+
     }
 
     void Update()
@@ -24,22 +35,41 @@ public class PlayerAnimator : MonoBehaviour
         CheckForTurn();
     }
 
+    void LateUpdate() {
+        if(finishedTurn) {
+            if(facingRight)
+                transform.rotation = Quaternion.Euler(0, 90f, 0);
+            else
+                transform.rotation = Quaternion.Euler(0, -90f, 0);
+        }
+    }
+
     void CheckMovement()
     {
         int moveDir = (int)Input.GetAxisRaw("Horizontal");
-        int aimDir = CheckAimDirection();
+        bool movingRight;
+
 
         if(moveDir != 0) //moving
         {
+
             anim.SetBool("running", true);
 
+            if(moveDir < 0)
+                movingRight = false;
+            else  
+                movingRight = true;
+
             //running in dir you aren't facing
-            if (moveDir != aimDir)
+            if (movingRight != facingRight)
             {
+                Debug.Log("BACKWARDS");
                 anim.SetBool("backwards", true);
             }
-            else
+            else {
+                Debug.Log("FORWARD");
                 anim.SetBool("backwards", false);
+            }
         }
 
         else //idling
@@ -50,25 +80,50 @@ public class PlayerAnimator : MonoBehaviour
 
     void CheckForTurn()
     {
-        int newAimDir = CheckAimDirection();
+        bool newFacingRight = CheckAimDirection();
         
-        if (newAimDir != facingDir)
+        if (newFacingRight != facingRight && finishedTurn) //need to face new direction & are not actively turning
         {
             anim.SetTrigger("needsTurn"); //trigger the turn animation
-            facingDir = newAimDir; //update facingDir after turn
+           finishedTurn = false; //denote active turn anim
+           Debug.Log("TURN");
         }
     }
 
-    int CheckAimDirection()
+    //checks whether you are aiming to the right of the player object
+    bool CheckAimDirection()
     {
-        float aimX = crosshair.transform.position.x;
-        float posX = this.transform.position.x;
+        float aimX = PlayerAimNew.instance.mousePos.x; //get mouse's position from player aim script
+        float posX = this.transform.position.x; 
 
         //crosshair to the left of player object
         if(aimX < posX)
-            return -1; //aiming left
+            return false; //aiming left
         else
-            return 1; //aiming right (default)
+            return true; //aiming right (default)
+    }
+
+    void FinishTurn()
+    {
+        facingRight = !facingRight; //switch facing direction to opposite
+        finishedTurn = true;
+        Debug.Log("finished turn");
+    }
+
+    void AddForce()
+    {
+        pc.AddJumpForce();
+    }
+
+    void AddAnimationEvent(float animTime, string fName, int clipIndex)
+    {
+         //create animation event
+        AnimationEvent evt = new AnimationEvent();
+        evt.time = animTime; //event happens at animTime seconds in animation
+        evt.functionName = fName; //event will call this function
+        
+        AnimationClip clip = anim.runtimeAnimatorController.animationClips[clipIndex]; //get clip from animator's array
+        clip.AddEvent(evt); //add event to clip
     }
 
 }
