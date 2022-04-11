@@ -4,6 +4,8 @@ using UnityEngine;
 //Authored by Joshua Hilliard
 public class PlayerProjectile : MonoBehaviour
 {
+    //OLD SCRIPT, USE PROJECTILE BASE
+
     Rigidbody rb;
 
     public float projectileSpeed = 30;
