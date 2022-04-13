@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
   m_AmbientGroundColor: {r: 1, g: 1, b: 1, a: 1}
-  m_AmbientIntensity: 0.72
+  m_AmbientIntensity: 0.75
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: be6c37625a5b4e740a428df2a39d8e99, type: 2}
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 0.25
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 403194967}
   m_IndirectSpecularColor: {r: 0.2265017, g: 0.25447023, b: 0.29847327, a: 0.25}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
@@ -17251,7 +17251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &403194967
 Light:
   m_ObjectHideFlags: 0
@@ -17321,13 +17321,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 403194966}
-  m_LocalRotation: {x: 0.7769819, y: -0.2583219, z: -0.016032536, w: 0.57385707}
+  m_LocalRotation: {x: 0.2747258, y: 0.071011946, z: -0.10608066, w: 0.953011}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 62.064, y: -136.684, z: -116.347}
+  m_LocalEulerAnglesHint: {x: 32.595, y: 5.248, z: -11.168}
 --- !u!1001 &403266798
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65572,7 +65572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2fc2efcde501cb749a36b0bf86eb24f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.9
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2fc2efcde501cb749a36b0bf86eb24f7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -65663,6 +65663,7 @@ MonoBehaviour:
   anim: {fileID: 1567876610}
   pc: {fileID: 1567876613}
   facingRight: 0
+  finishedTurn: 0
 --- !u!114 &1567876613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65685,6 +65686,7 @@ MonoBehaviour:
   airSpeed: 12
   crouchSpeed: 5
   wallSlideSpeed: 4
+  backwardSpeedPct: 0.5
   jumpForce: 20
   doubleJumpForce: 25
   WallJumpHeight: 20
@@ -93890,6 +93892,7 @@ MonoBehaviour:
   airSpeed: 12
   crouchSpeed: 5
   wallSlideSpeed: 4
+  backwardSpeedPct: 0.5
   jumpForce: 20
   doubleJumpForce: 25
   WallJumpHeight: 20

@@ -33,6 +33,13 @@ public class PlayerAnimator : MonoBehaviour
     {
         CheckMovement();
         CheckForTurn();
+
+        if(pc.isCrouching) {
+            anim.SetBool("crouching", true);
+        }
+        else {
+            anim.SetBool("crouching", false);
+        }
     }
 
     void LateUpdate() {
@@ -75,6 +82,7 @@ public class PlayerAnimator : MonoBehaviour
         else //idling
         {
             anim.SetBool("running", false);
+            anim.SetBool("backwards", false);
         }
     }
 

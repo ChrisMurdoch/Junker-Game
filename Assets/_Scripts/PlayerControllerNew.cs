@@ -59,8 +59,10 @@ public class PlayerControllerNew : MonoBehaviour
     [Header("Movement Parameters")]
     [SerializeField] private float moveSpeed = 10.0f; //Grounded speed
     [SerializeField] private float airSpeed = 12.0f; //Air speed, this should generally be higher that moveSpeed
-    [SerializeField] private float crouchSpeed = 5.0f;
+    [SerializeField] private float crouchSpeedPct = 0.5f; //multiply movespeed by this when crouching
+    [SerializeField] private float crouchHeightPct = 0.5f; // multiply this to character controller's height while crouched
     [SerializeField] private float wallSlideSpeed = 4.0f;
+    [SerializeField] private float backwardSpeedPct = 0.5f; //multiply this * moveSpeed when moving backward
 
     [Header("Jumping Parameters")] //For a snappier jump, turn these way up to a ratio of 1:2 ish or double the amount of gravity in the script
     [SerializeField] private float jumpForce = 20.0f;
@@ -82,6 +84,7 @@ public class PlayerControllerNew : MonoBehaviour
 
     private Vector3 hitPointNormal;
     private PlayerAnimator pa;
+    private float ccTopY; //origin is at feet for animation, this keeps track of where the top of the character controller is
     
     private bool IsSliding //A bool that returns the angle of a slope if it exceeds the CharacterControllers slope limit
     {
@@ -114,19 +117,21 @@ public class PlayerControllerNew : MonoBehaviour
     {
         Cursor.visible = false;
         inPickupRange = false;
+
+        //use transform.position & cc's height to get original top position
+        ccTopY = transform.position.y + characterController.height;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-
         switch (currentState)
         {
             default:
             case State.Normal:
                 SlopeCheck();
                 InputHandler();
-                //Crouch();
+                Crouch();
                 WallSlide();
                 GravityHandler();
                 Debug.Log("VELOCITY = " + velocity);
@@ -135,15 +140,18 @@ public class PlayerControllerNew : MonoBehaviour
                 if(!pa.facingRight && pa.finishedTurn && !anim.GetBool("backwards")) {
                     Debug.Log("FORWARD LEFT"); 
                     velocity.x *= -1.0f;
+                    Debug.Log("MOVE VALUE = " + (velocity * Time.deltaTime));
                     characterController.Move(velocity * Time.deltaTime);
 
                 //walking backward to the left
-                } else if (pa.facingRight && pa.finishedTurn && anim.GetBool("backwards")) {
+                } else if (!pa.facingRight && pa.finishedTurn && anim.GetBool("backwards")) {
+                    Debug.Log("BACKWARD RIGHT");
                     velocity.x *= -1.0f;
                     characterController.Move(velocity * Time.deltaTime);
                 }
                 
                 else {
+                    Debug.Log("MOVE VALUE = " + (velocity * Time.deltaTime));
                     characterController.Move(velocity * Time.deltaTime);
                 }
                 WallJump();
@@ -217,50 +225,69 @@ public class PlayerControllerNew : MonoBehaviour
         }
     }
 
-    // private void Crouch()
-    // {
-    //     if (Input.GetKey(KeyCode.C) && characterController.isGrounded)
-    //     {
-    //         isCrouching = true;
-    //         PlayerBody.transform.localScale = new Vector3(1, .5f, 1);
-    //         characterController.height = 1;
-    //         characterController.center = new Vector3(0, -.5f, 0);
-    //         PlayerBody.transform.localPosition = characterController.center;
-    //         if (Physics.Raycast(transform.position, Vector3.up, out RaycastHit hit, 1))
-    //         {
-    //             underObject = true;
-    //         }
-    //         else
-    //         {
-    //             underObject = false;
-    //         }
-    //     }
-    //     else if (underObject == true)
-    //     {
-    //         isCrouching = true;
-    //         PlayerBody.transform.localScale = new Vector3(1, .5f, 1);
-    //         characterController.height = 1;
-    //         characterController.center = new Vector3(0, -.5f, 0);
-    //         PlayerBody.transform.localPosition = characterController.center;
+    private void Crouch()
+    {
+        if ((Input.GetKey(KeyCode.S) || underObject) && characterController.isGrounded) //changed to "down" button for crouching
+        {
 
-    //         if (Physics.Raycast(transform.position, Vector3.up, out RaycastHit hit, 1))
-    //         {
-    //             underObject = true;
-    //         }
-    //         else
-    //         {
-    //             underObject = false;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         isCrouching = false;
-    //         PlayerBody.transform.localScale = new Vector3(1, 1, 1);
-    //         characterController.height = 2;
-    //         characterController.center = new Vector3(0, 0, 0);
-    //         PlayerBody.transform.localPosition = characterController.center;
-    //     }
-    // }
+            if (!isCrouching) //if you weren't already crouched
+            {
+                Debug.Log("enter crouch");
+                characterController.height *= crouchHeightPct; //get amt of current height for crouch
+
+                //multiply by same percent to get correct center height, keep x and z the same
+                characterController.center = new Vector3(characterController.center.x, 
+                                                    characterController.center.y * crouchHeightPct,
+                                                    characterController.center.z);
+                
+                ccTopY = transform.position.y + characterController.height;
+            }
+
+            isCrouching = true;
+
+            Debug.Log("crouching");
+
+            //turn position at top of character to vector3 for raycasting
+            Vector3 rayCastPos = new Vector3(transform.position.x, ccTopY, transform.position.z);
+            
+            //raycast from top of charactercontroller to find any block directly above
+            if (Physics.Raycast(rayCastPos, Vector3.up, out RaycastHit hit, 1))
+            {
+                Debug.DrawRay(rayCastPos, Vector3.up * hit.distance, Color.green); 
+                underObject = true;
+                Debug.Log("under object");
+            }
+            else
+            {
+                underObject = false;
+                Debug.Log("not under object");
+            }
+        }
+       
+        else //became ungrounded or not under object & not holding s key
+        {
+            Debug.Log("KEY UP");
+            UnCrouch();
+        }
+    }
+
+    private void UnCrouch()
+    {        
+        if(isCrouching) {
+
+            Debug.Log("exit crouch");
+            characterController.height /= crouchHeightPct; //reverse operation to get back to original height
+
+            //reverse operation on y center, keep x and z the same
+            characterController.center = new Vector3(characterController.center.x, 
+                                                characterController.center.y / crouchHeightPct,
+                                                characterController.center.z);
+
+            ccTopY = transform.position.y + characterController.height; //recalculate top of character controller
+        }
+
+        isCrouching = false;
+    }
 
     private void WallSlide()
     {
@@ -294,17 +321,16 @@ public class PlayerControllerNew : MonoBehaviour
 
         if (characterController.isGrounded)
         {
-            if (!isCrouching)
+            Debug.Log("X = " + x);
+            Debug.Log(transform.forward);
+            velocity = (transform.forward * x) * moveSpeed + Vector3.up * verticalVelocity;
+            /* A Vector3 used with charactercontroller.move()
+            Transform.right is shorthand for the X axis of the gameobject * x which is either -1, 0, or 1, then multiplied by the movespeed
+            Vector3.up * verticalVelocity is gravity and jump height, with Vector3.up being short for Vector3(0,1,0) */
+
+            if (isCrouching)
             {
-                Debug.Log("X = " + x);
-                velocity = (transform.forward * x) * moveSpeed + Vector3.up * verticalVelocity;
-                /* A Vector3 used with charactercontroller.move()
-                Transform.right is shorthand for the X axis of the gameobject * x which is either -1, 0, or 1, then multiplied by the movespeed
-                Vector3.up * verticalVelocity is gravity and jump height, with Vector3.up being short for Vector3(0,1,0) */
-            }
-            else if (isCrouching)
-            {
-                velocity = (transform.forward * x) * crouchSpeed + Vector3.up * verticalVelocity;
+                velocity.x *= crouchSpeedPct;
             }
         }
 
@@ -313,6 +339,11 @@ public class PlayerControllerNew : MonoBehaviour
             Debug.Log("NOT GROUNDED");
             velocity = (transform.forward * xAir) * airSpeed + Vector3.up * verticalVelocity;
         }
+
+        if (anim.GetBool("backwards"))
+            velocity.x *= backwardSpeedPct; //only a percent of movement speed when backwards
+
+        Debug.Log("VELOCITY = " + velocity);
 
 
     }
@@ -340,6 +371,10 @@ public class PlayerControllerNew : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded && !IsSliding && !isWallSliding) //If player is grounded and not sliding, verticalVelocity becomes the jumpforce
         {
             //verticalVelocity = 0;
+
+            if (isCrouching)
+                UnCrouch(); //jump automatically un-does crouch
+
             anim.SetTrigger("jumping");
         }
 
