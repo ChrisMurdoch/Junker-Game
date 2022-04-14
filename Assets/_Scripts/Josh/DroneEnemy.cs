@@ -25,6 +25,8 @@ public class DroneEnemy : EnemyBase
 
     [SerializeField] private GameObject Projectile;
     [SerializeField] private Transform ProjectileSpawn;
+    [SerializeField] private GameObject MuzzleFlashParticle;
+
 
     public LayerMask RaycastLayerIgnore;
 
@@ -145,6 +147,7 @@ public class DroneEnemy : EnemyBase
         if (fireTimer <= 0)
         {
             GameObject projectile = Instantiate(Projectile, ProjectileSpawn.position, ProjectileSpawn.rotation);
+            GameObject muzzleflash = Instantiate(MuzzleFlashParticle, ProjectileSpawn.position, ProjectileSpawn.rotation);
             Physics.IgnoreCollision(projectile.GetComponent<Collider>(), gameObject.GetComponent<Collider>());
             fireTimer = fireRate;
         }

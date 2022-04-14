@@ -32,6 +32,10 @@ public class PlayerAim : MonoBehaviour
 
         rotationCenter.transform.LookAt(mousePos, Vector3.right);
 
-        Crosshair.transform.position = Input.mousePosition;
+        if(Crosshair != null)
+        {
+            Crosshair.transform.position = Input.mousePosition;
+
+        }
     }
 }

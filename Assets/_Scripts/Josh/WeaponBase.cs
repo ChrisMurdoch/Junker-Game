@@ -13,6 +13,7 @@ public class WeaponBase : MonoBehaviour
     [Header("GameObject Parameters")]
     public GameObject projectile;
     public Transform projectileSpawn;
+    public GameObject muzzleFlashParticle;
 
     [Header("Gun Parameters")]
     public float fireRate;
@@ -56,6 +57,7 @@ public class WeaponBase : MonoBehaviour
         canShoot = false;
         shootTimer = fireRate;
 
+        GameObject muzzleflash = Instantiate(muzzleFlashParticle, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
     }
 
     protected virtual void Reload()

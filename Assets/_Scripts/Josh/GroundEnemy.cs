@@ -25,6 +25,12 @@ public class GroundEnemy : EnemyBase
 
     public LayerMask RaycastLayerIgnore;
 
+    public Transform meleeAttackPosition;
+    public float meleeAttackRange;
+
+    public float meleeAttackDamage = 10;
+
+
 
     private enum State
     {
@@ -157,7 +163,15 @@ public class GroundEnemy : EnemyBase
             {
                 animator.SetInteger("moving", 2);
                 attackTimer = attackInterval;
-                Debug.Log("Attack");
+                Collider[] hitColliders = Physics.OverlapSphere(meleeAttackPosition.position, meleeAttackRange);
+                foreach (var hitCollider in hitColliders)
+                {
+                    if (hitCollider.gameObject.CompareTag("Player"))
+                    {
+                        hitCollider.gameObject.GetComponent<PlayerStats>().TakeDamage(meleeAttackDamage);
+                    }
+                }
+                //Debug.Log("Attack");
             }
         }
 
