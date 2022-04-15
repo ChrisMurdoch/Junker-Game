@@ -9,12 +9,17 @@ public class PlayerAnimator : MonoBehaviour
     public GameObject crosshair;
     public Animator anim;
     public PlayerControllerNew pc;
+    [SerializeField] private float landingDist;
+    public float fallThreshold; //how far the player has to be from the ground to trigger falling animation
 
     //public bool jumpFinished;
+    private float storedMoveSpeed;
+    private float storedAirSpeed;
 
     private AnimationClip turnClip;
     [HideInInspector] public bool facingRight; //false = left, true = right
     [HideInInspector] public bool finishedTurn;
+    [HideInInspector] public bool finishedLand;
 
     // Start is called before the first frame update
     void Start()
@@ -22,9 +27,13 @@ public class PlayerAnimator : MonoBehaviour
         anim = this.GetComponent<Animator>();
         facingRight = true; //start facing right
         finishedTurn = true; //since we aren't actively turning on start
+        finishedLand = true; //since we aren't actively falling/landing
 
+        storedMoveSpeed = pc.moveSpeed;
+        storedAirSpeed = pc.airSpeed;
         AddAnimationEvent(1.09f, "FinishTurn", 1);
-        AddAnimationEvent(0.60f, "AddForce", 4);
+        AddAnimationEvent(0.15f, "AddForce", 8);
+        AddAnimationEvent(1.01f, "EndLanding", 10);
 
 
     }
@@ -40,14 +49,38 @@ public class PlayerAnimator : MonoBehaviour
         else {
             anim.SetBool("crouching", false);
         }
+
+
+        //check if cc left the ground. Extra check for if you are outside of a certain distance from the ground (aviods isGrounded glitchyness)
+        if (!GetComponent<CharacterController>().isGrounded && !Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, fallThreshold)) {
+            Debug.Log("NOT GROUNDED");
+            anim.SetBool("falling", true); //play falling idle anim
+            finishedLand = false;            
+        }
+
+        if(anim.GetCurrentAnimatorStateInfo(0).IsName("fall-idle"))
+            CheckForGround(); //while falling, check for when to play landing anim
+
+        if(anim.GetCurrentAnimatorStateInfo(0).IsName("fall-to-land")) {
+            pc.moveSpeed = 0f;
+            pc.airSpeed = 0f;
+        }
+        else {
+            pc.moveSpeed = storedMoveSpeed;
+            pc.airSpeed = storedAirSpeed;
+        }
+
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("idle"))
+            anim.ResetTrigger("needsLanding");
     }
 
     void LateUpdate() {
         if(finishedTurn) {
-            if(facingRight)
+            if(facingRight) {
                 transform.rotation = Quaternion.Euler(0, 90f, 0);
-            else
+            } else {
                 transform.rotation = Quaternion.Euler(0, -90f, 0);
+            }
         }
     }
 
@@ -70,11 +103,9 @@ public class PlayerAnimator : MonoBehaviour
             //running in dir you aren't facing
             if (movingRight != facingRight)
             {
-                Debug.Log("BACKWARDS");
                 anim.SetBool("backwards", true);
             }
             else {
-                Debug.Log("FORWARD");
                 anim.SetBool("backwards", false);
             }
         }
@@ -90,11 +121,10 @@ public class PlayerAnimator : MonoBehaviour
     {
         bool newFacingRight = CheckAimDirection();
         
-        if (newFacingRight != facingRight && finishedTurn) //need to face new direction & are not actively turning
+        if (newFacingRight != facingRight && finishedTurn && GetComponent<CharacterController>().isGrounded) //need to face new direction & are not actively turning
         {
             anim.SetTrigger("needsTurn"); //trigger the turn animation
            finishedTurn = false; //denote active turn anim
-           Debug.Log("TURN");
         }
     }
 
@@ -111,16 +141,32 @@ public class PlayerAnimator : MonoBehaviour
             return true; //aiming right (default)
     }
 
+    //check if we are close enough to the ground to trigger the landing anim
+    void CheckForGround()
+    {
+        if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, landingDist))
+        {
+            Debug.DrawRay(transform.position, -Vector3.up * hit.distance, Color.green); 
+            Debug.Log("NEEDS LANDING");
+            anim.SetTrigger("needsLanding"); //trigger landing animation
+        }
+
+    }
+
     void FinishTurn()
     {
         facingRight = !facingRight; //switch facing direction to opposite
         finishedTurn = true;
-        Debug.Log("finished turn");
     }
 
     void AddForce()
     {
         pc.AddJumpForce();
+    }
+
+    void EndLanding()
+    {
+        anim.SetBool("falling", false); //landed, so no longer falling
     }
 
     void AddAnimationEvent(float animTime, string fName, int clipIndex)

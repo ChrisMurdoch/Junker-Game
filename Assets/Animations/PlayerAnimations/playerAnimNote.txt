@@ -4,4 +4,10 @@ animation clip array order:
 1 = 180Turn
 2 = running
 3 = backwardWalk
-4 = jump
+4 = crouch-idle
+5 = crouch-walk
+6 = crouch-backward-walk
+7 = crouch-turn
+8 = jump-up
+9 = fall-idle
+10 = fall-to-land

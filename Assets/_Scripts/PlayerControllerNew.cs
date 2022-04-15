@@ -57,12 +57,13 @@ public class PlayerControllerNew : MonoBehaviour
 
 
     [Header("Movement Parameters")]
-    [SerializeField] private float moveSpeed = 10.0f; //Grounded speed
-    [SerializeField] private float airSpeed = 12.0f; //Air speed, this should generally be higher that moveSpeed
+    public float moveSpeed = 10.0f; //Grounded speed, changed to public so movement can freeze during certain animations
+    public float airSpeed = 12.0f; //Air speed, this should generally be higher that moveSpeed
     [SerializeField] private float crouchSpeedPct = 0.5f; //multiply movespeed by this when crouching
     [SerializeField] private float crouchHeightPct = 0.5f; // multiply this to character controller's height while crouched
     [SerializeField] private float wallSlideSpeed = 4.0f;
     [SerializeField] private float backwardSpeedPct = 0.5f; //multiply this * moveSpeed when moving backward
+    public float zPosition = 0.0f; //zPosition the characer should stay at
 
     [Header("Jumping Parameters")] //For a snappier jump, turn these way up to a ratio of 1:2 ish or double the amount of gravity in the script
     [SerializeField] private float jumpForce = 20.0f;
@@ -123,39 +124,34 @@ public class PlayerControllerNew : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         switch (currentState)
         {
             default:
             case State.Normal:
                 SlopeCheck();
-                InputHandler();
                 Crouch();
                 WallSlide();
+                WallJump();
+                JumpHandler();
                 GravityHandler();
-                Debug.Log("VELOCITY = " + velocity);
+                InputHandler();
 
                 //walking forward to the left
                 if(!pa.facingRight && pa.finishedTurn && !anim.GetBool("backwards")) {
-                    Debug.Log("FORWARD LEFT"); 
                     velocity.x *= -1.0f;
-                    Debug.Log("MOVE VALUE = " + (velocity * Time.deltaTime));
                     characterController.Move(velocity * Time.deltaTime);
 
                 //walking backward to the left
                 } else if (!pa.facingRight && pa.finishedTurn && anim.GetBool("backwards")) {
-                    Debug.Log("BACKWARD RIGHT");
                     velocity.x *= -1.0f;
                     characterController.Move(velocity * Time.deltaTime);
                 }
                 
                 else {
-                    Debug.Log("MOVE VALUE = " + (velocity * Time.deltaTime));
                     characterController.Move(velocity * Time.deltaTime);
                 }
-                WallJump();
-                JumpHandler();
                 UseHook();
                 break;
             case State.Hooking:
@@ -164,10 +160,14 @@ public class PlayerControllerNew : MonoBehaviour
             case State.Clinging:
                 HookCling();
                 break;
-
         }
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0); // Makes sure player stays at 0 on the Z axis
+        //if player gets off z = 0, smoothly move them back
+        if(transform.position.z != zPosition)
+        {
+            Vector3 moveOffset  = new Vector3 (0.0f, 0.0f, (zPosition - transform.position.z) * 0.05f);
+            characterController.Move (moveOffset);
+        }
 
 
         if (inPickupRange && Input.GetKeyDown(interactKey))
@@ -232,7 +232,6 @@ public class PlayerControllerNew : MonoBehaviour
 
             if (!isCrouching) //if you weren't already crouched
             {
-                Debug.Log("enter crouch");
                 characterController.height *= crouchHeightPct; //get amt of current height for crouch
 
                 //multiply by same percent to get correct center height, keep x and z the same
@@ -245,7 +244,6 @@ public class PlayerControllerNew : MonoBehaviour
 
             isCrouching = true;
 
-            Debug.Log("crouching");
 
             //turn position at top of character to vector3 for raycasting
             Vector3 rayCastPos = new Vector3(transform.position.x, ccTopY, transform.position.z);
@@ -255,18 +253,15 @@ public class PlayerControllerNew : MonoBehaviour
             {
                 Debug.DrawRay(rayCastPos, Vector3.up * hit.distance, Color.green); 
                 underObject = true;
-                Debug.Log("under object");
             }
             else
             {
                 underObject = false;
-                Debug.Log("not under object");
             }
         }
        
         else //became ungrounded or not under object & not holding s key
         {
-            Debug.Log("KEY UP");
             UnCrouch();
         }
     }
@@ -275,7 +270,6 @@ public class PlayerControllerNew : MonoBehaviour
     {        
         if(isCrouching) {
 
-            Debug.Log("exit crouch");
             characterController.height /= crouchHeightPct; //reverse operation to get back to original height
 
             //reverse operation on y center, keep x and z the same
@@ -321,8 +315,6 @@ public class PlayerControllerNew : MonoBehaviour
 
         if (characterController.isGrounded)
         {
-            Debug.Log("X = " + x);
-            Debug.Log(transform.forward);
             velocity = (transform.forward * x) * moveSpeed + Vector3.up * verticalVelocity;
             /* A Vector3 used with charactercontroller.move()
             Transform.right is shorthand for the X axis of the gameobject * x which is either -1, 0, or 1, then multiplied by the movespeed
@@ -336,16 +328,11 @@ public class PlayerControllerNew : MonoBehaviour
 
         if (!characterController.isGrounded)
         {
-            Debug.Log("NOT GROUNDED");
             velocity = (transform.forward * xAir) * airSpeed + Vector3.up * verticalVelocity;
         }
 
         if (anim.GetBool("backwards"))
             velocity.x *= backwardSpeedPct; //only a percent of movement speed when backwards
-
-        Debug.Log("VELOCITY = " + velocity);
-
-
     }
 
     private void WallJump()
@@ -380,6 +367,7 @@ public class PlayerControllerNew : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true && !isWallSliding) //If player is not grounded, then they can double jump
         {
+            Debug.Log("DOUBLE JUMP");
             //verticalVelocity = 0;
             anim.SetTrigger("jumping");
             canDoubleJump = false;
@@ -388,13 +376,14 @@ public class PlayerControllerNew : MonoBehaviour
 
     public void AddJumpForce()
     {
-        Debug.Log("AddJumpForce called");
         verticalVelocity = 0;
 
-        if(!characterController.isGrounded && canDoubleJump == true)
+        if(!characterController.isGrounded && canDoubleJump == true) {
+            anim.ResetTrigger("needsLanding"); //clear any landing trigger for prev jump
             verticalVelocity = doubleJumpForce;
-        else
+        } else {
             verticalVelocity = jumpForce;
+        }
     }
 
     private void GravityHandler()
@@ -416,7 +405,6 @@ public class PlayerControllerNew : MonoBehaviour
         {
             canDoubleJump = true; //Resets double jump when grounded
             characterController.stepOffset = baseStepOffSet;
-            
 
             if (OnSlope)
             {
