@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public enum State
     {
-        Normal, Hooking, Clinging
+        Normal = 0, Hooking = 1, Clinging = 2, Paused = 3
 
         //Normal is normal movement
         //Hooking is when the hook collides with a wall and beings pulling the player
@@ -132,6 +132,8 @@ public class PlayerController : MonoBehaviour
                 break;
             case State.Clinging:
                 HookCling();
+                break;
+            case State.Paused:
                 break;
 
         }
