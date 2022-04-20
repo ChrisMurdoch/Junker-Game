@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Larry - TutorialLevel.unity
+    guid: c1a367d34f9dd904fa1e55b540ccbd4c
+  - enabled: 1
     path: Assets/Scenes/Larry - V2 Hangar.unity
     guid: 58a59acbb5c641d4a8df6dbb1bc82fd8
   - enabled: 1
