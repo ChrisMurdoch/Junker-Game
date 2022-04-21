@@ -27,6 +27,7 @@ public class PrinterPistol : WeaponBase
     void Update()
     {
         base.FireRateTimer();
+        Reload();
         InputHandler();
     }
 
@@ -34,6 +35,7 @@ public class PrinterPistol : WeaponBase
     {
         Reload();
     }
+
     protected override void Reload()
     {
         if(currentAmmo < maxAmmo)

@@ -37,7 +37,8 @@ public class TurretEnemy : EnemyBase
 
     private void Start()
     {
-        Player = GameObject.Find("Player").transform;
+        //Player = GameObject.Find("Player").transform;
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
         LockOnTimer = LockOnLength;
         fireTimer = fireRate;
     }

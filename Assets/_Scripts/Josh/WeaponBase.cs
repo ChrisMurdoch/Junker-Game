@@ -15,6 +15,9 @@ public class WeaponBase : MonoBehaviour
     public Transform projectileSpawn;
     public GameObject muzzleFlashParticle;
 
+    [Header("Sound Effects")]
+    public AudioClip shootSFX;
+
     [Header("Gun Parameters")]
     public float fireRate;
     public float maxAmmo;
@@ -44,6 +47,7 @@ public class WeaponBase : MonoBehaviour
 
     protected virtual void Shoot()
     {
+        AudioManager.instance.PlaySound(shootSFX, projectileSpawn.position);
         float x = Random.Range(-spread, spread);
         Quaternion rot = Quaternion.Euler(projectileSpawn.eulerAngles.x + x, projectileSpawn.eulerAngles.y, projectileSpawn.eulerAngles.z);
         GameObject FiredProjectile = Instantiate(projectile, projectileSpawn.transform.position, rot);

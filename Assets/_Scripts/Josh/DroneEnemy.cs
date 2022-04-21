@@ -43,7 +43,8 @@ public class DroneEnemy : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
-        Player = GameObject.Find("Player").transform;
+        //Player = GameObject.Find("Player").transform;
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
         Physics.IgnoreCollision(Player.GetComponentInParent<CharacterController>(), gameObject.GetComponent<Collider>());
         fireTimer = fireRate;
         idleTimer = positionChangeTimer;

@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
     private bool canDoubleJump = true;
     private bool OnSlope;
 
+    public bool doubleJumpUnlocked = true;
+    public bool hookLauncherUnlocked = true;
+
+
     private CharacterController characterController;
     private GameObject PlayerBody;
 
@@ -70,6 +74,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("Hook Launcher Parameters")]
     [SerializeField] private float PullSpeed = 20f;
+
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip jumpSFX;
 
     //[Header("Other Parameters")]
     //[SerializeField] private LayerMask WhatIsGround; 
@@ -317,9 +324,10 @@ public class PlayerController : MonoBehaviour
         {
             verticalVelocity = 0;
             verticalVelocity = jumpForce;
+            AudioManager.instance.PlaySound(jumpSFX, transform.position);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true && !isWallSliding) //If player is not grounded, then they can double jump
+        if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true && !isWallSliding && doubleJumpUnlocked) //If player is not grounded, then they can double jump
         {
             verticalVelocity = 0;
             verticalVelocity = doubleJumpForce;
@@ -370,7 +378,7 @@ public class PlayerController : MonoBehaviour
 
     private void UseHook()
     {
-        if (Input.GetMouseButton(1) && CanHook) //Right mouse buttons throws the hook
+        if (Input.GetMouseButton(1) && CanHook && hookLauncherUnlocked) //Right mouse buttons throws the hook
         {
             hooklauncher.LaunchHook();
             CanHook = false;

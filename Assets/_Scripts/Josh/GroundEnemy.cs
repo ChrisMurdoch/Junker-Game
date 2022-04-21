@@ -45,7 +45,9 @@ public class GroundEnemy : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
-        Player = GameObject.Find("Player").transform;
+        //Player = GameObject.Find("Player").transform;
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
+
         attackTimer = attackInterval/2;
         AggroTimer = AggroLength;
         animator = GetComponent<Animator>();
