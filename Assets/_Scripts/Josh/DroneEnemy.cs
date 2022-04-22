@@ -28,6 +28,8 @@ public class DroneEnemy : EnemyBase
 
     public LayerMask RaycastLayerIgnore;
 
+    public AudioClip idleSound;
+    public AudioClip attackSound;
 
     private enum State
     {

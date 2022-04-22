@@ -14,10 +14,13 @@ public class HotBarController : MonoBehaviour
     public GameObject player;
     public Image currentItemImage;
 
+    public Sprite printerPistolImage;
+
     private void Start()
     {
-        //hotbar[0] = new InventoryObject()
-        //currentItemImage = hotbar[0].image;
+        InventoryObject printerPistol = new InventoryObject(printerPistolImage, new Vector2Int(1, 1), 1, 1, "Printer Pistol");
+        hotbar[0] = printerPistol;
+        currentItemImage.sprite = hotbar[0].image;
     }
 
     private void Update()
@@ -26,7 +29,7 @@ public class HotBarController : MonoBehaviour
         {
             ChangeActiveSlot(1);
         }
-        if (Input.GetAxis("Mouse ScrollWheel") < 0) // backward
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0) // backward
         {
             ChangeActiveSlot(0);
         }
@@ -58,14 +61,17 @@ public class HotBarController : MonoBehaviour
             if (currentItem < 0)
                 currentItem = hotbar.Length-1;
         }
-        else if (dir == 1)//ight
+        else if (dir == 1)//right
         {
             currentItem++;
             if (currentItem > 3)
                 currentItem = 0;
         }
         if (hotbar[currentItem] == null)
+        {
+            ChangeActiveSlot(dir);
             return;
+        }
         ChangeEquippedItem();
     }
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2547463850539135161}
   - component: {fileID: 7972625759169684217}
   m_Layer: 0
-  m_Name: GunPickUp
+  m_Name: AutoRiflePickUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -95,9 +95,13 @@ public class InventoryManager : MonoBehaviour
                 {
                     MouseDropItem(new Vector2(clickedPosition.x, clickedPosition.y));
                 }
-
-
             }
+            if(Input.GetMouseButtonDown(1) && !holdingItem)
+            {
+                Vector3 clickedPosition = Input.mousePosition;
+                UseInventoryItem(new Vector2(clickedPosition.x, clickedPosition.y));
+            }
+
             if(holdingItem) {
 
                 Vector3 newItemPosition = Input.mousePosition;
@@ -281,6 +285,7 @@ public class InventoryManager : MonoBehaviour
                     break;
             }
     }
+
     public void ReloadActiveWeapon(WeaponBase activeWeapon)
     {
         int amountUsed;
@@ -390,6 +395,34 @@ public class InventoryManager : MonoBehaviour
         return trans;
     }
 
+    public void UseInventoryItem(Vector2 clickPosition)
+    {
+        //Set up the new Pointer Event
+        PointerEventData m_PointerEventData = new PointerEventData(m_EventSystem);
+        //Set the Pointer Event Position to that of the game object
+        m_PointerEventData.position = Input.mousePosition;
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        m_Raycaster.Raycast(m_PointerEventData, results);
+
+        foreach(RaycastResult result in results)
+        {
+            if(result.gameObject.tag == "InvItem")
+            {
+                int objectToUse = CheckForUIItem(result.gameObject);
+                if(items[objectToUse].itemName == "Medkit")
+                {
+                    ItemHandler.PerformItemAction(items[objectToUse].itemName, player);
+                    items[objectToUse].RemoveObject();
+                    items.RemoveAt(objectToUse);
+                    return;
+                }
+            }
+        }
+    }
+
     // makes item image & background follow mouse until player clicks again
     public int MouseGrabItem(Vector2 clickPosition) {
         //Set up the new Pointer Event
@@ -490,7 +523,7 @@ public class InventoryManager : MonoBehaviour
                                     GetItemCenter(new Vector2Int(x, y), items[heldItemIndex].itemSize);
                                 heldItemIndex = -1;
                                 holdingItem = false;
-                                
+                                return;
                             }
                         }
                     }
@@ -514,6 +547,7 @@ public class InventoryManager : MonoBehaviour
                         RectTransform heldRect = items[heldItemIndex].uiImage.GetComponent<RectTransform>();
                         heldRect.position = GetItemCenter(items[heldItemIndex].GridPosition, items[heldItemIndex].itemSize);
                         heldItemIndex = -1;
+                        return;
                     }
                 }
             }

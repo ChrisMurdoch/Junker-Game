@@ -58,9 +58,9 @@ public class HudController : MonoBehaviour
     }
 
     //when target width is not met this will update it so that taking damage has the health bar move
-    private void UpdateHealth()
+    public void UpdateHealth(float currentHealth, float maxHealth)
     {
-        
+        healthCurrentLength = healthMaxLng * (currentHealth / maxHealth);
         healthHudElement.GetComponent<RectTransform>().sizeDelta = new Vector2(healthCurrentLength,healthHeight);
 
     }
@@ -72,7 +72,6 @@ public class HudController : MonoBehaviour
 
     private void Update()
     {
-        if (healthCurrentLength != healthTargetLength)
-            UpdateHealth();
+
     }
 }

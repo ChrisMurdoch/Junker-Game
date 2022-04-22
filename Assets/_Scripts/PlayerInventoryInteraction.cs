@@ -33,8 +33,10 @@ public class PlayerInventoryInteraction : MonoBehaviour
     {
         foreach(GameObject g in weaponList)
         {
-            if(g.name == itemName)
+            Debug.Log(g.name + " " + itemName);
+            if (g.name == itemName)
             {
+                
                 activeWeapon.gameObject.SetActive(false);
                 g.SetActive(true);
                 activeWeapon = g.GetComponent<WeaponBase>();

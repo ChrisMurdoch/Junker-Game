@@ -29,6 +29,9 @@ public class WeaponBase : MonoBehaviour
     [SerializeField] protected float shootTimer;
     [SerializeField] protected bool canShoot;
 
+    [Header("Audio Intialization Parameters")]
+    public AudioClip gunShotSound;
+    public AudioClip reloadSound;
 
     private void Start()
     {
@@ -55,7 +58,7 @@ public class WeaponBase : MonoBehaviour
         }
         canShoot = false;
         shootTimer = fireRate;
-
+        AudioSource.PlayClipAtPoint(gunShotSound, projectileSpawn.position);
     }
 
     protected virtual void Reload()
@@ -64,6 +67,7 @@ public class WeaponBase : MonoBehaviour
         {
             currentAmmo = maxAmmo;
         }
+        AudioSource.PlayClipAtPoint(reloadSound, transform.position);
     }
 
     protected virtual void InputHandler()
