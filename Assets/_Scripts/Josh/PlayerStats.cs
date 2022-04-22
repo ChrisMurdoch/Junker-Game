@@ -40,6 +40,11 @@ public class PlayerStats : MonoBehaviour
                 //Death stuff here
                 break;
         }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            TakeDamage(100);
+        }
     }
 
     public void TakeDamage(float n)
@@ -59,6 +64,7 @@ public class PlayerStats : MonoBehaviour
     public void PlayerDeath()
     {
         state = State.Dead;
+        GameManager.Instance.GameOver();
     }
 
     public void RestoreHealth(float n)

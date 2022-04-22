@@ -47,7 +47,8 @@ MonoBehaviour:
   weaponID: 3
   weaponName: AutoRifle
   projectile: {fileID: 8697358457310877863, guid: fd7dd3bf7f7a8bf4b93fae21f84b9eb4, type: 3}
-  projectileSpawn: {fileID: 0}
+  projectileSpawn: {fileID: 3453318869701712448}
+  muzzleFlashParticle: {fileID: 5334781383197386576, guid: 3ea0a0f110db4f2448b4b3f2c5a70811, type: 3}
   fireRate: 0.1
   maxAmmo: 30
   damagePerShot: 7
@@ -55,6 +56,7 @@ MonoBehaviour:
   spread: 2
   isSemiAuto: 0
   infiniteAmmo: 0
+  ammoType: 
   currentAmmo: 0
   shootTimer: 0
   canShoot: 0

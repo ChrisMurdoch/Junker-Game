@@ -51,7 +51,7 @@ public class LarryPlayerController : MonoBehaviour
     const string IS_CROUCH_WALK = "isCrouchWalk";
     const string IS_JUMP = "isJump";
 
-    float rotationPerFrame = 15f;
+    //float rotationPerFrame = 15f;
 
 
 

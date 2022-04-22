@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7610621814829043561
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1211161417126142420}
+  m_Layer: 6
+  m_Name: Melee Attack Location
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1211161417126142420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7610621814829043561}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 1.126, z: 1.341}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7793021844560200355}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7793021844559843017
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -442,6 +472,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 111292, guid: 332254905319da1469830bd3e8725b48, type: 3}
   m_PrefabInstance: {fileID: 7793021844559843017}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &7793021844560200355 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 494698, guid: 332254905319da1469830bd3e8725b48, type: 3}
+  m_PrefabInstance: {fileID: 7793021844559843017}
+  m_PrefabAsset: {fileID: 0}
 --- !u!136 &7540550725335069335
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -497,8 +532,11 @@ MonoBehaviour:
   speed: 8
   detectionRange: 20
   meleeRange: 2.5
-  attackInterval: 1
+  attackInterval: 1.5
   AggroLength: 3
   RaycastLayerIgnore:
     serializedVersion: 2
     m_Bits: 64
+  meleeAttackPosition: {fileID: 1211161417126142420}
+  meleeAttackRange: 5
+  meleeAttackDamage: 10

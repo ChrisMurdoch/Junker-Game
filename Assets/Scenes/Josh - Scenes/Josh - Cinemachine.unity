@@ -2460,6 +2460,7 @@ MonoBehaviour:
   weaponName: 'Defender '
   projectile: {fileID: 1895114844437855911, guid: c519bfc5eb0715e42a74ed3d0eedcde0, type: 3}
   projectileSpawn: {fileID: 1318979492}
+  muzzleFlashParticle: {fileID: 0}
   fireRate: 0.5
   maxAmmo: 30
   damagePerShot: 30
@@ -2467,6 +2468,7 @@ MonoBehaviour:
   spread: 2
   isSemiAuto: 0
   infiniteAmmo: 1
+  ammoType: 
   currentAmmo: 0
   shootTimer: 0
   canShoot: 0
@@ -11085,6 +11087,7 @@ MonoBehaviour:
   weaponName: Shotgun
   projectile: {fileID: 8697358457310877863, guid: 5610f416fc46f9043aa05ad0ac78687b, type: 3}
   projectileSpawn: {fileID: 1318979492}
+  muzzleFlashParticle: {fileID: 0}
   fireRate: 0.7
   maxAmmo: 5
   damagePerShot: 10
@@ -11092,6 +11095,7 @@ MonoBehaviour:
   spread: 4
   isSemiAuto: 0
   infiniteAmmo: 0
+  ammoType: 
   currentAmmo: 0
   shootTimer: 0
   canShoot: 0
@@ -13297,6 +13301,72 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &326061771
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1519181586}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.048
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071079
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.70710576
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_Name
+      value: playerModel-unity test
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+--- !u!4 &326061772 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1eb53f3323d39314f90e7b190c347ecd, type: 3}
+  m_PrefabInstance: {fileID: 326061771}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &326607146
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25504,13 +25574,15 @@ MonoBehaviour:
   weaponName: AutoRifle
   projectile: {fileID: 8697358457310877863, guid: fd7dd3bf7f7a8bf4b93fae21f84b9eb4, type: 3}
   projectileSpawn: {fileID: 1318979492}
+  muzzleFlashParticle: {fileID: 0}
   fireRate: 0.1
   maxAmmo: 30
   damagePerShot: 5
   projectileSpeed: 55
   spread: 2
   isSemiAuto: 0
-  infiniteAmmo: 0
+  infiniteAmmo: 1
+  ammoType: 
   currentAmmo: 0
   shootTimer: 0
   canShoot: 0
@@ -63453,6 +63525,7 @@ Transform:
   - {fileID: 579167703}
   - {fileID: 95864954}
   - {fileID: 633128721}
+  - {fileID: 326061772}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -72340,6 +72413,7 @@ MonoBehaviour:
   weaponName: Printer Pistol
   projectile: {fileID: 8697358457310877863, guid: fd7dd3bf7f7a8bf4b93fae21f84b9eb4, type: 3}
   projectileSpawn: {fileID: 1318979492}
+  muzzleFlashParticle: {fileID: 0}
   fireRate: 0.4
   maxAmmo: 10
   damagePerShot: 20
@@ -72347,6 +72421,7 @@ MonoBehaviour:
   spread: 1
   isSemiAuto: 0
   infiniteAmmo: 0
+  ammoType: 
   currentAmmo: 0
   shootTimer: 0
   canShoot: 0

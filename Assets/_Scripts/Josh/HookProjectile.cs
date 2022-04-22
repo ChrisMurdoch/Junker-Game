@@ -11,7 +11,7 @@ public class HookProjectile : MonoBehaviour
     private GameObject Player;
 
 
-    private float distanceTravelled = 0;
+    //private float distanceTravelled = 0;
     private Vector3 lastPosition;
     private Vector3 initialPosition;
 

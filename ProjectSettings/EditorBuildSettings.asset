@@ -4,5 +4,20 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Josh - Scenes/Josh - Main Menu.unity
+    guid: 5aac9f0a89d00bb45a56762e28f579b9
+  - enabled: 1
+    path: Assets/Scenes/Larry - TutorialLevel.unity
+    guid: c1a367d34f9dd904fa1e55b540ccbd4c
+  - enabled: 0
+    path: Assets/Scenes/Josh - Scenes/Josh - Gameplay Menus.unity
+    guid: e018eeb27c51cfd4caf0de3baf51aacd
+  - enabled: 0
+    path: Assets/Scenes/Larry - V2 Hangar.unity
+    guid: 58a59acbb5c641d4a8df6dbb1bc82fd8
+  - enabled: 0
+    path: Assets/Scenes/Larry - Hydroponics.unity
+    guid: 54c4fe26084193c499b32cddf2d1f110
   m_configObjects: {}
