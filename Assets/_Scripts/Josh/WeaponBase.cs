@@ -64,7 +64,11 @@ public class WeaponBase : MonoBehaviour
         canShoot = false;
         shootTimer = fireRate;
 
-        AudioSource.PlayClipAtPoint(gunShotSound, projectileSpawn.position);
+        if(gunShotSound != null)
+        {
+            AudioSource.PlayClipAtPoint(gunShotSound, projectileSpawn.position);
+        }
+
         GameObject muzzleflash = Instantiate(muzzleFlashParticle, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
     }
 

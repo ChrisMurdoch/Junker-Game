@@ -43,7 +43,7 @@ public class PlayerStats : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            TakeDamage(100);
+            TakeDamage(30);
         }
     }
 
@@ -58,6 +58,7 @@ public class PlayerStats : MonoBehaviour
                 PlayerDeath();
             }
         }
+
         PlayerHud.UpdateHealth(currentHealth, maxHealth);
     }
 

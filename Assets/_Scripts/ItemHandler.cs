@@ -21,7 +21,8 @@ public static class ItemHandler
     /// <param name="actor"></param>
     public static void PerformItemAction(string item, GameObject actor)
     {
-        if(actor.tag == "Player")
+
+        if (actor.tag == "Player")
         {
             if (guns.Contains(item))
                 EquipWeapon(item, actor);

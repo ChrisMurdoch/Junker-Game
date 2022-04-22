@@ -64,6 +64,7 @@ public class InventoryManager : MonoBehaviour
         //use tab key to open / close inventory
         if (Input.GetKeyDown(KeyCode.Tab))
         {
+            Cursor.visible = !Cursor.visible;
             if (invScreenActive)
             {
                 if (holdingItem)
