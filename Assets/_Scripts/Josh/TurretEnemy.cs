@@ -21,6 +21,8 @@ public class TurretEnemy : EnemyBase
 
     [SerializeField] private GameObject Projectile;
     [SerializeField] private Transform ProjectileSpawn;
+    [SerializeField] private GameObject MuzzleFlashParticle;
+
 
     public LayerMask RaycastLayerIgnore;
 
@@ -35,7 +37,8 @@ public class TurretEnemy : EnemyBase
 
     private void Start()
     {
-        Player = GameObject.FindWithTag("Player").transform;
+        //Player = GameObject.Find("Player").transform;
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
         LockOnTimer = LockOnLength;
         fireTimer = fireRate;
     }
@@ -134,6 +137,7 @@ public class TurretEnemy : EnemyBase
         if(fireTimer <= 0)
         {
             GameObject projectile = Instantiate(Projectile, ProjectileSpawn.position, ProjectileSpawn.rotation);
+            GameObject muzzleflash = Instantiate(MuzzleFlashParticle, ProjectileSpawn.position, ProjectileSpawn.rotation);
             Physics.IgnoreCollision(projectile.GetComponent<Collider>(), gameObject.GetComponent<Collider>());
             fireTimer = fireRate;
         }

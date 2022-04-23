@@ -9,7 +9,10 @@ using UnityEngine;
 /// </summary>
 public static class ItemHandler
 {
-    
+
+    static private List<string> guns = new List<string> { "Printer Pistol", "AutoRifle", "Shotgun" };
+    static private List<string> medicine = new List<string> { "Medkit" };
+
     /// <summary>
     /// This takes in the string of the item that is being used and 
     /// a game object as the actor; the actor is the game object that get's affected.
@@ -18,10 +21,13 @@ public static class ItemHandler
     /// <param name="actor"></param>
     public static void PerformItemAction(string item, GameObject actor)
     {
-        if(actor.tag == "Player")
+
+        if (actor.tag == "Player")
         {
-            if (item == "Gun")
+            if (guns.Contains(item))
                 EquipWeapon(item, actor);
+            if (medicine.Contains(item))
+                HealPlayer(item, actor);
             //if(item is a healing one, heal the player)
         }
         else if(actor.tag == "Inventory")
@@ -35,12 +41,21 @@ public static class ItemHandler
 
     }
 
+    static void HealPlayer(string itemName, GameObject player)
+    {
+        float healamt = 0;
+        switch(itemName)
+        {
+            case "Medkit":
+                healamt = 50;
+                break;
+        }
+        player.GetComponent<PlayerStats>().RestoreHealth(healamt);
+    }
+
     static void EquipWeapon(string itemName, GameObject player)
     {
         player.GetComponent<PlayerInventoryInteraction>().ActivateWeapon(itemName);
-        //there has to be a better way to do this, especially if we want upgrading weapons
-        //but for now this should do
-
     }
 
 

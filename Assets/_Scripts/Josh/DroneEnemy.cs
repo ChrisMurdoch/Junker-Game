@@ -25,9 +25,13 @@ public class DroneEnemy : EnemyBase
 
     [SerializeField] private GameObject Projectile;
     [SerializeField] private Transform ProjectileSpawn;
+    [SerializeField] private GameObject MuzzleFlashParticle;
+
 
     public LayerMask RaycastLayerIgnore;
 
+    public AudioClip idleSound;
+    public AudioClip attackSound;
 
     private enum State
     {
@@ -41,7 +45,8 @@ public class DroneEnemy : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
-        Player = GameObject.FindWithTag("Player").transform; //changed to find with tag instead of name
+        //Player = GameObject.Find("Player").transform;
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
         Physics.IgnoreCollision(Player.GetComponentInParent<CharacterController>(), gameObject.GetComponent<Collider>());
         fireTimer = fireRate;
         idleTimer = positionChangeTimer;
@@ -145,6 +150,7 @@ public class DroneEnemy : EnemyBase
         if (fireTimer <= 0)
         {
             GameObject projectile = Instantiate(Projectile, ProjectileSpawn.position, ProjectileSpawn.rotation);
+            GameObject muzzleflash = Instantiate(MuzzleFlashParticle, ProjectileSpawn.position, ProjectileSpawn.rotation);
             Physics.IgnoreCollision(projectile.GetComponent<Collider>(), gameObject.GetComponent<Collider>());
             fireTimer = fireRate;
         }

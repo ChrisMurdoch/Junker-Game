@@ -4,6 +4,7 @@ using UnityEngine;
 //Authored by Joshua Hilliard
 public class AutoRifle : WeaponBase
 {
+
     // Start is called before the first frame update
     void Start()
     {

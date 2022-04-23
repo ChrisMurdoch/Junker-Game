@@ -13,6 +13,10 @@ public class WeaponBase : MonoBehaviour
     [Header("GameObject Parameters")]
     public GameObject projectile;
     public Transform projectileSpawn;
+    public GameObject muzzleFlashParticle;
+
+    [Header("Sound Effects")]
+    public AudioClip shootSFX;
 
     [Header("Gun Parameters")]
     public float fireRate;
@@ -34,6 +38,9 @@ public class WeaponBase : MonoBehaviour
     [SerializeField] protected float shootTimer;
     [SerializeField] protected bool canShoot;
 
+    [Header("Audio Intialization Parameters")]
+    public AudioClip gunShotSound;
+    public AudioClip reloadSound;
 
     private void Start()
     {
@@ -48,6 +55,7 @@ public class WeaponBase : MonoBehaviour
 
     protected virtual void Shoot()
     {
+        AudioManager.instance.PlaySound(shootSFX, projectileSpawn.position);
         float x = Random.Range(-spread, spread);
         Quaternion rot = Quaternion.Euler(projectileSpawn.eulerAngles.x + x, projectileSpawn.eulerAngles.y, projectileSpawn.eulerAngles.z);
         GameObject FiredProjectile = Instantiate(projectile, projectileSpawn.transform.position, rot);
@@ -62,6 +70,12 @@ public class WeaponBase : MonoBehaviour
         canShoot = false;
         shootTimer = fireRate;
 
+        if(gunShotSound != null)
+        {
+            AudioSource.PlayClipAtPoint(gunShotSound, projectileSpawn.position);
+        }
+
+        GameObject muzzleflash = Instantiate(muzzleFlashParticle, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
     }
 
     protected virtual void Reload()
@@ -70,6 +84,7 @@ public class WeaponBase : MonoBehaviour
         {
             currentAmmo = maxAmmo;
         }
+        AudioSource.PlayClipAtPoint(reloadSound, transform.position);
     }
 
     protected virtual void InputHandler()
