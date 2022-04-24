@@ -17,9 +17,12 @@ public class WeaponIK : MonoBehaviour
     public float angleLimit = 90.0f; //stops character from aiming behind itself(or while turning)
     public float distanceLimit = 1.5f; //stops ik from glitching when the crosshair gets too close to the character
 
+    private PlayerAnimator pa; //reference to animation script
     public HumanBone[] humanBones; //holds references to bones this script affects
     private Transform[] boneTransforms; //holds transforms of bones this script affects
 
+    private Vector3 targetPosition;
+    private Vector3 storedTargetPosition; //used to keep aim stationary while turning
 
     // Start is called before the first frame update
     void Start()
@@ -31,17 +34,19 @@ public class WeaponIK : MonoBehaviour
         for(int i = 0; i < boneTransforms.Length; i++) {
             boneTransforms[i] = anim.GetBoneTransform(humanBones[i].bone);
         }
+
+        pa = GetComponent<PlayerAnimator>();
     }
 
 
     void LateUpdate()
     {
-        Vector3 targetPosition = GetTargetPosition(); //get position to aim at (crosshair) and adjust for angle/distance limits
+        storedTargetPosition = targetPosition; //save previous position
+        targetPosition = GetTargetPosition(); //get position to aim at (crosshair) and adjust for angle/distance limits
 
         for(int i = 0; i < iterations; i++) { //calculate target aim many times per frame
             for(int b = 0; b < boneTransforms.Length; b++) {
-                float boneWeight = humanBones[b].weight * weight; //how much this bone will be affected by aim (its own weight and the whole script's weight)
-                AimAtTarget(boneTransforms[b], targetPosition, boneWeight); //aim each of the bones
+                AimAtTarget(boneTransforms[b], targetPosition, humanBones[b].weight * weight); //aim each of the bones
             }
         }
     }
@@ -49,8 +54,10 @@ public class WeaponIK : MonoBehaviour
 
     private Vector3 GetTargetPosition() 
     {
+
         //get direction vector from bullet spawn to crosshair
         Vector3 targetDirection = GetComponent<PlayerAimNew>().mousePos - aimTransform.position;
+
         Vector3 aimDirection = aimTransform.forward; 
 
         //make sure aim stays directly forward
@@ -61,13 +68,20 @@ public class WeaponIK : MonoBehaviour
 
         //get angle between gun's aim and direction to crosshair
         float targetAngle = Vector3.Angle(targetDirection, aimDirection);
-
+        Debug.Log("angle = " + targetAngle);
         //if angle is > limit, blend back to an aim within bounds
         if(targetAngle > angleLimit)
         {
             blendOut += (targetAngle - angleLimit) / 50.0f; 
         }
 
+        // float xDistance;
+        // if(pa.facingRight) //mousePos should be higher x value
+        //     xDistance = GetComponent<PlayerAimNew>().mousePos.x - aimTransform.position.x;
+        // else //aimTransform should be higher x value
+        //     xDistance = aimTransform.position.x - GetComponent<PlayerAimNew>().mousePos.x;
+
+        //Debug.Log("xDistance = " + xDistance);
         float targetDistance = targetDirection.magnitude; //get distance from bullet spawn to crosshair
 
         //if closer than distance limit, blend back to neutral aim
@@ -85,11 +99,9 @@ public class WeaponIK : MonoBehaviour
         Vector3 aimDirection = aimTransform.forward;
 
         aimDirection.z = 0.0f; //no z direction, aiming in 2d xy plane
-        Debug.Log("aimDirection = " + aimDirection);
 
         Vector3 targetDirection = position - aimTransform.position;
         targetDirection.z = 0.0f;
-        Debug.Log("targetDirection = " + targetDirection);
 
         Quaternion aimTowards = Quaternion.FromToRotation(aimDirection, targetDirection); //get angle between 2 directions
         Quaternion blendRotation = Quaternion.Slerp(Quaternion.identity, aimTowards, w);

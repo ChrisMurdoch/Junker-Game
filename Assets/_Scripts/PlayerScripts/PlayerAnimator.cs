@@ -7,8 +7,8 @@ public class PlayerAnimator : MonoBehaviour
 {
 
     public GameObject crosshair;
-    public Animator anim;
-    public PlayerControllerNew pc;
+    private Animator anim;
+    private PlayerControllerNew pc;
     [SerializeField] private float landingDist;
     public float fallThreshold; //how far the player has to be from the ground to trigger falling animation
 
@@ -21,19 +21,27 @@ public class PlayerAnimator : MonoBehaviour
     [HideInInspector] public bool finishedTurn;
     [HideInInspector] public bool finishedLand;
 
+    private WeaponIK weaponIK; //ik reference to disable when turning
+
     // Start is called before the first frame update
     void Start()
     {
         anim = this.GetComponent<Animator>();
+        weaponIK = GetComponent<WeaponIK>();
+        pc = GetComponent<PlayerControllerNew>();
         facingRight = true; //start facing right
         finishedTurn = true; //since we aren't actively turning on start
         finishedLand = true; //since we aren't actively falling/landing
 
         storedMoveSpeed = pc.moveSpeed;
         storedAirSpeed = pc.airSpeed;
+
         AddAnimationEvent(1.09f, "FinishTurn", 1);
-        AddAnimationEvent(0.15f, "AddForce", 8);
-        AddAnimationEvent(1.01f, "EndLanding", 10);
+        AddAnimationEvent(0.15f, "AddForce", 7);
+        AddAnimationEvent(1.01f, "EndLanding", 9);
+
+        foreach (AnimationEvent evt in anim.runtimeAnimatorController.animationClips[7].events)
+            Debug.Log(evt.functionName + " == " + evt.time);
 
 
     }
@@ -53,7 +61,6 @@ public class PlayerAnimator : MonoBehaviour
 
         //check if cc left the ground. Extra check for if you are outside of a certain distance from the ground (aviods isGrounded glitchyness)
         if (!GetComponent<CharacterController>().isGrounded && !Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, fallThreshold)) {
-            Debug.Log("NOT GROUNDED");
             anim.SetBool("falling", true); //play falling idle anim
             finishedLand = false;            
         }
@@ -76,6 +83,9 @@ public class PlayerAnimator : MonoBehaviour
 
     void LateUpdate() {
         if(finishedTurn) {
+
+            weaponIK.enabled = true;
+
             if(facingRight) {
                 transform.rotation = Quaternion.Euler(0, 90f, 0);
             } else {
@@ -123,6 +133,7 @@ public class PlayerAnimator : MonoBehaviour
         
         if (newFacingRight != facingRight && finishedTurn && GetComponent<CharacterController>().isGrounded) //need to face new direction & are not actively turning
         {
+            weaponIK.enabled = false;
             anim.SetTrigger("needsTurn"); //trigger the turn animation
            finishedTurn = false; //denote active turn anim
         }
@@ -161,6 +172,7 @@ public class PlayerAnimator : MonoBehaviour
 
     void AddForce()
     {
+        Debug.Log("ANIM EVENT TRIGGERED");
         pc.AddJumpForce();
     }
 

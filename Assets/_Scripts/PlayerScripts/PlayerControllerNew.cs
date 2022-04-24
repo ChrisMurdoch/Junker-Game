@@ -4,6 +4,11 @@ using UnityEngine;
 
 //Authored by Joshua Hilliard
 
+/*Edits by Christine Murdoch:
+    animation code
+    regions
+    required components
+*/
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(HookLauncher))]
@@ -14,15 +19,17 @@ public class PlayerControllerNew : MonoBehaviour
     private bool inPickupRange;
     private GameObject currPickup; //holds the pickup we were last in range of
 
-    public Animator anim; //holds animator for player (for animations that need to be played from this script)
+    private Animator anim; //holds animator for player (for animations that need to be played from this script)
 
     //PLEASE MAKE A COPY OF THE SCRIPT WHEN ADDING STUFF IF YOU'RE NOT THE AUTHOR^
 
     private bool canDoubleJump = true;
     private bool OnSlope;
 
+    public bool doubleJumpUnlocked = true;
+    public bool hookLauncherUnlocked = true;
+
     private CharacterController characterController;
-    private GameObject PlayerBody;
 
     [HideInInspector] public Vector3 velocity; //made public to allow for animations to be handled in different script
     private float verticalVelocity;
@@ -48,7 +55,7 @@ public class PlayerControllerNew : MonoBehaviour
 
     [HideInInspector] public enum State
     {
-        Normal, Hooking, Clinging
+        Normal = 0, Hooking = 1, Clinging = 2, Paused = 3
 
         //Normal is normal movement
         //Hooking is when the hook collides with a wall and beings pulling the player
@@ -79,11 +86,15 @@ public class PlayerControllerNew : MonoBehaviour
     [Header("Hook Launcher Parameters")]
     [SerializeField] private float PullSpeed = 20f;
 
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip jumpSFX;
+
     //[Header("Other Parameters")]
     //[SerializeField] private LayerMask WhatIsGround; 
     //[SerializeField] public Transform GroundCheckPosition; 
 
     private Vector3 hitPointNormal;
+
     private PlayerAnimator pa;
     private float ccTopY; //origin is at feet for animation, this keeps track of where the top of the character controller is
     
@@ -105,11 +116,10 @@ public class PlayerControllerNew : MonoBehaviour
 
     private void Awake()
     {
-        //PlayerBody = transform.Find("Player Body").gameObject;
         hooklauncher = GetComponent<HookLauncher>();
         characterController = GetComponent<CharacterController>();
         baseStepOffSet = characterController.stepOffset;
-
+        anim = GetComponent<Animator>();
         pa = GetComponent<PlayerAnimator>();
     }
 
@@ -130,6 +140,7 @@ public class PlayerControllerNew : MonoBehaviour
         {
             default:
             case State.Normal:
+                anim.SetBool("hooked", false);
                 SlopeCheck();
                 Crouch();
                 WallSlide();
@@ -155,10 +166,15 @@ public class PlayerControllerNew : MonoBehaviour
                 UseHook();
                 break;
             case State.Hooking:
+                anim.SetBool("hooked", true);
                 HookPull();
                 break;
             case State.Clinging:
+                anim.SetBool("hooked", true);
                 HookCling();
+                break;
+            case State.Paused:
+                Debug.Log("PAUSED STATE");
                 break;
         }
 
@@ -181,7 +197,58 @@ public class PlayerControllerNew : MonoBehaviour
 
     }
 
+    public void ChangeState(int n) //A public method to allow other scripts to change the players state
+    {
+        currentState = (State)n;
+    }
 
+    public void SetVerticalVelocity(float n) //Public method to allow changing player's vertical velocity from other scripts
+    {
+        verticalVelocity = n;
+    }
+
+    public void AddJumpForce()
+    {
+        verticalVelocity = 0;
+        AudioManager.instance.PlaySound(jumpSFX, transform.position);
+        if(!characterController.isGrounded && canDoubleJump == true) {
+            anim.ResetTrigger("needsLanding"); //clear any landing trigger for prev jump
+            verticalVelocity = doubleJumpForce;
+        } else {
+            verticalVelocity = jumpForce;
+        }
+    }
+
+    private void InputHandler() //Gets the input of the "Horizontal Axis" or keys A & D.
+    {
+
+        x = Input.GetAxisRaw("Horizontal"); //is equal to -1 if pressing A, 1 if pressing D, or 0 if pressing neither
+        xAir = Input.GetAxis("Horizontal"); //Same as above but ramps to -1 or 1.
+
+        if (characterController.isGrounded)
+        {
+            velocity = (transform.forward * x) * moveSpeed + Vector3.up * verticalVelocity;
+            /* A Vector3 used with charactercontroller.move()
+            Transform.right is shorthand for the X axis of the gameobject * x which is either -1, 0, or 1, then multiplied by the movespeed
+            Vector3.up * verticalVelocity is gravity and jump height, with Vector3.up being short for Vector3(0,1,0) */
+
+            if (isCrouching)
+            {
+                velocity.x *= crouchSpeedPct;
+            }
+        }
+
+        if (!characterController.isGrounded)
+        {
+            velocity = (transform.forward * xAir) * airSpeed + Vector3.up * verticalVelocity;
+        }
+
+        if (anim.GetBool("backwards"))
+            velocity.x *= backwardSpeedPct; //only a percent of movement speed when backwards
+    }
+
+
+#region TriggersForPickups
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Pickups")
@@ -197,18 +264,15 @@ public class PlayerControllerNew : MonoBehaviour
     if (other.gameObject == currPickup)
         inPickupRange = false;
     }
+#endregion
 
+#region NormalStateMovement
     public void AddImpact(Vector3 dir, float force) //Allows adding "force" with a character controller
     {
         dir.Normalize();
         impact += dir.normalized * force / mass;
     }
 
-
-    public void ChangeState(int n) //A public method to allow other scripts to change the players state
-    {
-        currentState = (State)n;
-    }
 
     private void SlopeCheck() //A check to see if the player is standing on a slope
     {
@@ -266,6 +330,8 @@ public class PlayerControllerNew : MonoBehaviour
         }
     }
 
+    
+
     private void UnCrouch()
     {        
         if(isCrouching) {
@@ -307,34 +373,6 @@ public class PlayerControllerNew : MonoBehaviour
 
     }
 
-    private void InputHandler() //Gets the input of the "Horizontal Axis" or keys A & D.
-    {
-
-        x = Input.GetAxisRaw("Horizontal"); //is equal to -1 if pressing A, 1 if pressing D, or 0 if pressing neither
-        xAir = Input.GetAxis("Horizontal"); //Same as above but ramps to -1 or 1.
-
-        if (characterController.isGrounded)
-        {
-            velocity = (transform.forward * x) * moveSpeed + Vector3.up * verticalVelocity;
-            /* A Vector3 used with charactercontroller.move()
-            Transform.right is shorthand for the X axis of the gameobject * x which is either -1, 0, or 1, then multiplied by the movespeed
-            Vector3.up * verticalVelocity is gravity and jump height, with Vector3.up being short for Vector3(0,1,0) */
-
-            if (isCrouching)
-            {
-                velocity.x *= crouchSpeedPct;
-            }
-        }
-
-        if (!characterController.isGrounded)
-        {
-            velocity = (transform.forward * xAir) * airSpeed + Vector3.up * verticalVelocity;
-        }
-
-        if (anim.GetBool("backwards"))
-            velocity.x *= backwardSpeedPct; //only a percent of movement speed when backwards
-    }
-
     private void WallJump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && isWallSliding)
@@ -367,22 +405,9 @@ public class PlayerControllerNew : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !characterController.isGrounded && canDoubleJump == true && !isWallSliding) //If player is not grounded, then they can double jump
         {
-            Debug.Log("DOUBLE JUMP");
             //verticalVelocity = 0;
             anim.SetTrigger("jumping");
             canDoubleJump = false;
-        }
-    }
-
-    public void AddJumpForce()
-    {
-        verticalVelocity = 0;
-
-        if(!characterController.isGrounded && canDoubleJump == true) {
-            anim.ResetTrigger("needsLanding"); //clear any landing trigger for prev jump
-            verticalVelocity = doubleJumpForce;
-        } else {
-            verticalVelocity = jumpForce;
         }
     }
 
@@ -439,54 +464,72 @@ public class PlayerControllerNew : MonoBehaviour
         }
     }
 
+    #endregion
+
+#region HookAndClingStateFunctions
+
     private void HookPull()
     {
         canDoubleJump = transform;
-        Vector3 hookshotDir = (hooklauncher.hookHitPosition - transform.position).normalized;
+        Vector3 hookshotDir = (hooklauncher.hookHitPosition - transform.position).normalized; //angle between player's body and hook
         velocity = hookshotDir * PullSpeed * Time.deltaTime;
         characterController.Move(velocity);
 
-        float reachedHookHitPosition = 2f;
+        float reachedHookHitPosition = 2f; //how close the player should be to the hook to finish moving
 
-        if (Vector3.Distance(transform.position, hooklauncher.hookHitPosition) < reachedHookHitPosition)
+        ccTopY = transform.position.y + characterController.height; //get position of top of character controller
+
+        //vector3 representing position at top of character controller (accounts for player's height when reaching hook point)
+        Vector3 playerTopPosition = new Vector3(transform.position.x, ccTopY, transform.position.z);
+
+        //move to clinging state if you reach the hook
+        if (Vector3.Distance(playerTopPosition, hooklauncher.hookHitPosition) < reachedHookHitPosition)
         {
             StartCoroutine(ClingDelay());
         }
 
+        //jump from hooked position
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            StopAllCoroutines();
+            StopAllCoroutines(); //stops cling delay
             verticalVelocity = 0;
-            verticalVelocity = doubleJumpForce;
+            verticalVelocity = doubleJumpForce; //jumping from hooked state counts as double jump
             canDoubleJump = false;
-            currentState = State.Normal;
-            hooklauncher.DestroyActiveHook();
+
+            hooklauncher.DestroyActiveHook(); //destroy hook when jumping
+            hooklauncher.DidHitWall = false; //hook is no longer stuck to wall
+            currentState = State.Normal; //go back to normal state
         }
     }
 
     private void HookCling()
     {
+
+        anim.applyRootMotion = false; //turn off root motion (prevents model from sinking back down when clinging)
+
+        //if walking, fall from hooked position
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
-            hooklauncher.DestroyActiveHook();
+            Debug.Log("MOVE INPUT");
+            anim.applyRootMotion = true; //re-activate root motion for walking / turning
             verticalVelocity = 0;
+            hooklauncher.DestroyActiveHook();
             currentState = State.Normal;
         }
 
+        //jump from hooked position
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            verticalVelocity = 0;
-            verticalVelocity = doubleJumpForce;
+            Debug.Log("JUMP INPUT");
+            anim.applyRootMotion = true; //re-activate root motion for jump
+            anim.SetTrigger("jumping"); //start jump animation, anim event adds force
+            anim.ResetTrigger("needsTurn"); //stop turn anims from queueing during jump
+
             canDoubleJump = true;
             currentState = State.Normal;
             hooklauncher.DestroyActiveHook();
         }
 
-    }
-
-    public void SetVerticalVelocity(float n) //Public method to allow changing player's vertical velocity from other scripts
-    {
-        verticalVelocity = n;
     }
 
     IEnumerator ClingDelay()
@@ -495,6 +538,8 @@ public class PlayerControllerNew : MonoBehaviour
         currentState = State.Clinging;
         yield return null;
     }
+    
+#endregion
 
 }
 
