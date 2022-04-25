@@ -10,6 +10,8 @@ public class MenuManager : MonoBehaviour
 
     public static MenuManager Instance;
 
+    public bool isPaused = false;
+
     private void Awake()
     {
         Instance = this;
@@ -32,6 +34,7 @@ public class MenuManager : MonoBehaviour
     {
         pauseMenu.SetActive(!pauseMenu.activeSelf);
         Cursor.visible = !Cursor.visible;
+        isPaused = !isPaused;
         if(Time.timeScale == 1)
         {
             Time.timeScale = 0;

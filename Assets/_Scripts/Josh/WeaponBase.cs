@@ -83,21 +83,24 @@ public class WeaponBase : MonoBehaviour
 
     protected virtual void InputHandler()
     {
-        if (currentAmmo > 0 || infiniteAmmo)
+        if (Time.timeScale != 0)
         {
-            if (isSemiAuto)
+            if (currentAmmo > 0 || infiniteAmmo)
             {
-                if (Input.GetMouseButtonDown(0) && canShoot)
+                if (isSemiAuto)
                 {
-                    Shoot();
-                }
+                    if (Input.GetMouseButtonDown(0) && canShoot)
+                    {
+                        Shoot();
+                    }
 
-            }
-            else
-            {
-                if (Input.GetMouseButton(0) && canShoot)
+                }
+                else
                 {
-                    Shoot();
+                    if (Input.GetMouseButton(0) && canShoot)
+                    {
+                        Shoot();
+                    }
                 }
             }
         }

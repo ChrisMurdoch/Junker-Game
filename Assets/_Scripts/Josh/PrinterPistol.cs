@@ -58,24 +58,27 @@ public class PrinterPistol : WeaponBase
 
     protected override void InputHandler()
     {
-        if (currentAmmo > 0 || infiniteAmmo)
+        if (Time.timeScale != 0)
         {
-            if (isSemiAuto)
+            if (currentAmmo > 0 || infiniteAmmo)
             {
-                if (Input.GetMouseButtonDown(0) && canShoot)
+                if (isSemiAuto)
                 {
-                    Shoot();
-                    waitTimer = waitTime;
+                    if (Input.GetMouseButtonDown(0) && canShoot)
+                    {
+                        Shoot();
+                        waitTimer = waitTime;
+                    }
+
                 }
-
-            }
-            else
-            {
-                if (Input.GetMouseButton(0) && canShoot)
+                else
                 {
-                    Shoot();
-                    waitTimer = waitTime;
+                    if (Input.GetMouseButton(0) && canShoot)
+                    {
+                        Shoot();
+                        waitTimer = waitTime;
 
+                    }
                 }
             }
         }
