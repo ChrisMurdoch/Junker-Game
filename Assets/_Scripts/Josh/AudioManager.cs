@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    public Volume volume;
+
     public enum AudioChannel
     {
         Master = 0, SFX = 1, Music = 2 
@@ -14,7 +16,7 @@ public class AudioManager : MonoBehaviour
     [Range(0f, 1f)]
     public float sfxVolume = 1;
     [Range(0f, 1f)]
-    public float musicVolume = 1;
+    public float musicVolume = 0.5f;
 
     AudioSource[] musicSources;
     int activeMusicSourceIndex;
@@ -23,6 +25,8 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
+        SaveManager.InitialSave(volume);
+
         if (instance != null)
         {
             Destroy(gameObject);
@@ -38,8 +42,14 @@ public class AudioManager : MonoBehaviour
                 GameObject newMusicSource = new GameObject("Music Source " + (i + 1));
                 musicSources[i] = newMusicSource.AddComponent<AudioSource>();
                 newMusicSource.transform.parent = transform;
+                musicSources[i].loop = true;
             }
         }
+    }
+
+    private void Start()
+    {
+
     }
 
     public void PlaySound(AudioClip clip, Vector3 pos)
@@ -71,6 +81,29 @@ public class AudioManager : MonoBehaviour
         {
             s.volume = musicVolume * masterVolume;
         }
+
+    }
+
+    public void setMasterVolume(float value)
+    {
+        setVolume(value, AudioChannel.Master);
+        volume.Master = value;
+        SaveManager.Save(volume);
+    }
+
+    public void setSFXVolume(float value)
+    {
+        setVolume(value, AudioChannel.SFX);
+        volume.SFX = value;
+        SaveManager.Save(volume);
+
+    }
+
+    public void setMusicVolume(float value)
+    {
+        volume.Music = value;
+        setVolume(value, AudioChannel.Music);
+        SaveManager.Save(volume);
 
     }
 
