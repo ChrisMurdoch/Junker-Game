@@ -13,9 +13,9 @@ public class HookLauncher : MonoBehaviour
 
     [HideInInspector] public bool DidHitWall = false;
 
-    [Header("GameObject Parameters")]
+    [Header("Hook Instantiation Parameters")]
     public GameObject hookObject;
-    public GameObject hookSpawn;
+    private Transform hookSpawn;
 
     [Header("Hook Launcher Parameters")]
     public float launchSpeed;
@@ -51,9 +51,16 @@ public class HookLauncher : MonoBehaviour
     {
         if(currentHook == null)
         {
-            currentHook = Instantiate(hookObject, hookSpawn.transform.position, hookSpawn.transform.rotation);
+            currentHook = Instantiate(hookObject, hookSpawn.position, hookSpawn.rotation);
             currentHookScript = currentHook.GetComponent<HookProjectile>();
             currentHookScript.SetHookParameters(launchSpeed, returnSpeed, launchLength, GetComponent<HookLauncher>(), gameObject);
         }
+    }
+
+    //temporary method to change source of hook launch to the bullet spawn of whatever gun is active
+    //called by PlayerInventoryInteraction.ActivateWeapon()
+    public void ChangeLaunchSource(Transform sourceTransform)
+    {
+        hookSpawn = sourceTransform;
     }
 }

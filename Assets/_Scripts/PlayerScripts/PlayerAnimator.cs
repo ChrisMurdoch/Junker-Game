@@ -72,10 +72,10 @@ public class PlayerAnimator : MonoBehaviour
         if(anim.GetCurrentAnimatorStateInfo(0).IsName("Falling Idle"))
             CheckForGround(); //while falling, check for when to play landing anim
 
-        if(anim.GetCurrentAnimatorStateInfo(0).IsName("Falling To Landing")) {
-            pc.moveSpeed = 0f;
-            pc.airSpeed = 0f;
-        }
+        // if(anim.GetCurrentAnimatorStateInfo(0).IsName("Falling To Landing")) {
+        //     pc.moveSpeed = 0f;
+        //     pc.airSpeed = 0f;
+        // }
         else {
             pc.moveSpeed = storedMoveSpeed;
             pc.airSpeed = storedAirSpeed;

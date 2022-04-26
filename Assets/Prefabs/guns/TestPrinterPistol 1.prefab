@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &566217922813373019
+--- !u!1 &1397994099774407674
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4549829885246460292}
+  - component: {fileID: 1397994099774407675}
   m_Layer: 0
   m_Name: bullet-spawn
   m_TagString: Untagged
@@ -16,21 +16,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4549829885246460292
+--- !u!4 &1397994099774407675
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 566217922813373019}
+  m_GameObject: {fileID: 1397994099774407674}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.002, y: 0.057, z: 0.644}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6777476449273125190}
+  m_Father: {fileID: 1397994101272589959}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6777476449273433492
+--- !u!1 &1397994101272589958
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -38,47 +38,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6777476449273125190}
-  - component: {fileID: 6777476449276600852}
-  - component: {fileID: 6777476449275391680}
-  - component: {fileID: 6751194939468004239}
+  - component: {fileID: 1397994101272589959}
+  - component: {fileID: 1397994101272590010}
+  - component: {fileID: 1397994101272589957}
+  - component: {fileID: 1397994101272589956}
   m_Layer: 0
-  m_Name: TestPrinterPistol
+  m_Name: TestPrinterPistol 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6777476449273125190
+--- !u!4 &1397994101272589959
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6777476449273433492}
-  m_LocalRotation: {x: -0.055991407, y: 0.7163394, z: 0.693493, w: 0.052823443}
-  m_LocalPosition: {x: 0.000338965, y: 0.001300121, z: 0.0001021393}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_GameObject: {fileID: 1397994101272589958}
+  m_LocalRotation: {x: -0.013312712, y: -0.7070868, z: -0.7062285, w: -0.033053692}
+  m_LocalPosition: {x: 0.00025619983, y: 0.001049024, z: 0.00017216349}
+  m_LocalScale: {x: 0.007999997, y: 0.0079999985, z: 0.008000001}
   m_Children:
-  - {fileID: 4549829885246460292}
+  - {fileID: 1397994099774407675}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -91.869, y: 3.481, z: 167.692}
---- !u!33 &6777476449276600852
+  m_LocalEulerAnglesHint: {x: 0, y: 171.486, z: 90}
+--- !u!33 &1397994101272590010
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6777476449273433492}
+  m_GameObject: {fileID: 1397994101272589958}
   m_Mesh: {fileID: 4300002, guid: 584761fab006d6d42b4d0d8c56a51241, type: 3}
---- !u!23 &6777476449275391680
+--- !u!23 &1397994101272589957
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6777476449273433492}
+  m_GameObject: {fileID: 1397994101272589958}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -113,13 +113,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6751194939468004239
+--- !u!114 &1397994101272589956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6777476449273433492}
+  m_GameObject: {fileID: 1397994101272589958}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 301375290cac0df419e7a3cc04ada0f5, type: 3}
@@ -128,7 +128,7 @@ MonoBehaviour:
   weaponID: 1
   weaponName: Printer Pistol
   projectile: {fileID: 8968122134931231421, guid: ef623a3f3731a324ea3a2b5b775883a5, type: 3}
-  projectileSpawn: {fileID: 4549829885246460292}
+  projectileSpawn: {fileID: 1397994099774407675}
   muzzleFlashParticle: {fileID: 5334781383197386576, guid: 3ea0a0f110db4f2448b4b3f2c5a70811, type: 3}
   shootSFX: {fileID: 8300000, guid: 08f20f4a01958a34bbf2fe591e730213, type: 3}
   fireRate: 0.4
@@ -136,8 +136,8 @@ MonoBehaviour:
   damagePerShot: 20
   projectileSpeed: 50
   spread: 1
-  isSemiAuto: 0
-  infiniteAmmo: 0
+  isSemiAuto: 1
+  infiniteAmmo: 1
   ammoType: 
   mainHand: {fileID: 0}
   offHand: {fileID: 0}
@@ -145,7 +145,7 @@ MonoBehaviour:
   currentAmmo: 0
   shootTimer: 0
   canShoot: 0
-  gunShotSound: {fileID: 0}
+  gunShotSound: {fileID: 8300000, guid: 08f20f4a01958a34bbf2fe591e730213, type: 3}
   reloadSound: {fileID: 0}
   printTime: 0.5
   waitTime: 1

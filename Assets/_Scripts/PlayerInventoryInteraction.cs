@@ -8,10 +8,13 @@ public class PlayerInventoryInteraction : MonoBehaviour
     public GameObject[] weaponList;
     public WeaponBase activeWeapon;
 
+    private HookLauncher hl;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        hl = GetComponent<HookLauncher>();
+        hl.ChangeLaunchSource(activeWeapon.gameObject.transform.Find("bullet-spawn").transform); //temporary, sets hook's source to bullet spawn point of active weapon
     }
 
     // Update is called once per frame
@@ -43,6 +46,8 @@ public class PlayerInventoryInteraction : MonoBehaviour
                 return;
             }
         }
+
+        hl.ChangeLaunchSource(activeWeapon.gameObject.transform.Find("bullet-spawn").transform);
     }
 
 }

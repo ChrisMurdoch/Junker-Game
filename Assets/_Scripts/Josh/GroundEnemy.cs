@@ -19,6 +19,7 @@ public class GroundEnemy : EnemyBase
     private float attackTimer;
 
     private float distanceFromPlayer;
+    private Vector3 colliderCenter;
 
     private float AggroTimer;
     [SerializeField] private float AggroLength = 3;
@@ -47,6 +48,7 @@ public class GroundEnemy : EnemyBase
     {
         //Player = GameObject.Find("Player").transform;
         Player = GameObject.FindGameObjectWithTag("Player").transform;
+        colliderCenter = Player.gameObject.GetComponent<CharacterController>().center;
 
         attackTimer = attackInterval/2;
         AggroTimer = AggroLength;
@@ -94,7 +96,7 @@ public class GroundEnemy : EnemyBase
 
         if (distanceFromPlayer <= detectionRange)
         {
-            Vector3 DirectionToPlayer = Player.position - transform.position;
+            Vector3 DirectionToPlayer = (Player.position + colliderCenter) - transform.position;
             if (Physics.Raycast(transform.position, DirectionToPlayer, out RaycastHit hit, detectionRange, ~RaycastLayerIgnore))
             {
                 if (hit.transform.CompareTag("Player"))
@@ -112,7 +114,7 @@ public class GroundEnemy : EnemyBase
 
         agent.SetDestination(Player.position);
 
-        Vector3 DirectionToPlayer = Player.position - gameObject.transform.position;
+        Vector3 DirectionToPlayer = (Player.position + colliderCenter) - gameObject.transform.position;
 
         if (distanceFromPlayer <= detectionRange)
         {

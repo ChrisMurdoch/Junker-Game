@@ -549,7 +549,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Falling To Landing
-  m_Speed: 2
+  m_Speed: 3
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6675141358635438999}
@@ -1253,7 +1253,7 @@ AnimatorStateMachine:
     m_Position: {x: 430, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -181329466402410748}
-    m_Position: {x: 190, y: 170, z: 0}
+    m_Position: {x: 250, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -9126254617988523657}
     m_Position: {x: 350, y: 10, z: 0}
@@ -1392,7 +1392,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Quick 180 Turn
-  m_Speed: 3
+  m_Speed: 5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 4209134905979202412}

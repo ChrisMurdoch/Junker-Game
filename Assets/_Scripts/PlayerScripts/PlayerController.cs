@@ -142,12 +142,10 @@ public class PlayerController : MonoBehaviour
             case State.Normal:
                 anim.SetBool("hooked", false);
                 SlopeCheck();
-                Crouch();
-                WallSlide();
-                WallJump();
-                JumpHandler();
-                GravityHandler();
                 InputHandler();
+                //Crouch();
+                WallSlide();
+                GravityHandler();
 
                 //walking forward to the left
                 if(!pa.facingRight && pa.finishedTurn && !anim.GetBool("backwards")) {
@@ -164,9 +162,15 @@ public class PlayerController : MonoBehaviour
                     characterController.Move(velocity * Time.deltaTime);
                 }
 
+                WallJump();
+                JumpHandler();
+
+
                 if(hookLauncherUnlocked)
                     UseHook();
+
                 break;
+                
             case State.Hooking:
                 anim.SetBool("hooked", true);
                 HookPull();
@@ -399,8 +403,8 @@ public class PlayerController : MonoBehaviour
         {
             //verticalVelocity = 0;
 
-            if (isCrouching)
-                UnCrouch(); //jump automatically un-does crouch
+            // if (isCrouching)
+            //     UnCrouch(); //jump automatically un-does crouch
 
             anim.SetTrigger("jumping");
         }
