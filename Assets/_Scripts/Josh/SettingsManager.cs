@@ -12,11 +12,25 @@ public class SettingsManager : MonoBehaviour
 
     public Volume volume;
 
+    public static SettingsManager Instance;
+
     private string resolution = "Resolution";
+
+    public float ma;
+    public float sfx;
+    public float mu;
     private void Awake()
     {
-        //SaveManager.Save(volume);
+        Instance = this;
+
+        SaveManager.InitialSave(volume);
+
         volume = SaveManager.Load();
+
+        mu = volume.Music;
+        ma = volume.Master;
+        sfx = volume.SFX;
+
 
         if (PlayerPrefs.GetInt(resolution) == 0)
         {
@@ -35,26 +49,47 @@ public class SettingsManager : MonoBehaviour
             resolutionDropDown.value = 2;
         }
 
-        masterSlider.value = volume.Master;
-        sfxSlider.value = volume.SFX;
-        musicSlider.value = volume.Music;
+    }
 
-        AudioManager.instance.setMasterVolume(volume.Master);
-        AudioManager.instance.setSFXVolume(volume.SFX);
-        AudioManager.instance.setMusicVolume(volume.Music);
+    private void Start()
+    {
+        musicSlider.value = mu;
+        sfxSlider.value = sfx;
+        masterSlider.value = ma;
+
+        setMusicVolume(mu);
+        setSFXVolume(sfx);
+        setMasterVolume(ma);
+    }
+
+    public void SaveSettings()
+    {
+        SaveManager.Save(volume);
+    }
+
+    public void setMasterVolume(float value)
+    {
+        AudioManager.instance.setMasterVolume(value);
+        volume.Master = value;
+        //SaveManager.Save(volume);
 
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void setSFXVolume(float value)
     {
-        
+        AudioManager.instance.setSFXVolume(value);
+        volume.SFX = value;
+        //SaveManager.Save(volume);
+
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void setMusicVolume(float value)
     {
-        
+        AudioManager.instance.setMusicVolume(value);
+        volume.Music = value;
+        //SaveManager.Save(volume);
+
     }
 
     public void ChangeResolution()
