@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 public static class SaveManager
 {
     public static string directory = "SaveData";
-    public static string fileName = "Settings.txt";
+    public static string fileName = "Settings.dat";
 
     public static void Save(Volume lo)
     {

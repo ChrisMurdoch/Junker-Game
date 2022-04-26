@@ -49,6 +49,7 @@ MonoBehaviour:
   projectile: {fileID: 8697358457310877863, guid: fd7dd3bf7f7a8bf4b93fae21f84b9eb4, type: 3}
   projectileSpawn: {fileID: 3453318869701712448}
   muzzleFlashParticle: {fileID: 5334781383197386576, guid: 3ea0a0f110db4f2448b4b3f2c5a70811, type: 3}
+  shootSFX: {fileID: 8300000, guid: 08f20f4a01958a34bbf2fe591e730213, type: 3}
   fireRate: 0.1
   maxAmmo: 30
   damagePerShot: 7
@@ -60,6 +61,8 @@ MonoBehaviour:
   currentAmmo: 0
   shootTimer: 0
   canShoot: 0
+  gunShotSound: {fileID: 0}
+  reloadSound: {fileID: 0}
 --- !u!1 &3453318869701712447
 GameObject:
   m_ObjectHideFlags: 0
