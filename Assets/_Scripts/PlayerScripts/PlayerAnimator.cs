@@ -8,7 +8,7 @@ public class PlayerAnimator : MonoBehaviour
 
     public GameObject crosshair;
     private Animator anim;
-    private PlayerControllerNew pc;
+    private PlayerController pc;
     [SerializeField] private float landingDist;
     public float fallThreshold; //how far the player has to be from the ground to trigger falling animation
 
@@ -28,7 +28,7 @@ public class PlayerAnimator : MonoBehaviour
     {
         anim = this.GetComponent<Animator>();
         weaponIK = GetComponent<WeaponIK>();
-        pc = GetComponent<PlayerControllerNew>();
+        pc = GetComponent<PlayerController>();
         facingRight = true; //start facing right
         finishedTurn = true; //since we aren't actively turning on start
         finishedLand = true; //since we aren't actively falling/landing
@@ -37,8 +37,12 @@ public class PlayerAnimator : MonoBehaviour
         storedAirSpeed = pc.airSpeed;
 
         AddAnimationEvent(1.09f, "FinishTurn", 1);
-        AddAnimationEvent(0.15f, "AddForce", 7);
-        AddAnimationEvent(1.01f, "EndLanding", 9);
+        AddAnimationEvent(0.15f, "AddForce", 4);
+        AddAnimationEvent(1.01f, "EndLanding", 6);
+
+        Debug.Log("animation order");
+        foreach (AnimationClip ac in anim.runtimeAnimatorController.animationClips)
+            Debug.Log(ac.name);
 
         foreach (AnimationEvent evt in anim.runtimeAnimatorController.animationClips[7].events)
             Debug.Log(evt.functionName + " == " + evt.time);
@@ -65,10 +69,10 @@ public class PlayerAnimator : MonoBehaviour
             finishedLand = false;            
         }
 
-        if(anim.GetCurrentAnimatorStateInfo(0).IsName("fall-idle"))
+        if(anim.GetCurrentAnimatorStateInfo(0).IsName("Falling Idle"))
             CheckForGround(); //while falling, check for when to play landing anim
 
-        if(anim.GetCurrentAnimatorStateInfo(0).IsName("fall-to-land")) {
+        if(anim.GetCurrentAnimatorStateInfo(0).IsName("Falling To Landing")) {
             pc.moveSpeed = 0f;
             pc.airSpeed = 0f;
         }
@@ -77,8 +81,11 @@ public class PlayerAnimator : MonoBehaviour
             pc.airSpeed = storedAirSpeed;
         }
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("idle"))
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Standing Idle"))
             anim.ResetTrigger("needsLanding");
+
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Quick 180 Turn"))
+            anim.ResetTrigger("jumping"); //stop jumps from queueing during turns
     }
 
     void LateUpdate() {
@@ -130,9 +137,11 @@ public class PlayerAnimator : MonoBehaviour
     void CheckForTurn()
     {
         bool newFacingRight = CheckAimDirection();
-        
+
+        Debug.Log("grounded = " + GetComponent<CharacterController>().isGrounded);
         if (newFacingRight != facingRight && finishedTurn && GetComponent<CharacterController>().isGrounded) //need to face new direction & are not actively turning
         {
+            Debug.Log("TURN");
             weaponIK.enabled = false;
             anim.SetTrigger("needsTurn"); //trigger the turn animation
            finishedTurn = false; //denote active turn anim
@@ -142,7 +151,7 @@ public class PlayerAnimator : MonoBehaviour
     //checks whether you are aiming to the right of the player object
     bool CheckAimDirection()
     {
-        float aimX = PlayerAimNew.instance.mousePos.x; //get mouse's position from player aim script
+        float aimX = GetComponent<PlayerAim>().mousePos.x; //get mouse's position from player aim script
         float posX = this.transform.position.x; 
 
         //crosshair to the left of player object
@@ -172,7 +181,6 @@ public class PlayerAnimator : MonoBehaviour
 
     void AddForce()
     {
-        Debug.Log("ANIM EVENT TRIGGERED");
         pc.AddJumpForce();
     }
 

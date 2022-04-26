@@ -56,7 +56,7 @@ public class WeaponIK : MonoBehaviour
     {
 
         //get direction vector from bullet spawn to crosshair
-        Vector3 targetDirection = GetComponent<PlayerAimNew>().mousePos - aimTransform.position;
+        Vector3 targetDirection = GetComponent<PlayerAim>().mousePos - aimTransform.position;
 
         Vector3 aimDirection = aimTransform.forward; 
 
@@ -77,9 +77,9 @@ public class WeaponIK : MonoBehaviour
 
         // float xDistance;
         // if(pa.facingRight) //mousePos should be higher x value
-        //     xDistance = GetComponent<PlayerAimNew>().mousePos.x - aimTransform.position.x;
+        //     xDistance = GetComponent<PlayerAim>().mousePos.x - aimTransform.position.x;
         // else //aimTransform should be higher x value
-        //     xDistance = aimTransform.position.x - GetComponent<PlayerAimNew>().mousePos.x;
+        //     xDistance = aimTransform.position.x - GetComponent<PlayerAim>().mousePos.x;
 
         //Debug.Log("xDistance = " + xDistance);
         float targetDistance = targetDirection.magnitude; //get distance from bullet spawn to crosshair

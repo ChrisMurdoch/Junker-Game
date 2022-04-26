@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HookLauncher : MonoBehaviour
 {
-    private PlayerControllerNew playercontroller;
+    private PlayerController playercontroller;
 
     [HideInInspector] public GameObject currentHook;
     [HideInInspector] public HookProjectile currentHookScript;
@@ -25,7 +25,7 @@ public class HookLauncher : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playercontroller = GetComponent<PlayerControllerNew>();
+        playercontroller = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -33,7 +33,7 @@ public class HookLauncher : MonoBehaviour
     {
         if (DidHitWall)
         {
-            playercontroller.currentState = PlayerControllerNew.State.Hooking;
+            playercontroller.currentState = PlayerController.State.Hooking;
             DidHitWall = false;
         }
     }
