@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5803074657106696191}
   m_Layer: 0
   m_Name: 2x1_Float_Platform
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 498215051535165816}
   m_Layer: 0
   m_Name: Quart_FloorCeiling_01_snaps002 (6)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 2147229445676831272}
   m_Layer: 0
   m_Name: Quart_FloorCeiling_01_snaps002 (8)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8

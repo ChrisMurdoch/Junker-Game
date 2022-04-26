@@ -12,12 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Larry - TutorialLevel.unity
     guid: c1a367d34f9dd904fa1e55b540ccbd4c
   - enabled: 1
-    path: Assets/Scenes/Larry - V2 Hangar.unity
-    guid: 58a59acbb5c641d4a8df6dbb1bc82fd8
+    path: Assets/Scenes/jk unless/Hangar.unity
+    guid: 7a94967f813c3034ab8b8533c2bd7c45
   - enabled: 1
-    path: Assets/Scenes/Larry - Hydroponics.unity
-    guid: 54c4fe26084193c499b32cddf2d1f110
-  - enabled: 0
-    path: Assets/Scenes/Josh - Scenes/Josh - Gameplay Menus.unity
-    guid: e018eeb27c51cfd4caf0de3baf51aacd
+    path: Assets/Scenes/jk unless/Hydroponics.unity
+    guid: e61fd85885b35d14e99506d3e3b631a8
   m_configObjects: {}
