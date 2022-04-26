@@ -23,7 +23,7 @@ public class PlayerInventoryInteraction : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             Reload();
-
+            UpdateAmmoCount();
         }
         weaponList[0].GetComponent<PrinterPistol>().PrinterRegenerate();
         if (weaponList[0] == activeWeapon.gameObject)
@@ -50,18 +50,17 @@ public class PlayerInventoryInteraction : MonoBehaviour
         foreach(GameObject g in weaponList)
         {
             Debug.Log(g.name + " " + itemName);
-            if (g.name == itemName)
+            if (g.GetComponent<WeaponBase>().weaponName == itemName)
             {
                 
                 activeWeapon.gameObject.SetActive(false);
                 g.SetActive(true);
                 activeWeapon = g.GetComponent<WeaponBase>();
-                UpdateAmmoCount();
-                return;
+                break;
             }
         }
-
         hl.ChangeLaunchSource(activeWeapon.gameObject.transform.Find("bullet-spawn").transform);
+        UpdateAmmoCount();
     }
 
 }

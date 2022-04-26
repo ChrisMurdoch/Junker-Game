@@ -91,7 +91,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   currentItemImage: {fileID: 5827571462526048612}
-  printerPistolImage: {fileID: 0}
+  AmmoCounter: {fileID: 8771834492270647863}
+  printerPistolImage: {fileID: 21300000, guid: cda23db7957d6dc49803355f9a1f58b0, type: 3}
 --- !u!1 &5827571463045811388
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,7 +1009,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6678740887961034463, guid: 50edbe414ed791448b0ad4cbeb9488b0, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6678740887961034463, guid: 50edbe414ed791448b0ad4cbeb9488b0, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1081,3 +1082,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6678740887961034463, guid: 50edbe414ed791448b0ad4cbeb9488b0, type: 3}
   m_PrefabInstance: {fileID: 8004409693650356901}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8771834492270647863 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1634438104313401490, guid: 50edbe414ed791448b0ad4cbeb9488b0, type: 3}
+  m_PrefabInstance: {fileID: 8004409693650356901}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

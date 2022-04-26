@@ -5653,7 +5653,6 @@ MonoBehaviour:
   hookHitPosition: {x: 0, y: 0, z: 0}
   DidHitWall: 0
   hookObject: {fileID: 4481684180165800467, guid: 0ff5adc91e024994fbef31a1e2a0cf06, type: 3}
-  hookSpawn: {fileID: 7880447397706586983}
   launchSpeed: 20
   returnSpeed: 30
   launchLength: 10
@@ -5727,11 +5726,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: {fileID: 0}
+  hotBar: {fileID: 0}
   weaponList:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  activeWeapon: {fileID: 0}
+  - {fileID: 8931232553337132220}
+  - {fileID: 4452037465873419329}
+  - {fileID: 4561601196765990240}
+  activeWeapon: {fileID: 1644988675888169892}
 --- !u!114 &8320312634515138406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5746,6 +5746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerHud: {fileID: 0}
   maxHealth: 100
+  startingHealth: 50
   currentHealth: 100
 --- !u!1 &2763415864316813816
 GameObject:
@@ -9766,7 +9767,8 @@ GameObject:
   - component: {fileID: 2824399294023584624}
   - component: {fileID: 6855313755913347523}
   - component: {fileID: 636931211874334641}
-  - component: {fileID: 5689962060613853244}
+  - component: {fileID: 673365778237279198}
+  - component: {fileID: 706653513}
   m_Layer: 0
   m_Name: Test-AutoRifle
   m_TagString: Untagged
@@ -9838,7 +9840,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5689962060613853244
+--- !u!114 &673365778237279198
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9847,14 +9849,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4561601196765990240}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c47c86c7544bb0147b19c5d48e518029, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f7ea6d4a1e6ca648973dd62b5ad7172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weaponID: 3
   weaponName: AutoRifle
   projectile: {fileID: 7235336919865440893, guid: 013117ec0a50f07488850f24383d189a, type: 3}
   projectileSpawn: {fileID: 4031558774729795802}
-  muzzleFlashParticle: {fileID: 0}
+  muzzleFlashParticle: {fileID: 5334781383197386576, guid: 3ea0a0f110db4f2448b4b3f2c5a70811, type: 3}
   shootSFX: {fileID: 8300000, guid: 08f20f4a01958a34bbf2fe591e730213, type: 3}
   fireRate: 0.1
   maxAmmo: 30
@@ -9862,7 +9864,41 @@ MonoBehaviour:
   projectileSpeed: 55
   spread: 2
   isSemiAuto: 0
-  infiniteAmmo: 1
+  infiniteAmmo: 0
+  ammoType: rifleAmmo
+  mainHand: {fileID: 5415055167738689614}
+  offHand: {fileID: 1640269295644868235}
+  anim: {fileID: 1165890928127740564}
+  currentAmmo: 0
+  shootTimer: 0
+  canShoot: 0
+  gunShotSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+--- !u!114 &706653513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4561601196765990240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f7ea6d4a1e6ca648973dd62b5ad7172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponID: 3
+  weaponName: AutoRifle
+  projectile: {fileID: 7235336919865440893, guid: 013117ec0a50f07488850f24383d189a, type: 3}
+  projectileSpawn: {fileID: 4031558774729795802}
+  muzzleFlashParticle: {fileID: 5334781383197386576, guid: 3ea0a0f110db4f2448b4b3f2c5a70811, type: 3}
+  shootSFX: {fileID: 0}
+  fireRate: 0.1
+  maxAmmo: 30
+  damagePerShot: 7
+  projectileSpeed: 55
+  spread: 2
+  isSemiAuto: 0
+  infiniteAmmo: 0
   ammoType: rifleAmmo
   mainHand: {fileID: 5415055167738689614}
   offHand: {fileID: 1640269295644868235}
@@ -19608,7 +19644,7 @@ MonoBehaviour:
   projectileSpeed: 50
   spread: 1
   isSemiAuto: 1
-  infiniteAmmo: 1
+  infiniteAmmo: 0
   ammoType: 
   mainHand: {fileID: 5415055167738689614}
   offHand: {fileID: 1640269295644868235}
