@@ -48,6 +48,8 @@ public class HookProjectile : MonoBehaviour
 
         if (isReturning)
         {
+            Debug.Log("HOOK RETURNING");
+            
             rb.velocity = Vector3.zero;
             transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, returnSpeed * Time.deltaTime);
             GetComponent<Collider>().enabled = false;

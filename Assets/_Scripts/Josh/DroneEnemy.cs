@@ -4,7 +4,7 @@ using UnityEngine;
 //Authored by Joshua Hilliard
 public class DroneEnemy : EnemyBase
 {
-    public Transform Player;
+    [HideInInspector] public Transform Player;
     public Transform Gun;
 
     [SerializeField] private float range = 20;
@@ -22,6 +22,7 @@ public class DroneEnemy : EnemyBase
     [SerializeField] private float AggroLength = 3;
 
     private float distanceFromPlayer;
+    private Vector3 colliderCenter;
 
     [SerializeField] private GameObject Projectile;
     [SerializeField] private Transform ProjectileSpawn;
@@ -47,6 +48,7 @@ public class DroneEnemy : EnemyBase
     {
         //Player = GameObject.Find("Player").transform;
         Player = GameObject.FindGameObjectWithTag("Player").transform;
+        colliderCenter = Player.gameObject.GetComponent<CharacterController>().center;
         Physics.IgnoreCollision(Player.GetComponentInParent<CharacterController>(), gameObject.GetComponent<Collider>());
         fireTimer = fireRate;
         idleTimer = positionChangeTimer;
@@ -82,7 +84,7 @@ public class DroneEnemy : EnemyBase
 
         if (distanceFromPlayer <= range)
         {
-            Vector3 DirectionToPlayer = Player.position - gameObject.transform.position;
+            Vector3 DirectionToPlayer = (Player.position + colliderCenter) - gameObject.transform.position;
             if (Physics.Raycast(gameObject.transform.position, DirectionToPlayer, out RaycastHit hit, range, ~RaycastLayerIgnore))
             {
                 if (hit.transform.CompareTag("Player"))
@@ -100,7 +102,7 @@ public class DroneEnemy : EnemyBase
         Aim();
         Shoot();
 
-        Vector3 DirectionToPlayer = Player.position - gameObject.transform.position;
+        Vector3 DirectionToPlayer = (Player.position + colliderCenter) - gameObject.transform.position;
 
         if (distanceFromPlayer <= range)
         {

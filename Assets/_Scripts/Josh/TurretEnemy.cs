@@ -5,7 +5,7 @@ using UnityEngine;
 //Authored by Joshua Hilliard
 public class TurretEnemy : EnemyBase
 {
-    public Transform Player;
+    [HideInInspector] public Transform Player;
     public Transform turretHead;
 
     [SerializeField] private float followSpeed = 3;
@@ -15,6 +15,7 @@ public class TurretEnemy : EnemyBase
     private float fireTimer;
 
     private float distanceFromPlayer;
+    private Vector3 colliderCenter;
 
     private float LockOnLength = 1.5f;
     private float LockOnTimer;
@@ -39,6 +40,7 @@ public class TurretEnemy : EnemyBase
     {
         //Player = GameObject.Find("Player").transform;
         Player = GameObject.FindGameObjectWithTag("Player").transform;
+        colliderCenter = Player.gameObject.GetComponent<CharacterController>().center;
         LockOnTimer = LockOnLength;
         fireTimer = fireRate;
     }
@@ -69,7 +71,7 @@ public class TurretEnemy : EnemyBase
         ReturnToNormal();
         if (distanceFromPlayer <= range)
         {
-            Vector3 turretLookDir = Player.position - turretHead.position;
+            Vector3 turretLookDir = (Player.position + colliderCenter) - turretHead.position;
             if (Physics.Raycast(turretHead.position, turretLookDir, out RaycastHit hit, range, ~RaycastLayerIgnore))
             {
                 if (hit.transform.CompareTag("Player"))
@@ -85,7 +87,7 @@ public class TurretEnemy : EnemyBase
         Aim();
         Shoot();
 
-        Vector3 turretLookDir = Player.position - turretHead.position;
+        Vector3 turretLookDir = (Player.position + colliderCenter) - turretHead.position;
         if (distanceFromPlayer <= range)
         {
             if (Physics.Raycast(turretHead.position, turretLookDir, out RaycastHit hit, range, ~RaycastLayerIgnore))
@@ -124,7 +126,7 @@ public class TurretEnemy : EnemyBase
 
     private void Aim()
     {
-        Vector3 turretLookDir = Player.position - turretHead.position;
+        Vector3 turretLookDir = (Player.position + colliderCenter) - turretHead.position;
         Quaternion look = Quaternion.LookRotation(turretLookDir, transform.up);
         Vector3 rotation = Quaternion.Lerp(turretHead.rotation, look, followSpeed * Time.deltaTime).eulerAngles;
         turretHead.rotation = Quaternion.Euler(rotation);

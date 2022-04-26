@@ -1,0 +1,15 @@
+animation clip array order:
+
+0 = Standing Idle
+1 = Quick 180 Turn
+2 = Running
+3 = Walking Backwards
+4 = Jumping Up
+5 = Falling Idle
+6 = Falling To Landing
+7 = Rifle Crouch Turn
+8 = Crouched Run
+9 = Crouch Backward Walk
+10 = Crouch Idle
+11 = Rifle Aiming Idle
+12 = Firing Rifle
