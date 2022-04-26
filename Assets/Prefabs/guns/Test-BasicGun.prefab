@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8187731568220578937}
   - component: {fileID: 8187731568183895944}
   m_Layer: 0
-  m_Name: gun-1
+  m_Name: Test-BasicGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,6 +102,8 @@ MonoBehaviour:
   accuracyEft: 0
   unrecoil: 0.1
   ammoCount: 100
+  magazineCapacity: 0
+  ammoType: 
   fireRate: 600
 --- !u!1 &8187731569431794608
 GameObject:

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 //Authored by Joshua Hilliard
 public class GroundEnemy : EnemyBase
 {
-    public Transform Player;
+    [HideInInspector] public Transform Player;
     NavMeshAgent agent;
 
     Animator animator;

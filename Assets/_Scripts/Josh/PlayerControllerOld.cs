@@ -4,12 +4,13 @@ using UnityEngine;
 
 //Authored by Joshua Hilliard
 
-public class PlayerController : MonoBehaviour
+public class PlayerControllerOld : MonoBehaviour
 {
     public InventoryManager inventory; //reference to inventory script / canvas
     public KeyCode interactKey; // ex. "e", "Tab", "Mouse 0"
     private bool inPickupRange;
     private GameObject currPickup; //holds the pickup we were last in range of
+
 
     //PLEASE MAKE A COPY OF THE SCRIPT WHEN ADDING STUFF IF YOU'RE NOT THE AUTHOR^
 
@@ -23,7 +24,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController characterController;
     private GameObject PlayerBody;
 
-    private Vector3 velocity;
+    [HideInInspector] public Vector3 velocity; //made public to allow for animations to be handled in different script
     private float verticalVelocity;
 
     private float baseStepOffSet;

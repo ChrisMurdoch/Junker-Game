@@ -31,17 +31,6 @@ public class HookLauncher : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    LaunchHook();
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.M) && currentHook != null)
-        //{
-        //    Destroy(currentHook);
-        //    DidHitWall = false;
-        //}
-
         if (DidHitWall)
         {
             playercontroller.currentState = PlayerController.State.Hooking;

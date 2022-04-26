@@ -4,7 +4,7 @@ using UnityEngine;
 //Authored by Joshua Hilliard
 public class DroneEnemy : EnemyBase
 {
-    public Transform Player;
+    [HideInInspector] public Transform Player;
     public Transform Gun;
 
     [SerializeField] private float range = 20;

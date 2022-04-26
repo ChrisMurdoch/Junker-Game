@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAim : MonoBehaviour
+public class PlayerAimOld : MonoBehaviour
 {
     public Transform rotationCenter;
     [HideInInspector] public Vector3 mousePos;

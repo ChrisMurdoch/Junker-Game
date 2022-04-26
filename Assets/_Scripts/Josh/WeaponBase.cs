@@ -28,6 +28,11 @@ public class WeaponBase : MonoBehaviour
     public bool infiniteAmmo;
     public string ammoType;
 
+    [Header("Animation Parameters")]
+    public GameObject mainHand;
+    public GameObject offHand;
+    public Animator anim;
+
     [Header("Current State Info")]
     public float currentAmmo;
     [SerializeField] protected float shootTimer;
@@ -56,6 +61,7 @@ public class WeaponBase : MonoBehaviour
         GameObject FiredProjectile = Instantiate(projectile, projectileSpawn.transform.position, rot);
         ProjectileBase proj = FiredProjectile.GetComponent<ProjectileBase>();
         proj.SetParameters(projectileSpeed, damagePerShot);
+        anim.SetTrigger("fire"); //animate gunshot
         Physics.IgnoreCollision(GameObject.FindWithTag("Player").GetComponent<CharacterController>(), proj.GetComponent<Collider>());
         if (!infiniteAmmo)
         {
