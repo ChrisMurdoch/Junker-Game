@@ -49,11 +49,6 @@ public class PlayerStats : MonoBehaviour
                 //Death stuff here
                 break;
         }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            TakeDamage(30);
-        }
     }
 
     public void TakeDamage(float n)

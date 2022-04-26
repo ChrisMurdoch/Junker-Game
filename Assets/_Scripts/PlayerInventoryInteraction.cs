@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerInventoryInteraction : MonoBehaviour
 {
     public InventoryManager inventory;
+    public HotBarController hotBar;
     public GameObject[] weaponList;
     public WeaponBase activeWeapon;
-
     private HookLauncher hl;
 
     // Start is called before the first frame update
@@ -21,8 +21,21 @@ public class PlayerInventoryInteraction : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
+        {
             Reload();
+
+        }
         weaponList[0].GetComponent<PrinterPistol>().PrinterRegenerate();
+        if (weaponList[0] == activeWeapon.gameObject)
+            UpdateAmmoCount();
+        if (activeWeapon.ExposedInputCall())
+            UpdateAmmoCount();
+
+    }
+
+    private void UpdateAmmoCount()
+    {
+        hotBar.AmmoCounter.text =  activeWeapon.currentAmmo.ToString();
     }
 
     private void Reload()
@@ -43,6 +56,7 @@ public class PlayerInventoryInteraction : MonoBehaviour
                 activeWeapon.gameObject.SetActive(false);
                 g.SetActive(true);
                 activeWeapon = g.GetComponent<WeaponBase>();
+                UpdateAmmoCount();
                 return;
             }
         }

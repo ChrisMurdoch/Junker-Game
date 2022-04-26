@@ -27,8 +27,6 @@ public class PrinterPistol : WeaponBase
     void Update()
     {
         base.FireRateTimer();
-        Reload();
-        InputHandler();
     }
 
     public void PrinterRegenerate()
@@ -38,11 +36,11 @@ public class PrinterPistol : WeaponBase
 
     protected override void Reload()
     {
-        if(currentAmmo < maxAmmo)
+        if (currentAmmo < maxAmmo)
         {
             waitTimer -= Time.deltaTime;
-                
-            if(waitTimer <= 0)
+
+            if (waitTimer <= 0)
             {
                 printTimer -= Time.deltaTime;
 
@@ -56,7 +54,7 @@ public class PrinterPistol : WeaponBase
         }
     }
 
-    protected override void InputHandler()
+    protected override bool InputHandler()
     {
         if (Time.timeScale != 0)
         {
@@ -68,8 +66,8 @@ public class PrinterPistol : WeaponBase
                     {
                         Shoot();
                         waitTimer = waitTime;
+                        return true;
                     }
-
                 }
                 else
                 {
@@ -77,10 +75,11 @@ public class PrinterPistol : WeaponBase
                     {
                         Shoot();
                         waitTimer = waitTime;
-
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 }

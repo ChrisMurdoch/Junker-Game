@@ -415,6 +415,7 @@ public class InventoryManager : MonoBehaviour
                 int objectToUse = CheckForUIItem(result.gameObject);
                 if(items[objectToUse].itemName == "Medkit")
                 {
+                    Debug.Log("is it even getting here?");
                     ItemHandler.PerformItemAction(items[objectToUse].itemName, player);
                     items[objectToUse].RemoveObject();
                     items.RemoveAt(objectToUse);

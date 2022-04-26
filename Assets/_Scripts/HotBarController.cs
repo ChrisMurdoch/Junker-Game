@@ -13,6 +13,7 @@ public class HotBarController : MonoBehaviour
 
     public GameObject player;
     public Image currentItemImage;
+    public Text AmmoCounter;
 
     public Sprite printerPistolImage;
 
