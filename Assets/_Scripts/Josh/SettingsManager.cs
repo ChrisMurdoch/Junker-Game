@@ -49,18 +49,6 @@ public class SettingsManager : MonoBehaviour
             resolutionDropDown.value = 2;
         }
 
-
-        //musicSlider.value = mu;
-        //sfxSlider.value = sfx;
-        //masterSlider.value = ma;
-        ////sfxSlider.value = volume.SFX;
- 
-        //setMusicVolume(mu);
-        //setSFXVolume(sfx);
-        //setMasterVolume(ma);
-        //setSFXVolume(volume.SFX);
-
-
     }
 
     private void Start()
@@ -68,7 +56,6 @@ public class SettingsManager : MonoBehaviour
         musicSlider.value = mu;
         sfxSlider.value = sfx;
         masterSlider.value = ma;
-        //sfxSlider.value = volume.SFX;
 
         setMusicVolume(mu);
         setSFXVolume(sfx);
