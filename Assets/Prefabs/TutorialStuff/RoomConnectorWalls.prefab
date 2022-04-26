@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3468450185152066329}
   m_Layer: 0
   m_Name: 1x2_Y_Corner_Wall
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 3170996186068125178}
   m_Layer: 0
   m_Name: Deck_Wall_Joint_01_snaps002 (1)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 3638060109214717844}
   m_Layer: 0
   m_Name: Deck_WallDoorFrame_02_snaps002
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -528,7 +528,7 @@ GameObject:
   - component: {fileID: 6087974946811678883}
   m_Layer: 0
   m_Name: Deck_Wall_Joint_01_snaps002
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -622,7 +622,7 @@ GameObject:
   - component: {fileID: 5549961039203793486}
   m_Layer: 0
   m_Name: RoomConnectorWalls
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -656,7 +656,7 @@ GameObject:
   - component: {fileID: 3885707240797982975}
   m_Layer: 0
   m_Name: 1x2_Wall (15)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

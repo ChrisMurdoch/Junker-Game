@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 214816094233965331}
   m_Layer: 0
   m_Name: Hale_Floor_01_Side_snaps002 (29)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 499299964711441792}
   m_Layer: 0
   m_Name: Hale_Floor_01_Side_snaps002 (31)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 679006005872966562}
   m_Layer: 0
   m_Name: Hale_Floor_01_Side_snaps002 (26)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -398,7 +398,7 @@ GameObject:
   - component: {fileID: 921761412996399040}
   m_Layer: 0
   m_Name: Hale_Floor_01_Side_snaps002 (28)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -491,7 +491,7 @@ GameObject:
   - component: {fileID: 960079474593740718}
   m_Layer: 0
   m_Name: BackWall
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -533,7 +533,7 @@ GameObject:
   - component: {fileID: 960079474894246524}
   m_Layer: 0
   m_Name: HallwayEnd_doorLeft
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -566,7 +566,7 @@ GameObject:
   - component: {fileID: 960079475021245033}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -605,7 +605,7 @@ GameObject:
   - component: {fileID: 960079476447228938}
   m_Layer: 0
   m_Name: Ceiling (1)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 1435624015531281660}
   m_Layer: 0
   m_Name: 1x2_Wall (4)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -761,7 +761,7 @@ GameObject:
   - component: {fileID: 7819374476602688388}
   m_Layer: 0
   m_Name: 1x2_Wall (2)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -892,7 +892,7 @@ GameObject:
   - component: {fileID: 2786858937884709083}
   m_Layer: 0
   m_Name: Gen_Floor_01_snaps002 (6)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -1177,7 +1177,7 @@ GameObject:
   - component: {fileID: 731783250032189258}
   m_Layer: 0
   m_Name: 1x2_Wall (25)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1207,7 +1207,7 @@ GameObject:
   - component: {fileID: 731783250209875503}
   m_Layer: 0
   m_Name: 1x2_Wall (26)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1237,7 +1237,7 @@ GameObject:
   - component: {fileID: 731783250074538570}
   m_Layer: 0
   m_Name: 1x2_Wall (22)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1267,7 +1267,7 @@ GameObject:
   - component: {fileID: 731783250935855927}
   m_Layer: 0
   m_Name: 1x2_Wall (30)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1299,7 +1299,7 @@ GameObject:
   - component: {fileID: 731783250833110365}
   m_Layer: 0
   m_Name: 1x2_Wall (17)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1329,7 +1329,7 @@ GameObject:
   - component: {fileID: 731783250630275846}
   m_Layer: 0
   m_Name: 1x2_Wall (24)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1359,7 +1359,7 @@ GameObject:
   - component: {fileID: 731783250643256896}
   m_Layer: 0
   m_Name: 1x2_Wall (18)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1389,7 +1389,7 @@ GameObject:
   - component: {fileID: 731783251159699230}
   m_Layer: 0
   m_Name: 1x2_Wall (16)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1422,7 +1422,7 @@ GameObject:
   - component: {fileID: 5211944488837401240}
   m_Layer: 0
   m_Name: Gen_Floor_02_snaps002 (7)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -1518,7 +1518,7 @@ GameObject:
   - component: {fileID: 5868931241307136669}
   m_Layer: 0
   m_Name: Deck_Wall_Corner_snaps002
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -1615,7 +1615,7 @@ GameObject:
   - component: {fileID: 6289318747612048464}
   m_Layer: 0
   m_Name: Gen_Floor_01_snaps002 (7)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -1711,7 +1711,7 @@ GameObject:
   - component: {fileID: 6973337682371792458}
   m_Layer: 0
   m_Name: Hale_Floor_01_Side_snaps002 (30)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -1807,7 +1807,7 @@ GameObject:
   - component: {fileID: 6936229204688697357}
   m_Layer: 0
   m_Name: Hale_Floor_01_Side_snaps002 (27)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
@@ -1900,7 +1900,7 @@ GameObject:
   - component: {fileID: 3057947308122201278}
   m_Layer: 0
   m_Name: 1x2_Wall (3)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1932,7 +1932,7 @@ GameObject:
   - component: {fileID: 175541584553373612}
   m_Layer: 0
   m_Name: 1x2_Corner_Wall (1)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1967,7 +1967,7 @@ GameObject:
   - component: {fileID: 8526531811615313600}
   m_Layer: 0
   m_Name: Deck_Wall_Corner_snaps002 (1)
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
