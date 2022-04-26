@@ -7684,28 +7684,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c47c86c7544bb0147b19c5d48e518029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponID: 3
-  weaponName: AutoRifle
-  projectile: {fileID: 8697358457310877863, guid: fd7dd3bf7f7a8bf4b93fae21f84b9eb4, type: 3}
-  projectileSpawn: {fileID: 774372768}
-  muzzleFlashParticle: {fileID: 0}
-  shootSFX: {fileID: 0}
-  fireRate: 0.1
-  maxAmmo: 30
-  damagePerShot: 5
-  projectileSpeed: 55
-  spread: 2
-  isSemiAuto: 0
-  infiniteAmmo: 0
-  ammoType: 
-  mainHand: {fileID: 0}
-  offHand: {fileID: 0}
-  anim: {fileID: 0}
-  currentAmmo: 0
-  shootTimer: 0
-  canShoot: 0
-  gunShotSound: {fileID: 0}
-  reloadSound: {fileID: 0}
 --- !u!1 &290365505
 GameObject:
   m_ObjectHideFlags: 0
@@ -13054,6 +13032,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1917285678}
+    - target: {fileID: 5827571463309305559, guid: 1293053e785704741a702e50946a4068, type: 3}
+      propertyPath: playerMaxHealth
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 5827571463547624553, guid: 1293053e785704741a702e50946a4068, type: 3}
       propertyPath: player
       value: 

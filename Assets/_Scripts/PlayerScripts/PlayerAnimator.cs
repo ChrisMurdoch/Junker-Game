@@ -37,15 +37,15 @@ public class PlayerAnimator : MonoBehaviour
         storedAirSpeed = pc.airSpeed;
 
         AddAnimationEvent(1.09f, "FinishTurn", 1);
-        AddAnimationEvent(0.15f, "AddForce", 4);
+        //AddAnimationEvent(0.15f, "AddForce", 4);
         AddAnimationEvent(1.01f, "EndLanding", 6);
 
-        Debug.Log("animation order");
-        foreach (AnimationClip ac in anim.runtimeAnimatorController.animationClips)
-            Debug.Log(ac.name);
+        // Debug.Log("animation order");
+        // foreach (AnimationClip ac in anim.runtimeAnimatorController.animationClips)
+        //     Debug.Log(ac.name);
 
-        foreach (AnimationEvent evt in anim.runtimeAnimatorController.animationClips[7].events)
-            Debug.Log(evt.functionName + " == " + evt.time);
+        // foreach (AnimationEvent evt in anim.runtimeAnimatorController.animationClips[7].events)
+        //     Debug.Log(evt.functionName + " == " + evt.time);
 
 
     }
@@ -55,12 +55,12 @@ public class PlayerAnimator : MonoBehaviour
         CheckMovement();
         CheckForTurn();
 
-        if(pc.isCrouching) {
-            anim.SetBool("crouching", true);
-        }
-        else {
-            anim.SetBool("crouching", false);
-        }
+        // if(pc.isCrouching) {
+        //     anim.SetBool("crouching", true);
+        // }
+        // else {
+        //     anim.SetBool("crouching", false);
+        // }
 
 
         //check if cc left the ground. Extra check for if you are outside of a certain distance from the ground (aviods isGrounded glitchyness)
@@ -84,8 +84,8 @@ public class PlayerAnimator : MonoBehaviour
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Standing Idle"))
             anim.ResetTrigger("needsLanding");
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Quick 180 Turn"))
-            anim.ResetTrigger("jumping"); //stop jumps from queueing during turns
+        // if (anim.GetCurrentAnimatorStateInfo(0).IsName("Quick 180 Turn"))
+        //     anim.ResetTrigger("jumping"); //stop jumps from queueing during turns
     }
 
     void LateUpdate() {
@@ -139,6 +139,9 @@ public class PlayerAnimator : MonoBehaviour
         bool newFacingRight = CheckAimDirection();
 
         Debug.Log("grounded = " + GetComponent<CharacterController>().isGrounded);
+        Debug.Log("facingRight = " + facingRight);
+        Debug.Log("newFacingRight = " + newFacingRight);
+        Debug.Log("finishedTurn = " + finishedTurn);
         if (newFacingRight != facingRight && finishedTurn && GetComponent<CharacterController>().isGrounded) //need to face new direction & are not actively turning
         {
             Debug.Log("TURN");

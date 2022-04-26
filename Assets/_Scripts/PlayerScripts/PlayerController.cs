@@ -407,6 +407,7 @@ public class PlayerController : MonoBehaviour
             //     UnCrouch(); //jump automatically un-does crouch
 
             anim.SetTrigger("jumping");
+            AddJumpForce();
         }
 
         if(doubleJumpUnlocked) {

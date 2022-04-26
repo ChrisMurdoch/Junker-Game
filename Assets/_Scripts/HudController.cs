@@ -19,7 +19,7 @@ public class HudController : MonoBehaviour
     //Josh pls serialize these variables this script is gonna be rather large and I'd like to section off the aspects
     //of the component into dropdowns to compress things
     int playerHealth;
-    int playerMaxHealth;
+    [SerializeField] int playerMaxHealth;
     float healthHeight = 50f;
     float healthMaxLng = 500f;
     float healthCurrentLength = 500f;

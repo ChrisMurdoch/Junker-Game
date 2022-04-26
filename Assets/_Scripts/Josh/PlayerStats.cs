@@ -30,7 +30,6 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerHud.UpdateHealth(currentHealth, maxHealth);
         state = State.Alive;
     }
 
