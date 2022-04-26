@@ -45,7 +45,11 @@ public class WeaponBase : MonoBehaviour
     private void Update()
     {
         FireRateTimer();
-        InputHandler();
+    }
+
+    public bool ExposedInputCall()
+    {
+        return InputHandler();
     }
 
     protected virtual void Shoot()
@@ -64,10 +68,6 @@ public class WeaponBase : MonoBehaviour
         canShoot = false;
         shootTimer = fireRate;
 
-        if(gunShotSound != null)
-        {
-            AudioSource.PlayClipAtPoint(gunShotSound, projectileSpawn.position);
-        }
 
         GameObject muzzleflash = Instantiate(muzzleFlashParticle, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
     }
@@ -81,7 +81,7 @@ public class WeaponBase : MonoBehaviour
         AudioSource.PlayClipAtPoint(reloadSound, transform.position);
     }
 
-    protected virtual void InputHandler()
+    protected virtual bool InputHandler()
     {
         if (Time.timeScale != 0)
         {
@@ -92,6 +92,7 @@ public class WeaponBase : MonoBehaviour
                     if (Input.GetMouseButtonDown(0) && canShoot)
                     {
                         Shoot();
+                        return true;
                     }
 
                 }
@@ -100,10 +101,12 @@ public class WeaponBase : MonoBehaviour
                     if (Input.GetMouseButton(0) && canShoot)
                     {
                         Shoot();
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 
     protected virtual void FireRateTimer()
