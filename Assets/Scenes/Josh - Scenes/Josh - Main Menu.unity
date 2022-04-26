@@ -333,7 +333,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1586,8 +1586,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1846181228}
-        m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
+      - m_Target: {fileID: 1775076210}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: setMusicVolume
         m_Mode: 0
         m_Arguments:
@@ -3307,8 +3307,8 @@ RectTransform:
   m_Father: {fileID: 266920747}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3815,7 +3815,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5298230506155503974, guid: 54c7df6dbfe56dd4a9874179fc157486, type: 3}
       propertyPath: musicVolume
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5298230506155503974, guid: 54c7df6dbfe56dd4a9874179fc157486, type: 3}
       propertyPath: volume.Music
@@ -4213,7 +4213,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4487,8 +4487,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1846181228}
-        m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
+      - m_Target: {fileID: 1775076210}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: setSFXVolume
         m_Mode: 0
         m_Arguments:
@@ -5539,7 +5539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1297930975
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6851,8 +6851,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1846181228}
-        m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
+      - m_Target: {fileID: 1775076210}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: setMasterVolume
         m_Mode: 0
         m_Arguments:
@@ -7056,7 +7056,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7950,8 +7950,8 @@ RectTransform:
   m_Father: {fileID: 633889672}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8055,6 +8055,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4302042920928744, guid: c45c41f59dbb9894cb895ef86d325026, type: 3}
   m_PrefabInstance: {fileID: 1755812324}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1775076210 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5298230506155503974, guid: 54c7df6dbfe56dd4a9874179fc157486, type: 3}
+  m_PrefabInstance: {fileID: 930226564}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76847796edf9f949896cc16db60faac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1784938196
 GameObject:
   m_ObjectHideFlags: 0
@@ -8173,12 +8184,9 @@ MonoBehaviour:
   sfxSlider: {fileID: 1070758730}
   musicSlider: {fileID: 363435952}
   volume:
-    Master: 0.5
-    SFX: 0.5
-    Music: 0.5
-  ma: 0
-  sfx: 0
-  mu: 0
+    Master: 1
+    SFX: 1
+    Music: 1
 --- !u!1001 &1885733022
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8425,8 +8433,8 @@ RectTransform:
   m_Father: {fileID: 1784938197}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

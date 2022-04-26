@@ -24,14 +24,11 @@ public class MainMenuManager : MonoBehaviour
 
     public void QuitGame()
     {
-        SettingsManager.Instance.SaveSettings();
         Application.Quit();
     }
 
     public void ToggleSettingsPanel()
     {
         SettingsPanel.SetActive(!SettingsPanel.activeSelf);
-        SettingsManager.Instance.SaveSettings();
-
     }
 }

@@ -16,7 +16,6 @@ public class PlayerStats : MonoBehaviour
 
     [Header("Player Parameters")]
     public float maxHealth;
-    public float startingHealth = 50;
 
     [Header("Current Player Info")]
     [SerializeField] private float currentHealth;
@@ -25,18 +24,13 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = startingHealth;
-        PlayerHud.UpdateHealth(currentHealth, maxHealth);
-
+        currentHealth = maxHealth;
         state = State.Alive;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        PlayerHud.UpdateHealth(currentHealth, maxHealth);
-
         switch (state)
         {
             default:

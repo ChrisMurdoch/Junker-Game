@@ -12,25 +12,11 @@ public class SettingsManager : MonoBehaviour
 
     public Volume volume;
 
-    public static SettingsManager Instance;
-
     private string resolution = "Resolution";
-
-    public float ma;
-    public float sfx;
-    public float mu;
     private void Awake()
     {
-        Instance = this;
-
-        SaveManager.InitialSave(volume);
-
+        //SaveManager.Save(volume);
         volume = SaveManager.Load();
-
-        mu = volume.Music;
-        ma = volume.Master;
-        sfx = volume.SFX;
-
 
         if (PlayerPrefs.GetInt(resolution) == 0)
         {
@@ -49,60 +35,26 @@ public class SettingsManager : MonoBehaviour
             resolutionDropDown.value = 2;
         }
 
+        masterSlider.value = volume.Master;
+        sfxSlider.value = volume.SFX;
+        musicSlider.value = volume.Music;
 
-        //musicSlider.value = mu;
-        //sfxSlider.value = sfx;
-        //masterSlider.value = ma;
-        ////sfxSlider.value = volume.SFX;
- 
-        //setMusicVolume(mu);
-        //setSFXVolume(sfx);
-        //setMasterVolume(ma);
-        //setSFXVolume(volume.SFX);
-
+        AudioManager.instance.setMasterVolume(volume.Master);
+        AudioManager.instance.setSFXVolume(volume.SFX);
+        AudioManager.instance.setMusicVolume(volume.Music);
 
     }
 
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-        musicSlider.value = mu;
-        sfxSlider.value = sfx;
-        masterSlider.value = ma;
-        //sfxSlider.value = volume.SFX;
-
-        setMusicVolume(mu);
-        setSFXVolume(sfx);
-        setMasterVolume(ma);
+        
     }
 
-    public void SaveSettings()
+    // Update is called once per frame
+    void Update()
     {
-        SaveManager.Save(volume);
-    }
-
-    public void setMasterVolume(float value)
-    {
-        AudioManager.instance.setMasterVolume(value);
-        volume.Master = value;
-        //SaveManager.Save(volume);
-
-    }
-
-    public void setSFXVolume(float value)
-    {
-        AudioManager.instance.setSFXVolume(value);
-        volume.SFX = value;
-        //SaveManager.Save(volume);
-
-
-    }
-
-    public void setMusicVolume(float value)
-    {
-        AudioManager.instance.setMusicVolume(value);
-        volume.Music = value;
-        //SaveManager.Save(volume);
-
+        
     }
 
     public void ChangeResolution()

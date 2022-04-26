@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    //public Volume volume;
+    public Volume volume;
 
     public enum AudioChannel
     {
@@ -18,14 +18,14 @@ public class AudioManager : MonoBehaviour
     [Range(0f, 1f)]
     public float musicVolume = 0.5f;
 
-    public AudioSource[] musicSources;
+    AudioSource[] musicSources;
     int activeMusicSourceIndex;
 
     public static AudioManager instance;
 
     private void Awake()
     {
-        //SaveManager.InitialSave(volume);
+        SaveManager.InitialSave(volume);
 
         if (instance != null)
         {
@@ -87,23 +87,23 @@ public class AudioManager : MonoBehaviour
     public void setMasterVolume(float value)
     {
         setVolume(value, AudioChannel.Master);
-        //volume.Master = value;
-        //SaveManager.Save(volume);
+        volume.Master = value;
+        SaveManager.Save(volume);
     }
 
     public void setSFXVolume(float value)
     {
         setVolume(value, AudioChannel.SFX);
-        //volume.SFX = value;
-        //SaveManager.Save(volume);
+        volume.SFX = value;
+        SaveManager.Save(volume);
 
     }
 
     public void setMusicVolume(float value)
     {
-        //volume.Music = value;
+        volume.Music = value;
         setVolume(value, AudioChannel.Music);
-        //SaveManager.Save(volume);
+        SaveManager.Save(volume);
 
     }
 
