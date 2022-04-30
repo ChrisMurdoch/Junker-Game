@@ -5636,6 +5636,7 @@ MonoBehaviour:
   CanSlideOnSlopes: 1
   PullSpeed: 20
   jumpSFX: {fileID: 8300000, guid: 826c623ab37886d479752452a2a0c665, type: 3}
+  hookLauncherSFX: {fileID: 8300000, guid: e2799083fdcccca468a9b790e58cf241, type: 3}
 --- !u!114 &6605310773772778388
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -88,6 +88,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Sound Effects")]
     [SerializeField] private AudioClip jumpSFX;
+    [SerializeField] private AudioClip hookLauncherSFX;
 
     //[Header("Other Parameters")]
     //[SerializeField] private LayerMask WhatIsGround; 
@@ -464,10 +465,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButton(1) && CanHook) //Right mouse buttons throws the hook
         {
             hooklauncher.LaunchHook();
+            AudioManager.instance.PlaySound(hookLauncherSFX, transform.position);
             CanHook = false;
         }
 
-        if (characterController.isGrounded && !IsSliding)
+        if (characterController.isGrounded && !IsSliding && hooklauncher.currentHook == null)
         {
             CanHook = true;
         }

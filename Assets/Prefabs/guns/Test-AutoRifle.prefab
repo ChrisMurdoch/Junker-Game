@@ -100,7 +100,7 @@ MonoBehaviour:
   projectile: {fileID: 7235336919865440893, guid: 013117ec0a50f07488850f24383d189a, type: 3}
   projectileSpawn: {fileID: 3584451665394237919}
   muzzleFlashParticle: {fileID: 5334781383197386576, guid: 3ea0a0f110db4f2448b4b3f2c5a70811, type: 3}
-  shootSFX: {fileID: 8300000, guid: 08f20f4a01958a34bbf2fe591e730213, type: 3}
+  shootSFX: {fileID: 8300000, guid: 5b4060d3203a90649bce1ad8a3ebc404, type: 3}
   fireRate: 0.1
   maxAmmo: 30
   damagePerShot: 7

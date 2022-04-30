@@ -35987,6 +35987,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: {fileID: 1193652017}
+  hotBar: {fileID: 0}
   weaponList:
   - {fileID: 159456890}
   - {fileID: 1153854885}
@@ -36023,7 +36024,6 @@ MonoBehaviour:
   hookHitPosition: {x: 0, y: 0, z: 0}
   DidHitWall: 0
   hookObject: {fileID: 4481684180165800467, guid: 0ff5adc91e024994fbef31a1e2a0cf06, type: 3}
-  hookSpawn: {fileID: 675158279}
   launchSpeed: 35
   returnSpeed: 40
   launchLength: 20
@@ -36041,6 +36041,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerHud: {fileID: 1193652018}
   maxHealth: 100
+  startingHealth: 50
   currentHealth: 0
 --- !u!114 &1081777019
 MonoBehaviour:
@@ -39254,6 +39255,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1df17655abb0a8245837e98b6d0b9e71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1193652019 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5827571462526048615, guid: 1293053e785704741a702e50946a4068, type: 3}
+  m_PrefabInstance: {fileID: 1193652016}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99920a0ece31400409fff18cddf9d9a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1194433104
@@ -58827,6 +58839,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3209888129128674845, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: hotBar
+      value: 
+      objectReference: {fileID: 1193652019}
     - target: {fileID: 3209888129128674845, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: inventory
       value: 

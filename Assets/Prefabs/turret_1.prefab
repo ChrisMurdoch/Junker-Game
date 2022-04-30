@@ -58,6 +58,7 @@ MonoBehaviour:
   Projectile: {fileID: 1895114844437855911, guid: ec1c27b5482cec540839ec8b2e5a8922, type: 3}
   ProjectileSpawn: {fileID: 5683732034011874863}
   MuzzleFlashParticle: {fileID: 5334781383197386576, guid: 3ea0a0f110db4f2448b4b3f2c5a70811, type: 3}
+  shootSFX: {fileID: 8300000, guid: 4961ff3f8e99359459cd4c02a76721fc, type: 3}
   RaycastLayerIgnore:
     serializedVersion: 2
     m_Bits: 64
