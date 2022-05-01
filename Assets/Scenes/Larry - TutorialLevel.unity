@@ -65030,6 +65030,14 @@ PrefabInstance:
       propertyPath: inventory
       value: 
       objectReference: {fileID: 551582917}
+    - target: {fileID: 4630412641799767669, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: WallJumpHeight
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4630412641799767669, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: WallJumpPropulsion
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 4710069013076394155, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: Crosshair
       value: 

@@ -40,7 +40,10 @@ public class PlayerController : MonoBehaviour
     private bool underObject;
 
     private bool isWallSliding = false;
+    private bool touchingWall = false;
     private ControllerColliderHit wallHit;
+    private Vector3 wallNormal;
+    private Vector3 wallHitDirection;
 
     private float x;
     private float xAir;
@@ -201,6 +204,9 @@ public class PlayerController : MonoBehaviour
             inPickupRange = false;
         }
 
+        if(isWallSliding)
+            Debug.Log("SLIDING");
+
     }
 
     public void ChangeState(int n) //A public method to allow other scripts to change the players state
@@ -273,12 +279,6 @@ public class PlayerController : MonoBehaviour
 #endregion
 
 #region NormalStateMovement
-    public void AddImpact(Vector3 dir, float force) //Allows adding "force" with a character controller
-    {
-        dir.Normalize();
-        impact += dir.normalized * force / mass;
-    }
-
 
     private void SlopeCheck() //A check to see if the player is standing on a slope
     {
@@ -357,6 +357,19 @@ public class PlayerController : MonoBehaviour
 
     private void WallSlide()
     {
+        // if(touchingWall) {            
+
+        //     // get touched wall's normal (will use if wall jump occurs)
+        //     wallNormal = GetWallNormals();
+            
+        //     //no normal = not touching a wall
+        //     if (wallNormal == Vector3.zero) {
+        //         Debug.Log("MOVED OFF WALL");
+        //         wallHitDirection = Vector3.zero; //reset direction when not touching wall
+        //         touchingWall = false;
+        //     }
+        // }
+
         if (characterController.isGrounded || ((characterController.collisionFlags & CollisionFlags.Sides) == 0))
         {
             isWallSliding = false;
@@ -365,9 +378,22 @@ public class PlayerController : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (((characterController.collisionFlags & CollisionFlags.Sides) != 0) && !characterController.isGrounded) //changed to match instructions from documentation
+        if (((characterController.collisionFlags & CollisionFlags.Sides) != 0) && !characterController.isGrounded) 
         {
+            Debug.DrawRay(hit.point, hit.normal, Color.red, 1.25f);
             wallHit = hit;
+            // Debug.Log("HIT OBJECT = " + wallHit.gameObject.name);
+            // Debug.Log("wall x = " + wallHit.transform.position.x);
+            // Debug.Log("player x  = " + wallHit.transform.position.x);
+            // if(wallHit.transform.position.x < transform.position.x) {
+            //     Debug.Log("LEFT WALL");
+            //     wallHitDirection = -Vector3.right;
+            // } else  {
+            //     Debug.Log("RIGHT WALL");
+            //     wallHitDirection = Vector3.right;
+            // }
+
+            // touchingWall = true;
 
             if (verticalVelocity <= 0)
             {
@@ -377,6 +403,29 @@ public class PlayerController : MonoBehaviour
 
         }
 
+    }
+
+    // private Vector3 GetWallNormals()
+    // {
+    //     //raycast starts at player's center
+    //     Vector3 startPoint = transform.position + characterController.center;
+    //     Debug.DrawRay(startPoint, wallHitDirection, Color.blue, 0.1f);
+
+    //     //raycast short distance from point on player to direction of wall
+    //     if(Physics.Raycast(startPoint, wallHitDirection, out RaycastHit rayHit, 0.05f)) {
+    //         return rayHit.normal;
+    //     }
+    //     else {
+    //         Debug.Log("NOT ON WALL");
+    //         return Vector3.zero; //return 0 if you aren't touching a wall
+    //     }
+    // }
+
+    public void AddImpact(Vector3 dir, float force) //Allows adding "force" with a character controller
+    {
+        // dir.Normalize();
+        Debug.Log("dir.normalized = " + dir.normalized);
+        impact = dir.normalized * force / mass;
     }
 
     private void WallJump()
@@ -393,7 +442,7 @@ public class PlayerController : MonoBehaviour
             characterController.Move(impact * Time.deltaTime);
         }
 
-        impact = Vector3.Lerp(impact, Vector3.zero, 7 * Time.deltaTime);
+        impact = Vector3.Lerp(impact, Vector3.zero, Time.deltaTime);
     }
 
     private void JumpHandler()
@@ -426,8 +475,11 @@ public class PlayerController : MonoBehaviour
         {
 
             OnSlope = false; //Can't be on a slope if they're not grounded
-            verticalVelocity -= gravity * Time.deltaTime;
 
+            //only increase downward velocity if not wall sliding
+            if(!isWallSliding) {
+                verticalVelocity -= gravity * Time.deltaTime;
+            }
             if (characterController.collisionFlags == CollisionFlags.Above) //If player hits a ceiling, stop adding upward velocity
             {
                 verticalVelocity = 0;                //Stop adding any more velocity.
@@ -437,6 +489,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (characterController.isGrounded && verticalVelocity < 0 && !IsSliding)
         {
+            impact = Vector3.zero; //reset impact value when you hit the ground
             canDoubleJump = true; //Resets double jump when grounded
             characterController.stepOffset = baseStepOffSet;
 

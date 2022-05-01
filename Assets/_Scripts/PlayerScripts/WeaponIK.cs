@@ -68,7 +68,6 @@ public class WeaponIK : MonoBehaviour
 
         //get angle between gun's aim and direction to crosshair
         float targetAngle = Vector3.Angle(targetDirection, aimDirection);
-        Debug.Log("angle = " + targetAngle);
         //if angle is > limit, blend back to an aim within bounds
         if(targetAngle > angleLimit)
         {

@@ -138,13 +138,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         bool newFacingRight = CheckAimDirection();
 
-        Debug.Log("grounded = " + GetComponent<CharacterController>().isGrounded);
-        Debug.Log("facingRight = " + facingRight);
-        Debug.Log("newFacingRight = " + newFacingRight);
-        Debug.Log("finishedTurn = " + finishedTurn);
         if (newFacingRight != facingRight && finishedTurn && GetComponent<CharacterController>().isGrounded) //need to face new direction & are not actively turning
         {
-            Debug.Log("TURN");
             weaponIK.enabled = false;
             anim.SetTrigger("needsTurn"); //trigger the turn animation
            finishedTurn = false; //denote active turn anim
@@ -170,7 +165,6 @@ public class PlayerAnimator : MonoBehaviour
         if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, landingDist))
         {
             Debug.DrawRay(transform.position, -Vector3.up * hit.distance, Color.green); 
-            Debug.Log("NEEDS LANDING");
             anim.SetTrigger("needsLanding"); //trigger landing animation
         }
 
