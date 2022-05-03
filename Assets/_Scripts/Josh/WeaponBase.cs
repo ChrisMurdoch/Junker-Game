@@ -65,7 +65,10 @@ public class WeaponBase : MonoBehaviour
         GameObject FiredProjectile = Instantiate(projectile, projectileSpawn.transform.position, rot);
         ProjectileBase proj = FiredProjectile.GetComponent<ProjectileBase>();
         proj.SetParameters(projectileSpeed, damagePerShot);
-        anim.SetTrigger("fire"); //animate gunshot
+        if(anim != null)
+        {
+            anim.SetTrigger("fire"); //animate gunshot
+        }
         Physics.IgnoreCollision(GameObject.FindWithTag("Player").GetComponent<CharacterController>(), proj.GetComponent<Collider>());
         if (!infiniteAmmo)
         {
