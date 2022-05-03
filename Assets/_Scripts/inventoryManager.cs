@@ -37,6 +37,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject[] hotbarSquares; //holds each hotbar square's rect transform after instantiated
     public float squareSizeValue;
     public InventoryObject[] hotBarItems;
+    public string[] hotBarBlacklist = { "Medkit", "RifleAmmo", "ShotgunAmmo"};
 
     public GameObject player;
     public GameObject hotBar;
@@ -532,23 +533,29 @@ public class InventoryManager : MonoBehaviour
                 }
 
             }
-            else if(result.gameObject.tag == "HotBarSquare")
+            else if(result.gameObject.tag == "HotBarSquare" && !IsBlacklisted(items[heldItemIndex].itemName))
             {
                 for(int i = 0; i < hotbarSquares.Length; i++)
                 {
                     if(result.gameObject == hotbarSquares[i])
                     {
+                        if (hotBarItems[i] == items[heldItemIndex])
+                            return;
                         hotBar.GetComponent<HotBarController>().PlcaeItemInSlot(items[heldItemIndex], i+1);
 
                         GameObject newImage = Instantiate(imagePrefab, hotbarSquares[i].transform);
                         newImage.GetComponent<Image>().sprite = items[heldItemIndex].image;
                         newImage.GetComponent<RectTransform>().sizeDelta = hotbarSquares[i].GetComponent<RectTransform>().sizeDelta;
+                        if (hotBarItems[i] != null)
+                            hotBarItems[i].RemoveObject();
                         hotBarItems[i] = items[heldItemIndex];
 
                         holdingItem = false;
                         RectTransform heldRect = items[heldItemIndex].uiImage.GetComponent<RectTransform>();
                         heldRect.position = GetItemCenter(items[heldItemIndex].GridPosition, items[heldItemIndex].itemSize);
                         heldItemIndex = -1;
+
+                        
                         return;
                     }
                 }
@@ -618,6 +625,16 @@ public class InventoryManager : MonoBehaviour
         }
 
         return true; //grid position is empty
+    }
+
+    bool IsBlacklisted (string itemName)
+    {
+        foreach(string name in hotBarBlacklist)
+        {
+            if (name == itemName)
+                return false;
+        }
+        return true;
     }
 
 }
