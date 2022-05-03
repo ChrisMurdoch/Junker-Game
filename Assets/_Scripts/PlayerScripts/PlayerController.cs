@@ -153,11 +153,13 @@ public class PlayerController : MonoBehaviour
                 //walking forward to the left
                 if(!pa.facingRight && pa.finishedTurn && !anim.GetBool("backwards")) {
                     velocity.x *= -1.0f;
+                    Debug.Log("VELOCITY = " + velocity);
                     characterController.Move(velocity * Time.deltaTime);
 
                 //walking backward to the left
                 } else if (!pa.facingRight && pa.finishedTurn && anim.GetBool("backwards")) {
                     velocity.x *= -1.0f;
+                    Debug.Log("VELOCITY = " + velocity);
                     characterController.Move(velocity * Time.deltaTime);
                 }
                 
@@ -204,9 +206,6 @@ public class PlayerController : MonoBehaviour
             inPickupRange = false;
         }
 
-        if(isWallSliding)
-            Debug.Log("SLIDING");
-
     }
 
     public void ChangeState(int n) //A public method to allow other scripts to change the players state
@@ -216,6 +215,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetVerticalVelocity(float n) //Public method to allow changing player's vertical velocity from other scripts
     {
+        Debug.Log("Called SetVerticalVelocity");
         verticalVelocity = n;
     }
 
@@ -370,16 +370,29 @@ public class PlayerController : MonoBehaviour
         //     }
         // }
 
-        if (characterController.isGrounded || ((characterController.collisionFlags & CollisionFlags.Sides) == 0))
+        if (isWallSliding) {
+            Debug.Log("WALL SLIDING");
+            anim.applyRootMotion = false;
+        }
+
+        if (characterController.isGrounded || (characterController.collisionFlags != CollisionFlags.Sides))
         {
+            Debug.Log("STOP WALL SLIDE");
             isWallSliding = false;
+            anim.applyRootMotion = true;
         }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (((characterController.collisionFlags & CollisionFlags.Sides) != 0) && !characterController.isGrounded) 
+        Debug.Log("controllerColliderHit called");
+        Debug.Log("FLAGS = " + characterController.collisionFlags);
+        Debug.Log("other collider = " + hit.collider);
+        Debug.Log("isGrounded = " + characterController.isGrounded);
+        if ((characterController.collisionFlags == CollisionFlags.Sides) && !characterController.isGrounded) 
         {
+            verticalVelocity = 0f;
+            Debug.Log("colliderHit");
             Debug.DrawRay(hit.point, hit.normal, Color.red, 1.25f);
             wallHit = hit;
             // Debug.Log("HIT OBJECT = " + wallHit.gameObject.name);
@@ -432,6 +445,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isWallSliding)
         {
+            Debug.Log("Wall Jump");
             verticalVelocity = 0;
             verticalVelocity = WallJumpHeight;
             AddImpact(wallHit.normal, WallJumpPropulsion);
@@ -482,6 +496,7 @@ public class PlayerController : MonoBehaviour
             }
             if (characterController.collisionFlags == CollisionFlags.Above) //If player hits a ceiling, stop adding upward velocity
             {
+                Debug.Log("HIT CEILING");
                 verticalVelocity = 0;                //Stop adding any more velocity.
                 characterController.stepOffset = 0;                 //Set stepOffset to zero to prevent player moving and sticking to the ceiling.
             }
@@ -507,6 +522,7 @@ public class PlayerController : MonoBehaviour
 
         if (CanSlideOnSlopes && IsSliding && characterController.isGrounded)
         {
+            Debug.Log("Slope Sliding");
             velocity += new Vector3(hitPointNormal.x, -hitPointNormal.y, hitPointNormal.z) * slopeSlideSpeed;
         }
 
