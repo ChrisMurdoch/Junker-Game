@@ -6029,7 +6029,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -240}
-  m_SizeDelta: {x: 1000, y: 300}
+  m_SizeDelta: {x: 1404.36, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &133284080
 MonoBehaviour:
@@ -6051,7 +6051,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You Did It!
+  m_text: Thank You For Playing The Junker Demo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 163bb9e10fd3b7f4eb2defbe940c433e, type: 2}
   m_sharedMaterial: {fileID: -3241125064717154043, guid: 163bb9e10fd3b7f4eb2defbe940c433e, type: 2}
@@ -6078,8 +6078,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 150
-  m_fontSizeBase: 150
+  m_fontSize: 130
+  m_fontSizeBase: 130
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -15568,6 +15568,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2547463850539135161, guid: e71a30162cdf2854e94f1a9818ad5976, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2547463850541363851, guid: e71a30162cdf2854e94f1a9818ad5976, type: 3}
       propertyPath: m_Name
       value: ShotgunPickUp
@@ -15590,7 +15594,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2547463850541553309, guid: e71a30162cdf2854e94f1a9818ad5976, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.25
+      value: -2.01
       objectReference: {fileID: 0}
     - target: {fileID: 2547463850541553309, guid: e71a30162cdf2854e94f1a9818ad5976, type: 3}
       propertyPath: m_LocalPosition.y
@@ -36507,6 +36511,10 @@ PrefabInstance:
       propertyPath: PlayerHud
       value: 
       objectReference: {fileID: 1386735587}
+    - target: {fileID: 8331833450034311370, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: startingHealth
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8331833450034311371, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: hotBar
       value: 
@@ -74554,6 +74562,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2547463850539135161, guid: 4fa9708554689f34496d32a4645254a2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2547463850541363851, guid: 4fa9708554689f34496d32a4645254a2, type: 3}
       propertyPath: m_Name
       value: AutoRiflePickUp
@@ -74576,7 +74588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2547463850541553309, guid: 4fa9708554689f34496d32a4645254a2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.25
+      value: -2.01
       objectReference: {fileID: 0}
     - target: {fileID: 2547463850541553309, guid: 4fa9708554689f34496d32a4645254a2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -74584,7 +74596,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2547463850541553309, guid: 4fa9708554689f34496d32a4645254a2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2547463850541553309, guid: 4fa9708554689f34496d32a4645254a2, type: 3}
       propertyPath: m_LocalRotation.w

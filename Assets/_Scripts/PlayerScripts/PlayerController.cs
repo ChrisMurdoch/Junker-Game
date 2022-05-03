@@ -372,13 +372,13 @@ public class PlayerController : MonoBehaviour
         // }
 
         if (isWallSliding) {
-            Debug.Log("WALL SLIDING");
+            //Debug.Log("WALL SLIDING");
             anim.applyRootMotion = false;
         }
 
         if (characterController.isGrounded || (characterController.collisionFlags != CollisionFlags.Sides))
         {
-            Debug.Log("STOP WALL SLIDE");
+            //Debug.Log("STOP WALL SLIDE");
             isWallSliding = false;
             anim.applyRootMotion = true;
         }
