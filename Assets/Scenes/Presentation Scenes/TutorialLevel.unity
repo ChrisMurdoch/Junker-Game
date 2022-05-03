@@ -67120,6 +67120,14 @@ PrefabInstance:
       propertyPath: inventory
       value: 
       objectReference: {fileID: 551582917}
+    - target: {fileID: 8331833450034311409, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: m_Radius
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833450034311409, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: m_SkinWidth
+      value: 0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 8331833450034311410, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: m_RootOrder
       value: 1
