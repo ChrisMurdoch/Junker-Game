@@ -392,7 +392,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("isGrounded = " + characterController.isGrounded);
         if ((characterController.collisionFlags == CollisionFlags.Sides) && !characterController.isGrounded) 
         {
-            verticalVelocity = 0f;
+            //verticalVelocity = 0f;
             Debug.Log("colliderHit");
             Debug.DrawRay(hit.point, hit.normal, Color.red, 1.25f);
             wallHit = hit;
@@ -479,6 +479,7 @@ public class PlayerController : MonoBehaviour
             {
                 //verticalVelocity = 0;
                 anim.SetTrigger("jumping");
+                AddJumpForce();
                 canDoubleJump = false;
             }
         }
