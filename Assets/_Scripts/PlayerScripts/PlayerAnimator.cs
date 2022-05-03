@@ -69,8 +69,8 @@ public class PlayerAnimator : MonoBehaviour
             finishedLand = false;            
         }
 
-        if(anim.GetCurrentAnimatorStateInfo(0).IsName("Falling Idle"))
-            CheckForGround(); //while falling, check for when to play landing anim
+        // if(anim.GetCurrentAnimatorStateInfo(0).IsName("Falling Idle"))
+        //     CheckForGround(); //while falling, check for when to play landing anim
 
         // if(anim.GetCurrentAnimatorStateInfo(0).IsName("Falling To Landing")) {
         //     pc.moveSpeed = 0f;
@@ -138,13 +138,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         bool newFacingRight = CheckAimDirection();
 
-        Debug.Log("grounded = " + GetComponent<CharacterController>().isGrounded);
-        Debug.Log("facingRight = " + facingRight);
-        Debug.Log("newFacingRight = " + newFacingRight);
-        Debug.Log("finishedTurn = " + finishedTurn);
         if (newFacingRight != facingRight && finishedTurn && GetComponent<CharacterController>().isGrounded) //need to face new direction & are not actively turning
         {
-            Debug.Log("TURN");
             weaponIK.enabled = false;
             anim.SetTrigger("needsTurn"); //trigger the turn animation
            finishedTurn = false; //denote active turn anim
@@ -165,16 +160,15 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     //check if we are close enough to the ground to trigger the landing anim
-    void CheckForGround()
-    {
-        if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, landingDist))
-        {
-            Debug.DrawRay(transform.position, -Vector3.up * hit.distance, Color.green); 
-            Debug.Log("NEEDS LANDING");
-            anim.SetTrigger("needsLanding"); //trigger landing animation
-        }
+    // void CheckForGround()
+    // {
+    //     if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, landingDist))
+    //     {
+    //         Debug.DrawRay(transform.position, -Vector3.up * hit.distance, Color.green); 
+    //         anim.SetTrigger("needsLanding"); //trigger landing animation
+    //     }
 
-    }
+    // }
 
     void FinishTurn()
     {
@@ -187,10 +181,10 @@ public class PlayerAnimator : MonoBehaviour
         pc.AddJumpForce();
     }
 
-    void EndLanding()
-    {
-        anim.SetBool("falling", false); //landed, so no longer falling
-    }
+    // void EndLanding()
+    // {
+    //     anim.SetBool("falling", false); //landed, so no longer falling
+    // }
 
     void AddAnimationEvent(float animTime, string fName, int clipIndex)
     {
