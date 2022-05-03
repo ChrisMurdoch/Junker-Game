@@ -28,6 +28,8 @@ public class DroneEnemy : EnemyBase
     [SerializeField] private Transform ProjectileSpawn;
     [SerializeField] private GameObject MuzzleFlashParticle;
 
+    [SerializeField] private AudioClip shootSFX;
+
 
     public LayerMask RaycastLayerIgnore;
 
@@ -151,6 +153,7 @@ public class DroneEnemy : EnemyBase
 
         if (fireTimer <= 0)
         {
+            AudioManager.instance.PlaySound(shootSFX, transform.position);
             GameObject projectile = Instantiate(Projectile, ProjectileSpawn.position, ProjectileSpawn.rotation);
             GameObject muzzleflash = Instantiate(MuzzleFlashParticle, ProjectileSpawn.position, ProjectileSpawn.rotation);
             Physics.IgnoreCollision(projectile.GetComponent<Collider>(), gameObject.GetComponent<Collider>());

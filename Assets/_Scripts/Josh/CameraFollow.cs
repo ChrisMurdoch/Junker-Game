@@ -24,10 +24,10 @@ public class CameraFollow : MonoBehaviour
         newPosition.z = negativeZAxis;
         newPosition.y = target.position.y + 2.5f;
 
-        if (player.GetComponent<PlayerController>().isCrouching) 
-        {
-            newPosition.y = target.position.y;
-        }
+        //if (player.GetComponent<PlayerControllerOld>().isCrouching) 
+        //{
+        //    newPosition.y = target.position.y;
+        //}
 
         if (Input.GetKey(KeyCode.S))
         {

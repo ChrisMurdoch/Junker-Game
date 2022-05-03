@@ -6,7 +6,6 @@ public class MainMenuManager : MonoBehaviour
 {
     public GameObject SettingsPanel;
 
-
     // Start is called before the first frame update
     void Start()
     {

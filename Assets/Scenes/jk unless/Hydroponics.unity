@@ -36401,6 +36401,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3209888129128674845, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: hotBar
+      value: 
+      objectReference: {fileID: 831758286}
+    - target: {fileID: 3209888129128674845, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: inventory
       value: 
       objectReference: {fileID: 1386735586}
@@ -36431,6 +36435,10 @@ PrefabInstance:
     - target: {fileID: 4630412641799767669, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: doubleJumpUnlocked
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4630412641799767669, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: hookLauncherUnlocked
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4710069013076394155, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: Crosshair
@@ -36534,6 +36542,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 790415785839303945, guid: f31cfebf5241f354db1741f99a1061e9, type: 3}
   m_PrefabInstance: {fileID: 831735601}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &831758286 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5827571462526048615, guid: 1293053e785704741a702e50946a4068, type: 3}
+  m_PrefabInstance: {fileID: 1386735585}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99920a0ece31400409fff18cddf9d9a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &833695379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39592,6 +39611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: {fileID: 1386735586}
+  hotBar: {fileID: 0}
   weaponList:
   - {fileID: 26543712}
   - {fileID: 278506321}
@@ -39628,7 +39648,6 @@ MonoBehaviour:
   hookHitPosition: {x: 0, y: 0, z: 0}
   DidHitWall: 0
   hookObject: {fileID: 4481684180165800467, guid: 0ff5adc91e024994fbef31a1e2a0cf06, type: 3}
-  hookSpawn: {fileID: 360229649}
   launchSpeed: 35
   returnSpeed: 40
   launchLength: 20
@@ -39646,6 +39665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerHud: {fileID: 1386735587}
   maxHealth: 100
+  startingHealth: 50
   currentHealth: 0
 --- !u!114 &899462972
 MonoBehaviour:
