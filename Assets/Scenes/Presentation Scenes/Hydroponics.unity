@@ -36519,13 +36519,37 @@ PrefabInstance:
       propertyPath: isSemiAuto
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245808, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: shootSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 5b4060d3203a90649bce1ad8a3ebc404, type: 3}
+    - target: {fileID: 8331833449101245808, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: gunShotSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 5b4060d3203a90649bce1ad8a3ebc404, type: 3}
+    - target: {fileID: 8331833449101245808, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: infiniteAmmo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245808, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: damagePerShot
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8331833449101245809, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: shootSFX
       value: 
       objectReference: {fileID: 8300000, guid: 5b4060d3203a90649bce1ad8a3ebc404, type: 3}
     - target: {fileID: 8331833449101245809, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: gunShotSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 5b4060d3203a90649bce1ad8a3ebc404, type: 3}
+    - target: {fileID: 8331833449101245809, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: infiniteAmmo
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245809, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: damagePerShot
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8331833449101245814, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: shootSFX
