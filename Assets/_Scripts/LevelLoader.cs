@@ -7,7 +7,14 @@ public class LevelLoader : MonoBehaviour
 {
     public Animator transition;
     public float transitionTime = 1f;
-    
+
+    private GameObject CrossFadeObject;
+
+    private void Awake()
+    {
+        CrossFadeObject = transition.gameObject;
+        CrossFadeObject.SetActive(true);
+    }
 
     public void LoadNextLevel()
     {

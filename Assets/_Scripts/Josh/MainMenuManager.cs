@@ -23,5 +23,6 @@ public class MainMenuManager : MonoBehaviour
     public void ToggleSettingsPanel()
     {
         SettingsPanel.SetActive(!SettingsPanel.activeSelf);
+
     }
 }

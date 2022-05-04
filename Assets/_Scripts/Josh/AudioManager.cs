@@ -77,10 +77,12 @@ public class AudioManager : MonoBehaviour
 
         }
 
-        foreach (AudioSource s in musicSources)
-        {
-            s.volume = musicVolume * masterVolume;
-        }
+        //foreach (AudioSource s in musicSources)
+        //{
+        //    s.volume = musicVolume * masterVolume;
+        //}
+
+        musicSources[activeMusicSourceIndex].volume = musicVolume * masterVolume;
 
     }
 
@@ -88,14 +90,14 @@ public class AudioManager : MonoBehaviour
     {
         setVolume(value, AudioChannel.Master);
         volume.Master = value;
-        SaveManager.Save(volume);
+        //SaveManager.Save(volume);
     }
 
     public void setSFXVolume(float value)
     {
         setVolume(value, AudioChannel.SFX);
         volume.SFX = value;
-        SaveManager.Save(volume);
+        //SaveManager.Save(volume);
 
     }
 
@@ -103,7 +105,7 @@ public class AudioManager : MonoBehaviour
     {
         volume.Music = value;
         setVolume(value, AudioChannel.Music);
-        SaveManager.Save(volume);
+        //SaveManager.Save(volume);
 
     }
 
@@ -127,5 +129,7 @@ public class AudioManager : MonoBehaviour
             musicSources[1 - activeMusicSourceIndex].volume = Mathf.Lerp(musicVolume * masterVolume, 0, percent);
             yield return null;
         }
+        //musicSources[1 - activeMusicSourceIndex].clip = null;
+        //yield return null;
     }
 }

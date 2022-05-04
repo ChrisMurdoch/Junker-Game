@@ -36,9 +36,12 @@ public class PlayerAnimator : MonoBehaviour
         storedMoveSpeed = pc.moveSpeed;
         storedAirSpeed = pc.airSpeed;
 
-        AddAnimationEvent(1.09f, "FinishTurn", 1);
+        //add required animation events if they don't already exist
+        if(anim.runtimeAnimatorController.animationClips[1].events.Length == 0)
+            AddAnimationEvent(1.09f, "FinishTurn", 1);
         //AddAnimationEvent(0.15f, "AddForce", 4);
-        AddAnimationEvent(1.01f, "EndLanding", 6);
+        if(anim.runtimeAnimatorController.animationClips[6].events.Length == 0)
+            AddAnimationEvent(1.01f, "EndLanding", 6);
 
         // Debug.Log("animation order");
         // foreach (AnimationClip ac in anim.runtimeAnimatorController.animationClips)
@@ -140,9 +143,10 @@ public class PlayerAnimator : MonoBehaviour
 
         if (newFacingRight != facingRight && finishedTurn && GetComponent<CharacterController>().isGrounded) //need to face new direction & are not actively turning
         {
+            Debug.Log("START TURN");
             weaponIK.enabled = false;
             anim.SetTrigger("needsTurn"); //trigger the turn animation
-           finishedTurn = false; //denote active turn anim
+            finishedTurn = false; //denote active turn anim
         }
     }
 
@@ -174,6 +178,7 @@ public class PlayerAnimator : MonoBehaviour
     {
         facingRight = !facingRight; //switch facing direction to opposite
         finishedTurn = true;
+        Debug.Log("END TURN");
     }
 
     void AddForce()

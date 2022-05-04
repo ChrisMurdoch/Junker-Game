@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3453318869003482952}
-  - component: {fileID: 3453318869003482954}
+  - component: {fileID: 7735573774966912759}
   m_Layer: 0
   m_Name: AutoRifle
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3453318869003482954
+--- !u!114 &7735573774966912759
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,14 +41,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 3453318869003482951}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c47c86c7544bb0147b19c5d48e518029, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f7ea6d4a1e6ca648973dd62b5ad7172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weaponID: 3
   weaponName: AutoRifle
-  projectile: {fileID: 8697358457310877863, guid: fd7dd3bf7f7a8bf4b93fae21f84b9eb4, type: 3}
-  projectileSpawn: {fileID: 3453318869701712448}
+  projectile: {fileID: 7235336919865440893, guid: 013117ec0a50f07488850f24383d189a, type: 3}
+  projectileSpawn: {fileID: 3584451665394237919, guid: f8a9e61a68f57954ea75c83fea152246, type: 3}
   muzzleFlashParticle: {fileID: 5334781383197386576, guid: 3ea0a0f110db4f2448b4b3f2c5a70811, type: 3}
+  shootSFX: {fileID: 8300000, guid: 5b4060d3203a90649bce1ad8a3ebc404, type: 3}
   fireRate: 0.1
   maxAmmo: 30
   damagePerShot: 7
@@ -56,10 +57,15 @@ MonoBehaviour:
   spread: 2
   isSemiAuto: 0
   infiniteAmmo: 0
-  ammoType: 
+  ammoType: rifleAmmo
+  mainHand: {fileID: 0}
+  offHand: {fileID: 0}
+  anim: {fileID: 0}
   currentAmmo: 0
   shootTimer: 0
   canShoot: 0
+  gunShotSound: {fileID: 0}
+  reloadSound: {fileID: 0}
 --- !u!1 &3453318869701712447
 GameObject:
   m_ObjectHideFlags: 0

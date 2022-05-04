@@ -53,6 +53,8 @@ public class SettingsManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log(mu);
+
         musicSlider.value = mu;
         sfxSlider.value = sfx;
         masterSlider.value = ma;

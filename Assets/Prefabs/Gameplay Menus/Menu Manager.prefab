@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2727755202861148618
 RectTransform:
   m_ObjectHideFlags: 0
@@ -257,6 +257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 2727755204278997359}
   deathMenu: {fileID: 2727755202861148621}
+  isPaused: 0
 --- !u!1 &2727755203027785577
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +323,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Failed...
+  m_text: Failure...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 163bb9e10fd3b7f4eb2defbe940c433e, type: 2}
   m_sharedMaterial: {fileID: -3241125064717154043, guid: 163bb9e10fd3b7f4eb2defbe940c433e, type: 2}

@@ -18,8 +18,12 @@ public class PlayerStats : MonoBehaviour
     public float maxHealth;
     public float startingHealth = 50;
 
+    [Header("Audio Parameters")]
+    public AudioClip deathSound;
+
     [Header("Current Player Info")]
     [SerializeField] private float currentHealth;
+
 
 
     private void Awake()
@@ -58,6 +62,7 @@ public class PlayerStats : MonoBehaviour
             if(currentHealth <= 0)
             {
                 currentHealth = 0;
+                AudioManager.instance.PlaySound(deathSound, transform.position);
                 PlayerDeath();
             }
         }

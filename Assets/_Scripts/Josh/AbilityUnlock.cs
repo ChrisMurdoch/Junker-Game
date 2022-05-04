@@ -29,20 +29,40 @@ public class AbilityUnlock : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<PlayerController>())
+        if (other.gameObject.GetComponent<PlayerController>() || other.gameObject.GetComponent<PlayerControllerOld>())
         {
             UnlockEvent.Invoke();
 
             PlayerController pc = other.gameObject.GetComponent<PlayerController>();
+            PlayerControllerOld pc2 = other.gameObject.GetComponent<PlayerControllerOld>();
 
-            if(Ability == Abilities.DoubleJump)
+
+            if (Ability == Abilities.DoubleJump)
             {
-                pc.doubleJumpUnlocked = true;
+                if(pc != null)
+                {
+                    pc.doubleJumpUnlocked = true;
+                }
+
+                if(pc2 != null)
+                {
+                    pc2.doubleJumpUnlocked = true;
+
+                }
             }
 
             if (Ability == Abilities.HookLauncher)
             {
-                pc.hookLauncherUnlocked = true;
+                if (pc != null)
+                {
+                    pc.hookLauncherUnlocked = true;
+                }
+
+                if (pc2 != null)
+                {
+                    pc2.hookLauncherUnlocked = true;
+
+                }
             }
 
             Destroy(gameObject);

@@ -372,13 +372,13 @@ public class PlayerController : MonoBehaviour
         // }
 
         if (isWallSliding) {
-            Debug.Log("WALL SLIDING");
+            //Debug.Log("WALL SLIDING");
             anim.applyRootMotion = false;
         }
 
         if (characterController.isGrounded || (characterController.collisionFlags != CollisionFlags.Sides))
         {
-            Debug.Log("STOP WALL SLIDE");
+            //Debug.Log("STOP WALL SLIDE");
             isWallSliding = false;
             anim.applyRootMotion = true;
         }
@@ -386,14 +386,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.Log("controllerColliderHit called");
-        Debug.Log("FLAGS = " + characterController.collisionFlags);
-        Debug.Log("other collider = " + hit.collider);
-        Debug.Log("isGrounded = " + characterController.isGrounded);
+        //Debug.Log("isGrounded = " + characterController.isGrounded);
         if ((characterController.collisionFlags == CollisionFlags.Sides) && !characterController.isGrounded) 
         {
-            verticalVelocity = 0f;
-            Debug.Log("colliderHit");
+            //verticalVelocity = 0f;
             Debug.DrawRay(hit.point, hit.normal, Color.red, 1.25f);
             wallHit = hit;
             // Debug.Log("HIT OBJECT = " + wallHit.gameObject.name);
@@ -438,7 +434,6 @@ public class PlayerController : MonoBehaviour
     public void AddImpact(Vector3 dir, float force) //Allows adding "force" with a character controller
     {
         // dir.Normalize();
-        Debug.Log("dir.normalized = " + dir.normalized);
         impact = dir.normalized * force / mass;
     }
 
@@ -446,7 +441,6 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isWallSliding)
         {
-            Debug.Log("Wall Jump");
             verticalVelocity = 0;
             verticalVelocity = WallJumpHeight;
             AddImpact(wallHit.normal, WallJumpPropulsion);
@@ -479,6 +473,7 @@ public class PlayerController : MonoBehaviour
             {
                 //verticalVelocity = 0;
                 anim.SetTrigger("jumping");
+                AddJumpForce();
                 canDoubleJump = false;
             }
         }
@@ -590,7 +585,6 @@ public class PlayerController : MonoBehaviour
         //if walking, fall from hooked position
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
-            Debug.Log("MOVE INPUT");
             anim.applyRootMotion = true; //re-activate root motion for walking / turning
             verticalVelocity = 0;
             hooklauncher.DestroyActiveHook();
@@ -600,7 +594,6 @@ public class PlayerController : MonoBehaviour
         //jump from hooked position
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("JUMP INPUT");
             anim.applyRootMotion = true; //re-activate root motion for jump
             anim.SetTrigger("jumping"); //start jump animation, anim event adds force
 
