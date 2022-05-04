@@ -67096,6 +67096,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8331833449101245771, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: waitTime
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245771, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: printTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245771, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: isSemiAuto
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8331833450034311368, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: m_Name
       value: Player

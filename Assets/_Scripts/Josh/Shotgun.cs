@@ -22,6 +22,8 @@ public class Shotgun : WeaponBase
 
     protected override void Shoot()
     {
+        AudioManager.instance.PlaySound(shootSFX, projectileSpawn.position);
+
         for (int i = 0; i < NumberOfPellets; i++)
         {
             float x = Random.Range(-spread, spread);

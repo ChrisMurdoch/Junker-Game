@@ -7,6 +7,11 @@ public class MainMenuManager : MonoBehaviour
     public GameObject SettingsPanel;
 
     // Start is called before the first frame update
+    private void Awake()
+    {
+        Cursor.visible = true;
+    }
+
     void Start()
     {
         if(SettingsPanel != null)

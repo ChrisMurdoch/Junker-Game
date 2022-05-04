@@ -18,6 +18,7 @@ public class LarryTriggerGameEnd : MonoBehaviour
         if(other.gameObject.CompareTag("Player"))
         {
             youDidIt.SetActive(true);
+            Cursor.visible = true;
         }
     }
 

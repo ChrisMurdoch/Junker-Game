@@ -36507,6 +36507,30 @@ PrefabInstance:
       propertyPath: PlayerHud
       value: 
       objectReference: {fileID: 1386735587}
+    - target: {fileID: 8331833449101245771, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: waitTime
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245771, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: printTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245771, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: isSemiAuto
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245809, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: shootSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 5b4060d3203a90649bce1ad8a3ebc404, type: 3}
+    - target: {fileID: 8331833449101245809, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: infiniteAmmo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331833449101245814, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
+      propertyPath: shootSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 601c87e3246ab644da8cc6f4d857f8be, type: 3}
     - target: {fileID: 8331833450034311370, guid: 623b4162d26699140b74020a991bb3bd, type: 3}
       propertyPath: PlayerHud
       value: 
@@ -80252,7 +80276,7 @@ MonoBehaviour:
   target: {fileID: 376295825}
   player: {fileID: 376295824}
   FollowSpeed: 5
-  negativeZAxis: -15
+  negativeZAxis: -20
   lookDownAmount: 5
   lookUpAmount: 6
 --- !u!114 &1859804200

@@ -147,7 +147,7 @@ MonoBehaviour:
   canShoot: 0
   gunShotSound: {fileID: 8300000, guid: 08f20f4a01958a34bbf2fe591e730213, type: 3}
   reloadSound: {fileID: 0}
-  printTime: 0.5
-  waitTime: 1
+  printTime: 0.3
+  waitTime: 0.8
   printTimer: 0
   waitTimer: 0

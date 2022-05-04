@@ -103,11 +103,11 @@ MonoBehaviour:
   shootSFX: {fileID: 8300000, guid: 5b4060d3203a90649bce1ad8a3ebc404, type: 3}
   fireRate: 0.1
   maxAmmo: 30
-  damagePerShot: 7
+  damagePerShot: 10
   projectileSpeed: 55
   spread: 2
   isSemiAuto: 0
-  infiniteAmmo: 0
+  infiniteAmmo: 1
   ammoType: rifleAmmo
   mainHand: {fileID: 0}
   offHand: {fileID: 0}
