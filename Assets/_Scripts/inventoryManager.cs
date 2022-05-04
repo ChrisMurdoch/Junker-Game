@@ -37,6 +37,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject[] hotbarSquares; //holds each hotbar square's rect transform after instantiated
     public float squareSizeValue;
     public InventoryObject[] hotBarItems;
+    private GameObject[] hotBarImages;
     public string[] hotBarBlacklist = { "Medkit", "RifleAmmo", "ShotgunAmmo"};
 
     public GameObject player;
@@ -547,15 +548,13 @@ public class InventoryManager : MonoBehaviour
                         newImage.GetComponent<Image>().sprite = items[heldItemIndex].image;
                         newImage.GetComponent<RectTransform>().sizeDelta = hotbarSquares[i].GetComponent<RectTransform>().sizeDelta;
                         if (hotBarItems[i] != null)
-                            hotBarItems[i].RemoveObject();
+                            Destroy(hotBarImages[i]);
                         hotBarItems[i] = items[heldItemIndex];
-
                         holdingItem = false;
                         RectTransform heldRect = items[heldItemIndex].uiImage.GetComponent<RectTransform>();
                         heldRect.position = GetItemCenter(items[heldItemIndex].GridPosition, items[heldItemIndex].itemSize);
-                        heldItemIndex = -1;
-
-                        
+                        hotBarImages[i] = newImage;
+                        heldItemIndex = -1;                 
                         return;
                     }
                 }

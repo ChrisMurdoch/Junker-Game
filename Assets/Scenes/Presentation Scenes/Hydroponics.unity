@@ -60288,7 +60288,7 @@ PrefabInstance:
     - target: {fileID: 5827571462526048615, guid: 1293053e785704741a702e50946a4068, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 899462967}
+      objectReference: {fileID: 376295824}
     - target: {fileID: 5827571462526048615, guid: 1293053e785704741a702e50946a4068, type: 3}
       propertyPath: printerPistolImage
       value: 
