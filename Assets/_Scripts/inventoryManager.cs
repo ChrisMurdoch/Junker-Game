@@ -632,9 +632,9 @@ public class InventoryManager : MonoBehaviour
         foreach(string name in hotBarBlacklist)
         {
             if (name == itemName)
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
 }
