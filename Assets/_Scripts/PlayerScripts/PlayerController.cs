@@ -386,7 +386,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.Log("isGrounded = " + characterController.isGrounded);
+        //Debug.Log("isGrounded = " + characterController.isGrounded);
         if ((characterController.collisionFlags == CollisionFlags.Sides) && !characterController.isGrounded) 
         {
             //verticalVelocity = 0f;
