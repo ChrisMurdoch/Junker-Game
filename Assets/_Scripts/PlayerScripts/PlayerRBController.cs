@@ -93,8 +93,10 @@ public class PlayerRBController : MonoBehaviour
 
         if((Input.GetAxis("Jump") > 0) && grounded) //check for jump input & grounded condition
         {
-            rb.AddForce(transform.up * jumpForce); //add force to initiate jump
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse); //add force to initiate jump
             anim.SetTrigger("jumping");
+            anim.SetBool("falling", true);
+            grounded = false;
         }
 
         Vector3 velocity;
@@ -162,8 +164,11 @@ public class PlayerRBController : MonoBehaviour
         if(comparison <= 90f || comparison >= -90f) //make sure collision isn't with anything pointing slightly down
         {
             Debug.Log("COLLISION WITH GROUND");
+            if (grounded == false)
+                anim.SetTrigger("needsLanding");
             grounded = true; 
             ground = collision.gameObject; //keep track of the last ground you collided with
+            
             anim.SetBool("falling", false);
         }
     }
@@ -174,7 +179,6 @@ public class PlayerRBController : MonoBehaviour
         {
             Debug.Log("exit collider");
             grounded = false; //no longer grounded when you leave the ground you were on
-            anim.SetBool("falling", true);
         }
     }
 }
