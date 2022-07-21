@@ -6,9 +6,15 @@ using UnityEngine;
 public class PlayerRBController : MonoBehaviour
 {
     /// <summary>
-    /// player's rigidbody
+    /// player's rigidbody component
     /// </summary>
     private Rigidbody rb;
+
+    /// <summary>
+    /// player's Animator component
+    /// </summary>
+    private Animator anim;
+
     /// <summary>
     /// input for horizontal movement
     /// </summary>
@@ -33,6 +39,13 @@ public class PlayerRBController : MonoBehaviour
     /// keeps track of the last ground the player was standing on
     /// </summary>
     private GameObject ground;
+    /// <summary>
+    /// Ratio of horizontal speed to the standard walking speed, facing forward.   
+    /// 1.0 is walking forward, -1.0 is walking backward, 0.0 is stopped.
+    /// </summary>
+    private float animatorMoveSpeed;
+
+
 
     /// <summary>
     /// speed value applied to rb movement
@@ -71,6 +84,7 @@ public class PlayerRBController : MonoBehaviour
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+        anim = gameObject.GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -80,6 +94,7 @@ public class PlayerRBController : MonoBehaviour
         if((Input.GetAxis("Jump") > 0) && grounded) //check for jump input & grounded condition
         {
             rb.AddForce(transform.up * jumpForce); //add force to initiate jump
+            anim.SetTrigger("jumping");
         }
 
         Vector3 velocity;
@@ -95,7 +110,20 @@ public class PlayerRBController : MonoBehaviour
         velocity.y = rb.velocity.y; //precents gravity from being overridden by horizontal input
         rb.velocity = velocity; //apply velocity to rigidbody
 
+        //apply current motion to animator
+        animatorMoveSpeed = velocity.x / speed / Time.deltaTime;
+        if (velocity.x == 0.0f)
+            animatorMoveSpeed = 0.0f;
+        if (!facingForward)
+            animatorMoveSpeed *= -1.0f;
+        anim.SetFloat("animatorMoveSpeed", animatorMoveSpeed);
+
         Turn(); //check if you need to turn
+    }
+
+    private void Update()
+    {
+
     }
 
     /// <summary>
@@ -111,6 +139,8 @@ public class PlayerRBController : MonoBehaviour
             {
                 rb.rotation = Quaternion.Euler(backRot); //rotate to match aim
                 facingForward = false;
+                //I would plug in the turnaround animation here but it doesn't work with root offset (the thing that causes the animation to move the gameobject) disabled.
+                //Can't have root offset enabled with rigidbody physics so probs just turn around frame 1 >:(
             }
         }
         else //aiming right of player
@@ -134,6 +164,7 @@ public class PlayerRBController : MonoBehaviour
             Debug.Log("COLLISION WITH GROUND");
             grounded = true; 
             ground = collision.gameObject; //keep track of the last ground you collided with
+            anim.SetBool("falling", false);
         }
     }
 
@@ -143,6 +174,7 @@ public class PlayerRBController : MonoBehaviour
         {
             Debug.Log("exit collider");
             grounded = false; //no longer grounded when you leave the ground you were on
+            anim.SetBool("falling", true);
         }
     }
 }
