@@ -79768,6 +79768,10 @@ PrefabInstance:
       propertyPath: Crosshair
       value: 
       objectReference: {fileID: 188726431}
+    - target: {fileID: 8212654488643054760, guid: 09d83bf1886c0ef4baedff175008a636, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8212654488643054762, guid: 09d83bf1886c0ef4baedff175008a636, type: 3}
       propertyPath: crosshair
       value: 
