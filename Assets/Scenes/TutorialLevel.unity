@@ -79754,7 +79754,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 429727943661690371, guid: 09d83bf1886c0ef4baedff175008a636, type: 3}
       propertyPath: speed
-      value: 200
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 429727943661690371, guid: 09d83bf1886c0ef4baedff175008a636, type: 3}
       propertyPath: jumpForce
@@ -79763,6 +79763,10 @@ PrefabInstance:
     - target: {fileID: 429727943661690371, guid: 09d83bf1886c0ef4baedff175008a636, type: 3}
       propertyPath: turnSpeed
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 429727943661690371, guid: 09d83bf1886c0ef4baedff175008a636, type: 3}
+      propertyPath: jumpImpulse
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4138660297042712091, guid: 09d83bf1886c0ef4baedff175008a636, type: 3}
       propertyPath: Crosshair
