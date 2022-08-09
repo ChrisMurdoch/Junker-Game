@@ -51,10 +51,21 @@ public class PlayerRBController : MonoBehaviour
     /// speed value applied to rb movement
     /// </summary>
     public float speed;
+
     /// <summary>
-    /// upward impulse added when player jumps
+    /// Amount to adjust speed by each frame
     /// </summary>
-    public float jumpImpulse;
+    public float acceleration;
+
+    /// <summary>
+    /// Amound to adjust speed by when slowing down on the ground only
+    /// </summary>
+    public float deceleration;
+
+    /// <summary>
+    /// upward velocity to set when player jumps
+    /// </summary>
+    public float jumpVelocity;
 
     /// <summary>
     /// The maximum number of times the player can jump in midair
@@ -75,6 +86,22 @@ public class PlayerRBController : MonoBehaviour
     /// The time that must elapse after a jump before the player may jump again.
     /// </summary>
     private float jumpCooldownLength = 0.5f;
+
+    /// <summary>
+    /// The normal of the wall that the player is attached to during their wallcling
+    /// </summary>
+    private Vector3 wallNormal;
+
+
+    /// <summary>
+    /// Timer for walljumpDuration
+    /// </summary>
+    private float walljumpTimer = 0f;
+
+    /// <summary>
+    /// The amount of time in seconds the player cannot readjust their speed in the air after a walljump
+    /// </summary>
+    public float walljumpDuration = 0.5f;
 
     //want momentum to build (only in air)
     //decelerate to ground speed when grounded
@@ -133,7 +160,7 @@ public class PlayerRBController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Jump Input: " + Input.GetAxis("Jump"));
+        walljumpTimer -= Time.deltaTime;
         switch(actionState)
         {
             case ActionState.Locked: break;
@@ -151,6 +178,7 @@ public class PlayerRBController : MonoBehaviour
     {
         actionState = ActionState.Grounded;
         anim.SetBool("falling", false);
+        anim.SetBool("onWall", false);
         airJumps = maxAirJumps;
         jumpCooldownTimer = 0f;
     }
@@ -162,35 +190,13 @@ public class PlayerRBController : MonoBehaviour
     {
         if (Input.GetAxis("Jump") > 0) //check for jump input
         {
-            rb.AddForce(transform.up * jumpImpulse, ForceMode.Impulse); //add force to initiate jump
+            rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z); //set velocity to speed of jump
             jumpCooldownTimer = jumpCooldownLength;
             anim.SetBool("falling", true);
             actionState = ActionState.Midair;
         }
 
-        horizontal = Input.GetAxis("Horizontal"); //get horizontal input
-
-        Vector3 velocity;
-
-        if (facingForward) //imput stays normal while front facing
-        {
-            velocity = (transform.forward * horizontal) * speed;
-        }
-        else //inputs flipped when facing backward
-        {
-            velocity = (-transform.forward * horizontal) * speed;
-        }
-
-        velocity.y = rb.velocity.y; //precents gravity from being overridden by horizontal input
-        rb.velocity = velocity; //apply velocity to rigidbody
-
-        //apply current motion to animator
-        animatorMoveSpeed = velocity.x / speed;
-        if (velocity.x == 0.0f)
-            animatorMoveSpeed = 0.0f;
-        if (!facingForward)
-            animatorMoveSpeed *= -1.0f;
-        anim.SetFloat("animatorMoveSpeed", animatorMoveSpeed);
+        MoveHorizontal();
 
         Turn();
     }
@@ -200,31 +206,54 @@ public class PlayerRBController : MonoBehaviour
         
         if (Input.GetAxis("Jump") > 0 && airJumps > 0) //check for jump input and remaining airjumps
         {
-            if (jumpCooldownTimer < 0)
+            if (jumpCooldownTimer < 0f && walljumpTimer <= 0f)
             {
-                rb.AddForce(transform.up * jumpImpulse, ForceMode.Impulse); //add force to initiate jump
+                rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
                 anim.Play("Falling Idle");
                 jumpCooldownTimer = jumpCooldownLength;
                 airJumps--;
             }
         }
         jumpCooldownTimer -= Time.deltaTime;
+        if (walljumpTimer <= 0f)
+        {
+            MoveHorizontal();
+        }
+
         Turn();
     }
 
-    private void EnterWallcling()
+    private void EnterWallcling(Vector3 newWallNormal)
     {
+        this.wallNormal = newWallNormal;
         Debug.Log("Entering Wallcling");
         actionState = ActionState.Wallcling;
-        airJumps = maxAirJumps;
+        //airJumps = maxAirJumps;
         anim.SetBool("onWall", true);
-        anim.SetBool("falling", false);
+        //anim.SetBool("falling", false);
         rb.velocity = Vector3.zero;
     }
 
     private void Wallcling()
     {
-        rb.velocity = new Vector3(rb.velocity.x, 0.667f * rb.velocity.y, rb.velocity.z);
+        //rb.velocity = new Vector3(rb.velocity.x, 0.667f * rb.velocity.y, rb.velocity.z);
+        rb.velocity = Vector3.zero;
+
+        //on a jump, move away from the wall at max walking speed as well as up with the jump speed
+        if (Input.GetAxis("Jump") > 0)
+        {
+            Vector3 newVelocity = (Vector3.up * jumpVelocity + (wallNormal * speed));
+            rb.velocity = newVelocity;
+            Debug.Log("off wall velocity: " + newVelocity);
+            walljumpTimer = walljumpDuration;
+            anim.SetBool("onWall", false);
+            anim.SetBool("falling", true);
+            actionState = ActionState.Midair;
+
+        }
+
+        MoveHorizontal();
+
     }
 
     /// <summary>
@@ -254,24 +283,67 @@ public class PlayerRBController : MonoBehaviour
         }
     }
 
+    private void MoveHorizontal()
+    {
+        horizontal = Input.GetAxis("Horizontal"); //get horizontal input
+
+        Vector3 targetVelocity;
+
+        if (facingForward) //imput stays normal while front facing
+        {
+            targetVelocity = (transform.forward * horizontal) * speed;
+        }
+        else //inputs flipped when facing backward
+        {
+            targetVelocity = (-transform.forward * horizontal) * speed;
+        }
+
+        float currentVelocity = rb.velocity.x;
+
+        if (targetVelocity.x > 0f && currentVelocity < targetVelocity.x)
+            rb.AddForce(Vector3.right * acceleration);
+        else if (targetVelocity.x < 0f && currentVelocity > targetVelocity.x)
+            rb.AddForce(Vector3.left * acceleration);
+
+        //Only decellerate on ground
+        if (actionState == ActionState.Grounded)
+        {
+            if (targetVelocity.x == 0f && currentVelocity < -0.2f)
+                rb.AddForce(Vector3.right * deceleration);
+            else if (targetVelocity.x == 0f && currentVelocity > 0.2f)
+                rb.AddForce(Vector3.left * deceleration);
+        }
+
+
+        //targetVelocity.y = rb.velocity.y; //precents gravity from being overridden by horizontal input
+        //rb.velocity = targetVelocity; //apply velocity to rigidbody
+
+        //apply current motion to animator
+        animatorMoveSpeed = currentVelocity / speed;
+        if (currentVelocity == 0.0f)
+            animatorMoveSpeed = 0.0f;
+        if (!facingForward)
+            animatorMoveSpeed *= -1.0f;
+        anim.SetFloat("animatorMoveSpeed", animatorMoveSpeed);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         Vector3 normal = collision.GetContact(0).normal; //get the normal from one of the contact points
+        normal.z = 0;
         float comparison = Vector3.Angle(normal, Vector3.up); //get an angle to see if the object can be ground
 
-        Debug.Log("collision angle = " + comparison);
         float acceptableGroundAngle = 75f;
         if(comparison <= acceptableGroundAngle) //make sure collision isn't with anything pointing slightly down
         {
-            if (actionState == ActionState.Midair)
+            if (actionState == ActionState.Midair || actionState == ActionState.Wallcling)
                 EnterGrounded();
             ground = collision.gameObject; //keep track of the last ground you collided with
 
         }
         else if(comparison > 85f && comparison < 95f && actionState == ActionState.Midair) //Check if a wall for a wallcling
         {
-            Debug.Log("Collided with a wall");
-            EnterWallcling();
+            EnterWallcling(normal);
         }
     }
 
@@ -281,6 +353,11 @@ public class PlayerRBController : MonoBehaviour
         {
             Debug.Log("exit collider");
             actionState = ActionState.Midair; //no longer grounded when you leave the ground you were on
+        }
+        else if (actionState == ActionState.Wallcling)
+        {
+            actionState = ActionState.Midair;
+            anim.SetBool("onWall", false);
         }
     }
 }

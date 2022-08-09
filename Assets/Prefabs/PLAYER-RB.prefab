@@ -7586,8 +7586,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
-  turnSpeed: 0
-  jumpForce: 0
+  acceleration: 10
+  deceleration: 4
+  jumpVelocity: 0
+  maxAirJumps: 1
+  walljumpDuration: 0.5
+  actionState: 1
 --- !u!114 &8212654488643054762
 MonoBehaviour:
   m_ObjectHideFlags: 0
